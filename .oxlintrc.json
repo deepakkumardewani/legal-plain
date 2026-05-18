@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "import", "unicorn"],
+  "rules": {
+    "typescript/no-unused-vars": "error",
+    "typescript/consistent-type-imports": "error",
+    "react/jsx-no-useless-fragment": "error"
+  }
+}

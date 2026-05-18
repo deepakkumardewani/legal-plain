@@ -1,0 +1,91 @@
+export type DocumentType = "EMPLOYMENT_CONTRACT" | "NDA" | "RESIDENTIAL_LEASE";
+export type RiskLevel = "RED" | "YELLOW" | "CONTEXT_DEPENDENT" | "GREEN";
+
+export interface JurisdictionMismatch {
+  governingLaw: string;
+  partyLocations: string[];
+  confidence: "HIGH" | "LOW";
+  riskLevel: "HIGH" | "MEDIUM" | "LOW";
+  plainEnglish: string;
+  whyItMatters: string;
+  affectedClauseIds: string[];
+  whatToAskFor: string;
+}
+
+export interface ClauseAnalysis {
+  id: string;
+  title: string;
+  originalExcerpt: string;
+  plainEnglish: string;
+  riskLevel: RiskLevel;
+  riskReason: string;
+  contextNote?: string;
+  comparisonToStandard: string;
+  obligation: string;
+  negotiationTip?: string;
+  affectedByMismatch?: boolean;
+}
+
+export interface MissingClause {
+  title: string;
+  whyItMatters: string;
+  whatToAskFor: string;
+}
+
+export interface KeyDate {
+  label: string;
+  value: string;
+  urgency: "HIGH" | "MEDIUM" | "LOW";
+}
+
+export interface Pass1Result {
+  valid: boolean;
+  reason?: string;
+  documentType: DocumentType;
+  governingLawJurisdiction: string | null;
+  partyLocations: string[];
+  jurisdictionMismatch: boolean;
+  mismatchConfidence: "HIGH" | "LOW" | null;
+  clauseMap: string[];
+}
+
+export interface AnalysisResult {
+  documentType: DocumentType;
+  governingLawJurisdiction: string | null;
+  partyLocations: string[];
+  userJurisdiction: string | null;
+  effectiveJurisdiction: string;
+  jurisdictionMismatch: JurisdictionMismatch | null;
+  overallRiskScore: number;
+  overallRiskLabel: string;
+  redFlagCount: number;
+  unusualCount: number;
+  contextDependentCount: number;
+  standardCount: number;
+  clauses: ClauseAnalysis[];
+  missingClauses: MissingClause[];
+  keyDates: KeyDate[];
+  yourRights: string[];
+  yourObligations: string[];
+  analyzedAt: string;
+  followUpQuestionsRemaining: number;
+}
+
+export interface AnalyzeRequest {
+  documentText: string;
+  userJurisdiction: string | null;
+  userId: string;
+}
+
+export interface FollowupRequest {
+  question: string;
+  analysisResult: AnalysisResult;
+  documentText: string;
+  userId: string;
+  analysisId: string;
+}
+
+export interface ShareRequest {
+  analysisResult: AnalysisResult;
+  userId: string;
+}
