@@ -47,13 +47,13 @@ Build LegalPlain per [SPEC.md](SPEC.md): a zero-account web tool that analyzes p
 
 ### Phase 2: Input UI Slice
 
-- [ ] **Task 11: Disclaimer gate (session-scoped, non-bypassable)**
-- [ ] **Task 12: Document input — CodeMirror paste tab**
-- [ ] **Task 13: PDF upload — pdf.js client-side extraction + scanned-PDF error**
-- [ ] **Task 14: Jurisdiction selector + Analyze button + 5-stage loading**
+- [x] **Task 11: Disclaimer gate (session-scoped, non-bypassable)**
+- [x] **Task 12: Document input — CodeMirror paste tab**
+- [x] **Task 13: PDF upload — pdf.js client-side extraction + scanned-PDF error**
+- [x] **Task 14: Jurisdiction selector + Analyze button + 5-stage loading**
 
 #### Checkpoint: Input
-- [ ] User can: acknowledge disclaimer → paste or upload → submit → see loading stages → reach a stub results page
+- [x] User can: acknowledge disclaimer → paste or upload → submit → see loading stages → reach a stub results page
 
 ---
 
