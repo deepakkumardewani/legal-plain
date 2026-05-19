@@ -59,15 +59,15 @@ Build LegalPlain per [SPEC.md](SPEC.md): a zero-account web tool that analyzes p
 
 ### Phase 3: Results UI Slice
 
-- [ ] **Task 15: Risk dashboard header + 4 risk tabs (ClauseCard)**
-- [ ] **Task 16: Jurisdiction mismatch banner + affected-clause badge + score floor**
-- [ ] **Task 17: Missing clauses, key dates, rights, obligations panels**
-- [ ] **Task 18: Follow-up question input (3-question cap)**
+- [x] **Task 15: Risk dashboard header + 4 risk tabs (ClauseCard)**
+- [x] **Task 16: Jurisdiction mismatch banner + affected-clause badge + score floor**
+- [x] **Task 17: Missing clauses, key dates, rights, obligations panels**
+- [x] **Task 18: Follow-up question input (3-question cap)**
 
 #### Checkpoint: Results
-- [ ] All 4 risk levels render correctly; CONTEXT_DEPENDENT shows gray border + contextNote
-- [ ] HIGH and LOW confidence mismatch banners render with correct styling
-- [ ] Follow-up cites specific clauses
+- [x] All 4 risk levels render correctly; CONTEXT_DEPENDENT shows gray border + contextNote
+- [x] HIGH and LOW confidence mismatch banners render with correct styling
+- [x] Follow-up cites specific clauses
 
 ---
 
