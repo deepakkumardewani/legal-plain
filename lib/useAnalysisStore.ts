@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 import {
   getStoredAnalysis,
+  getStoredDocumentText,
   setStoredAnalysis,
   clearStoredAnalysis,
   subscribeToAnalysis,
@@ -11,13 +12,15 @@ import type { AnalysisResult } from "@/lib/types";
 
 export function useAnalysisStore(): {
   analysis: AnalysisResult | null;
-  setAnalysis: (a: AnalysisResult) => void;
+  documentText: string | null;
+  setAnalysis: (a: AnalysisResult, text?: string) => void;
   clearAnalysis: () => void;
 } {
   const analysis = useSyncExternalStore(subscribeToAnalysis, getStoredAnalysis, getStoredAnalysis);
 
   return {
     analysis,
+    documentText: getStoredDocumentText(),
     setAnalysis: setStoredAnalysis,
     clearAnalysis: clearStoredAnalysis,
   };

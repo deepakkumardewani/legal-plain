@@ -8,10 +8,11 @@ import { MissingClausesPanel } from "@/components/analysis/MissingClausesPanel";
 import { KeyDatesPanel } from "@/components/analysis/KeyDatesPanel";
 import { YourRightsPanel } from "@/components/analysis/YourRightsPanel";
 import { ObligationsPanel } from "@/components/analysis/ObligationsPanel";
+import { FollowUpInput } from "@/components/analysis/FollowUpInput";
 
 export default function ResultsPage() {
   const router = useRouter();
-  const { analysis } = useAnalysisStore();
+  const { analysis, documentText } = useAnalysisStore();
 
   useEffect(() => {
     if (!analysis) {
@@ -33,6 +34,8 @@ export default function ResultsPage() {
         <YourRightsPanel rights={analysis.yourRights} />
         <ObligationsPanel obligations={analysis.yourObligations} />
       </div>
+
+      <FollowUpInput analysis={analysis} documentText={documentText || ""} />
     </main>
   );
 }

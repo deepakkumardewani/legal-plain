@@ -61,7 +61,7 @@ export default function HomePage() {
       }
 
       const result: AnalysisResult = await response.json();
-      setAnalysis(result);
+      setAnalysis(result, documentText.trim());
       router.push("/results");
     } catch {
       setError("Something went wrong. Please check your connection and try again.");
