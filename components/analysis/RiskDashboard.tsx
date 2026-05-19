@@ -5,6 +5,7 @@ import type { AnalysisResult, RiskLevel } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { CategoryTabs } from "./CategoryTabs";
 import { ClauseCard } from "./ClauseCard";
+import { JurisdictionMismatchBanner } from "./JurisdictionMismatchBanner";
 
 const documentTypeLabels: Record<string, string> = {
   EMPLOYMENT_CONTRACT: "Employment Contract",
@@ -74,6 +75,10 @@ export function RiskDashboard({ analysis }: RiskDashboardProps) {
           <CountBadge label="Missing" count={analysis.missingClauses.length} color="slate" />
         </div>
       </div>
+
+      {analysis.jurisdictionMismatch && (
+        <JurisdictionMismatchBanner mismatch={analysis.jurisdictionMismatch} />
+      )}
 
       <div className="mt-6">
         <CategoryTabs
