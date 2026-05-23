@@ -4,14 +4,23 @@ import { useCallback, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { validatePdfFile, extractPdfText } from "@/lib/pdfParser";
 
+const MAX_CHARS = 150_000;
+
 interface PdfUploadProps {
   onText: (text: string) => void;
+}
+
+interface LoadedDoc {
+  fileName: string;
+  charCount: number;
+  truncated: boolean;
 }
 
 export function PdfUpload({ onText }: PdfUploadProps) {
   const [dragOver, setDragOver] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loaded, setLoaded] = useState<LoadedDoc | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleError = useCallback((message: string) => {
@@ -22,6 +31,7 @@ export function PdfUpload({ onText }: PdfUploadProps) {
   const processFile = useCallback(
     async (file: File) => {
       setError(null);
+      setLoaded(null);
       setLoading(true);
 
       const validationError = validatePdfFile(file);
@@ -32,8 +42,11 @@ export function PdfUpload({ onText }: PdfUploadProps) {
 
       try {
         const result = await extractPdfText(file);
+        const truncated = result.text.length > MAX_CHARS;
+        const text = truncated ? result.text.slice(0, MAX_CHARS) : result.text;
+        setLoaded({ fileName: file.name, charCount: text.length, truncated });
         setLoading(false);
-        onText(result.text);
+        onText(text);
       } catch (err) {
         const message = err instanceof Error ? err.message : "Failed to extract text from PDF.";
         handleError(message);
@@ -42,15 +55,19 @@ export function PdfUpload({ onText }: PdfUploadProps) {
     [onText, handleError],
   );
 
+  const clearFile = useCallback(() => {
+    setLoaded(null);
+    setError(null);
+    onText("");
+    fileInputRef.current?.focus();
+  }, [onText]);
+
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault();
       setDragOver(false);
-
       const file = e.dataTransfer.files[0];
-      if (file) {
-        processFile(file);
-      }
+      if (file) processFile(file);
     },
     [processFile],
   );
@@ -58,23 +75,80 @@ export function PdfUpload({ onText }: PdfUploadProps) {
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
-      if (file) {
-        processFile(file);
-      }
-      // Reset the input so the same file can be selected again
+      if (file) processFile(file);
       e.target.value = "";
     },
     [processFile],
   );
 
+  const openPicker = useCallback(() => fileInputRef.current?.click(), []);
+
+  if (loaded) {
+    return (
+      <div className="w-full">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/pdf"
+          className="hidden"
+          onChange={handleFileChange}
+          aria-hidden="true"
+        />
+        <div className="rounded-2xl border border-[#e4dfd6] bg-white p-5">
+          <div className="flex items-center gap-4">
+            <span
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#1f7a4d]/10 text-[#1f7a4d]"
+              aria-hidden
+            >
+              <svg
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+              </svg>
+            </span>
+            <div className="min-w-0 flex-1">
+              <p
+                className="truncate text-[15px] font-semibold text-[#18181f]"
+                title={loaded.fileName}
+              >
+                {loaded.fileName}
+              </p>
+              <p className="mt-0.5 text-sm text-[#72728a] tabular-nums">
+                {loaded.charCount.toLocaleString("en-US")} characters · ready to analyze
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={clearFile}
+              className="shrink-0 rounded-full px-3 py-1.5 text-sm font-medium text-[#72728a] transition-colors hover:bg-[#f5f0e8] hover:text-[#18181f]"
+            >
+              Remove
+            </button>
+          </div>
+          {loaded.truncated && (
+            <p className="mt-4 rounded-xl bg-[#fbf3e3] px-4 py-2.5 text-sm text-[#9a6310]">
+              This contract is long — we trimmed it to the first {MAX_CHARS.toLocaleString("en-US")}{" "}
+              characters for analysis.
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
       <div
         className={cn(
-          "flex min-h-[200px] cursor-pointer flex-col items-center justify-center rounded-b-md border border-t-0 border-dashed p-8 transition-colors",
-          dragOver && "border-gray-900 bg-gray-50",
-          !dragOver && "border-gray-300 hover:border-gray-400",
-          loading && "pointer-events-none opacity-60",
+          "group relative flex min-h-[260px] cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed p-10 text-center transition-all duration-200",
+          dragOver
+            ? "border-[#c8791a] bg-[#f5f0e8]"
+            : "border-[#d8d2c6] bg-white hover:border-[#c8791a]/50 hover:bg-[#faf9f6]",
+          loading && "pointer-events-none opacity-70",
         )}
         onDragOver={(e) => {
           e.preventDefault();
@@ -85,13 +159,13 @@ export function PdfUpload({ onText }: PdfUploadProps) {
           setDragOver(false);
         }}
         onDrop={handleDrop}
-        onClick={() => fileInputRef.current?.click()}
+        onClick={openPicker}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            fileInputRef.current?.click();
+            openPicker();
           }
         }}
         aria-label="Upload PDF file"
@@ -106,33 +180,63 @@ export function PdfUpload({ onText }: PdfUploadProps) {
         />
 
         {loading ? (
-          <p className="text-sm text-gray-500">Extracting text from PDF…</p>
+          <div className="flex flex-col items-center">
+            <span
+              className="mb-4 h-9 w-9 animate-spin rounded-full border-[3px] border-[#e4dfd6] border-t-[#c8791a]"
+              aria-hidden
+            />
+            <p className="text-[15px] font-medium text-[#18181f]">Reading your contract…</p>
+            <p className="mt-1 text-sm text-[#72728a]">Extracting the text from your PDF</p>
+          </div>
         ) : (
           <>
-            <svg
-              className="mb-3 h-8 w-8 text-gray-400"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
+            <span
+              className={cn(
+                "mb-5 flex h-14 w-14 items-center justify-center rounded-2xl transition-colors",
+                dragOver
+                  ? "bg-[#c8791a] text-white"
+                  : "bg-[#f5f0e8] text-[#c8791a] group-hover:bg-[#c8791a] group-hover:text-white",
+              )}
+              aria-hidden
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-              />
-            </svg>
-            <p className="text-sm text-gray-600">
-              <span className="font-medium text-gray-900">Click to upload</span> or drag and drop
+              <svg
+                className="h-7 w-7"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.75}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 16.5V6m0 0L8.25 9.75M12 6l3.75 3.75M4.5 16.5v1.875A2.625 2.625 0 0 0 7.125 21h9.75a2.625 2.625 0 0 0 2.625-2.625V16.5"
+                />
+              </svg>
+            </span>
+            <p
+              className="text-xl font-bold text-[#18181f]"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              {dragOver ? "Drop to upload" : "Drop your contract here"}
             </p>
-            <p className="mt-1 text-xs text-gray-400">PDF only, up to 10 MB</p>
+            <p className="mt-2 text-[15px] text-[#72728a]">
+              or{" "}
+              <span className="font-semibold text-[#c8791a] underline decoration-[#c8791a]/30 underline-offset-2">
+                browse your files
+              </span>
+            </p>
+            <p className="mt-5 text-xs font-medium uppercase tracking-wider text-[#a3a0a8]">
+              PDF · up to 10 MB
+            </p>
           </>
         )}
       </div>
 
       {error && (
-        <p className="mt-2 text-sm text-red-600" role="alert">
+        <p
+          className="mt-3 rounded-xl bg-[#fbeceb] px-4 py-3 text-sm font-medium text-[#b3261e]"
+          role="alert"
+        >
           {error}
         </p>
       )}

@@ -1,4 +1,4 @@
-import type { Redis } from "@upstash/redis";
+import type { RedisClient } from "@/lib/redis";
 
 const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const ANALYZE_LIMIT = 10;
@@ -30,7 +30,7 @@ export interface RateLimitResult {
 }
 
 async function checkKeyLimit(
-  redis: Redis,
+  redis: RedisClient,
   key: string,
   limit: number,
   now: number,
@@ -55,7 +55,7 @@ async function hashIP(ip: string): Promise<string> {
 }
 
 export async function checkRateLimit(
-  redis: Redis,
+  redis: RedisClient,
   userId: string,
   ip: string,
   type: "analyze" | "followup",

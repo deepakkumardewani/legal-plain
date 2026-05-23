@@ -92,9 +92,12 @@ export function JurisdictionSelector({ value, onChange }: JurisdictionSelectorPr
 
   return (
     <div className="w-full" ref={containerRef}>
-      <label htmlFor="jurisdiction-input" className="mb-1 block text-sm font-medium text-gray-700">
+      <label
+        htmlFor="jurisdiction-input"
+        className="mb-2 block text-sm font-semibold text-[#18181f]"
+      >
         Where will this contract be enforced?{" "}
-        <span className="font-normal text-gray-400">(optional but improves accuracy)</span>
+        <span className="font-normal text-[#a3a0a8]">optional, improves accuracy</span>
       </label>
       <div className="relative">
         <input
@@ -108,7 +111,7 @@ export function JurisdictionSelector({ value, onChange }: JurisdictionSelectorPr
           aria-activedescendant={
             highlightIndex >= 0 ? `jurisdiction-option-${highlightIndex}` : undefined
           }
-          className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+          className="w-full rounded-xl border border-[#d8d2c6] bg-white px-4 py-3 text-[15px] text-[#18181f] transition-colors placeholder:text-[#a3a0a8] focus:border-[#c8791a] focus:outline-none focus:ring-2 focus:ring-[#c8791a]/20"
           placeholder="Not specified"
           value={open ? search : selected.label}
           onFocus={() => setOpen(true)}
@@ -125,10 +128,10 @@ export function JurisdictionSelector({ value, onChange }: JurisdictionSelectorPr
             ref={listRef}
             id="jurisdiction-list"
             role="listbox"
-            className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-200 bg-white py-1 shadow-lg"
+            className="absolute z-10 mt-2 max-h-60 w-full overflow-auto rounded-xl border border-[#e4dfd6] bg-white py-1.5 shadow-[0_12px_32px_-12px_rgba(24,24,31,0.25)]"
           >
             {filtered.length === 0 ? (
-              <li className="px-3 py-2 text-sm text-gray-500">No results found</li>
+              <li className="px-4 py-2.5 text-sm text-[#72728a]">No results found</li>
             ) : (
               filtered.map((jurisdiction, index) => (
                 <li
@@ -137,9 +140,9 @@ export function JurisdictionSelector({ value, onChange }: JurisdictionSelectorPr
                   role="option"
                   aria-selected={jurisdiction.value === value}
                   className={cn(
-                    "cursor-pointer px-3 py-2 text-sm",
-                    index === highlightIndex && "bg-gray-100",
-                    jurisdiction.value === value && "font-medium text-gray-900",
+                    "mx-1 cursor-pointer rounded-lg px-3 py-2.5 text-sm text-[#4a4a5e]",
+                    index === highlightIndex && "bg-[#f5f0e8]",
+                    jurisdiction.value === value && "font-semibold text-[#c8791a]",
                   )}
                   onMouseEnter={() => setHighlightIndex(index)}
                   onClick={() => selectOption(jurisdiction)}

@@ -62,9 +62,7 @@ describe("ClauseCard", () => {
 
   it("does not show negotiation tip for GREEN clauses", () => {
     render(
-      <ClauseCard
-        clause={{ ...baseClause, riskLevel: "GREEN", negotiationTip: "No need." }}
-      />,
+      <ClauseCard clause={{ ...baseClause, riskLevel: "GREEN", negotiationTip: "No need." }} />,
     );
     expect(screen.queryByText(/Negotiation tip/)).toBeNull();
   });

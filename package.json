@@ -15,18 +15,20 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "verify":"bun run lint:fix && bun run format:check && bun run type-check "
+    "verify": "bun run lint:fix && bun run format:check && bun run type-check "
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.52.0",
+    "@ai-sdk/deepseek": "^2.0.35",
     "@codemirror/lang-markdown": "^6.3.0",
     "@codemirror/view": "^6.35.0",
     "@radix-ui/react-slot": "^1.1.1",
     "@upstash/redis": "^1.34.0",
     "@vercel/kv": "^2.0.0",
+    "ai": "^6.0.188",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "codemirror": "^6.0.1",
+    "ioredis": "^5.10.1",
     "jspdf": "^2.5.2",
     "lucide-react": "^0.468.0",
     "next": "^16.0.0",

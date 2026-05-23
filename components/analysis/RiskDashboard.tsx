@@ -93,9 +93,7 @@ export function RiskDashboard({ analysis }: RiskDashboardProps) {
 
       <div className="mt-4 space-y-4">
         {filteredClauses.length === 0 ? (
-          <p className="py-8 text-center text-sm text-gray-400">
-            No clauses in this category.
-          </p>
+          <p className="py-8 text-center text-sm text-gray-400">No clauses in this category.</p>
         ) : (
           filteredClauses.map((clause) => <ClauseCard key={clause.id} clause={clause} />)
         )}
@@ -104,15 +102,7 @@ export function RiskDashboard({ analysis }: RiskDashboardProps) {
   );
 }
 
-function CountBadge({
-  label,
-  count,
-  color,
-}: {
-  label: string;
-  count: number;
-  color: string;
-}) {
+function CountBadge({ label, count, color }: { label: string; count: number; color: string }) {
   const colorMap: Record<string, string> = {
     red: "border-red-200 bg-red-50 text-red-700",
     yellow: "border-yellow-200 bg-yellow-50 text-yellow-700",

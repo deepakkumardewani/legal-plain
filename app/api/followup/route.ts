@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { followupRequestSchema, followupResponseSchema } from "@/lib/schemas";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { getRedis } from "@/lib/redis";
-import { callClaude } from "@/lib/anthropic";
+import { callAI } from "@/lib/ai";
 import { buildFollowupPrompt } from "@/lib/prompts/followup";
 import type { AnalysisResult } from "@/lib/types";
 
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       documentText,
     });
 
-    const response = await callClaude({
+    const response = await callAI({
       system: prompt.system,
       user: prompt.user,
       maxTokens: 2048,

@@ -16,7 +16,7 @@ export default function ResultsPage() {
 
   useEffect(() => {
     if (!analysis) {
-      router.replace("/");
+      router.replace("/analyze");
     }
   }, [analysis, router]);
 

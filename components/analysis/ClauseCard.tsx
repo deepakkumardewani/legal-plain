@@ -75,12 +75,14 @@ export function ClauseCard({ clause }: ClauseCardProps) {
         {clause.obligation}
       </div>
 
-      {clause.riskLevel !== "GREEN" && clause.riskLevel !== "CONTEXT_DEPENDENT" && clause.negotiationTip && (
-        <div className="mt-2 rounded-md bg-purple-50 px-3 py-2 text-sm text-purple-800">
-          <span className="font-medium">Negotiation tip: </span>
-          {clause.negotiationTip}
-        </div>
-      )}
+      {clause.riskLevel !== "GREEN" &&
+        clause.riskLevel !== "CONTEXT_DEPENDENT" &&
+        clause.negotiationTip && (
+          <div className="mt-2 rounded-md bg-purple-50 px-3 py-2 text-sm text-purple-800">
+            <span className="font-medium">Negotiation tip: </span>
+            {clause.negotiationTip}
+          </div>
+        )}
 
       {clause.riskLevel === "CONTEXT_DEPENDENT" && clause.contextNote && (
         <div className="mt-2 rounded-md bg-gray-100 px-3 py-2 text-sm text-gray-700 italic">

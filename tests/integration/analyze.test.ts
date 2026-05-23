@@ -12,7 +12,7 @@ function createMockRedis(allowed = true, remaining = 9) {
 describe("POST /api/analyze", () => {
   beforeEach(() => {
     vi.resetModules();
-    process.env.ANTHROPIC_API_KEY = "test-key";
+    process.env.DEEPSEEK_API_KEY = "test-key";
     process.env.UPSTASH_REDIS_REST_URL = "https://test.upstash.io";
     process.env.UPSTASH_REDIS_REST_TOKEN = "test-token";
   });
@@ -24,8 +24,8 @@ describe("POST /api/analyze", () => {
       getRedis: () => mockRedis,
     }));
 
-    vi.doMock("@/lib/anthropic", () => ({
-      callClaude: vi
+    vi.doMock("@/lib/ai", () => ({
+      callAI: vi
         .fn()
         .mockImplementationOnce(() => Promise.resolve(validPass1Result))
         .mockImplementationOnce(() => Promise.resolve(sampleAnalysis)),
@@ -58,6 +58,9 @@ describe("POST /api/analyze", () => {
     expect(data.documentType).toBe("EMPLOYMENT_CONTRACT");
     expect(data.effectiveJurisdiction).toBeDefined();
     expect(data.followUpQuestionsRemaining).toBe(10);
+    expect(data.analysisId).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+    );
     expect(data.analyzedAt).toBeDefined();
     expect(data.clauses.length).toBeGreaterThan(0);
   });
@@ -146,8 +149,8 @@ describe("POST /api/analyze", () => {
       getRedis: () => createMockRedis(),
     }));
 
-    vi.doMock("@/lib/anthropic", () => ({
-      callClaude: vi.fn().mockResolvedValue({
+    vi.doMock("@/lib/ai", () => ({
+      callAI: vi.fn().mockResolvedValue({
         valid: false,
         reason: "This is not a legal document.",
         documentType: "EMPLOYMENT_CONTRACT",
@@ -192,8 +195,8 @@ describe("POST /api/analyze", () => {
       overallRiskScore: 35,
     };
 
-    vi.doMock("@/lib/anthropic", () => ({
-      callClaude: vi
+    vi.doMock("@/lib/ai", () => ({
+      callAI: vi
         .fn()
         .mockImplementationOnce(() => Promise.resolve(validPass1Result))
         .mockImplementationOnce(() => Promise.resolve(lowScoreAnalysis)),

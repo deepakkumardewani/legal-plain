@@ -8,11 +8,8 @@
 ## Conditional Reference Table
 
 | Task                                      | Reference                                           |
-| ----------------------------------------- | --------------------------------------------------- |
-| Naming conventions, code style            | `.claude/skills/code-style/SKILL.md`                |
-| TypeScript best practices, error handling | `.claude/skills/typescript-best-practices/SKILL.md` |
-| Shadcn usage                              | `.claude/skills/shadcn/SKILL.md`                    |
-| Component Rules                           | `.claude/skills/component-rules/SKILL.md`           |
+| ----------------------------------------- | --------------------------------------------------- |                    |
+| Component Rules                           | `.claude/skills/shadcn-component-rules/SKILL.md`           |
 ---
 
 # context-mode — MANDATORY routing rules

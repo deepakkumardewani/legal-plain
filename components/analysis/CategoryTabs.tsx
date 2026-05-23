@@ -29,10 +29,34 @@ export function CategoryTabs({
   standardCount,
 }: CategoryTabsProps) {
   const tabs: Tab[] = [
-    { level: "RED", label: "Red Flags", count: redFlagCount, emoji: "Red", activeColor: "border-red-500 text-red-700" },
-    { level: "YELLOW", label: "Unusual", count: unusualCount, emoji: "Yellow", activeColor: "border-yellow-500 text-yellow-700" },
-    { level: "CONTEXT_DEPENDENT", label: "Context-Dependent", count: contextDependentCount, emoji: "Context", activeColor: "border-gray-600 text-gray-700" },
-    { level: "GREEN", label: "Standard", count: standardCount, emoji: "Green", activeColor: "border-green-500 text-green-700" },
+    {
+      level: "RED",
+      label: "Red Flags",
+      count: redFlagCount,
+      emoji: "Red",
+      activeColor: "border-red-500 text-red-700",
+    },
+    {
+      level: "YELLOW",
+      label: "Unusual",
+      count: unusualCount,
+      emoji: "Yellow",
+      activeColor: "border-yellow-500 text-yellow-700",
+    },
+    {
+      level: "CONTEXT_DEPENDENT",
+      label: "Context-Dependent",
+      count: contextDependentCount,
+      emoji: "Context",
+      activeColor: "border-gray-600 text-gray-700",
+    },
+    {
+      level: "GREEN",
+      label: "Standard",
+      count: standardCount,
+      emoji: "Green",
+      activeColor: "border-green-500 text-green-700",
+    },
   ];
 
   return (

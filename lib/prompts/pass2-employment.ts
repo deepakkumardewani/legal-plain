@@ -1,11 +1,4 @@
-import type { Pass1Result } from "@/lib/types";
-
-interface Pass2PromptInput {
-  documentText: string;
-  effectiveJurisdiction: string;
-  mismatchSnippet?: string;
-  pass1: Pass1Result;
-}
+import type { Pass2Input } from "./pass2-selector";
 
 interface Pass2Prompt {
   system: string;
@@ -16,8 +9,7 @@ export function buildPass2Prompt({
   documentText,
   effectiveJurisdiction,
   mismatchSnippet,
-  pass1: _pass1,
-}: Pass2PromptInput): Pass2Prompt {
+}: Pass2Input): Pass2Prompt {
   const mismatchSection = mismatchSnippet ? `\n${mismatchSnippet}\n` : "";
 
   const system = `You are a senior employment lawyer analyzing this contract on behalf of the employee. Your analysis must be thorough, specific, and jurisdiction-aware.
@@ -64,7 +56,7 @@ IMPORTANT OUTPUT RULES:
 - overallRiskScore: integer 0-100, where 0 = perfectly balanced, 100 = maximally one-sided against employee. Holistic assessment of combined clause impact.
 - overallRiskLabel: concise label (e.g. "High Risk", "Moderate Risk", "Low Risk", "Standard")
 - redFlagCount, unusualCount, contextDependentCount, standardCount: accurate counts matching clause risk levels
-- keyDates: dates, deadlines, notice periods found in the document with urgency (HIGH/MEDIUM/LOW)
+- keyDates: array of { label, value, urgency } for dates, deadlines, notice periods (urgency: HIGH/MEDIUM/LOW)
 - yourRights: list of rights the employee has under this contract
 - yourObligations: list of what the employee must do
 - If mismatch confidence is HIGH, floor the overallRiskScore at 60

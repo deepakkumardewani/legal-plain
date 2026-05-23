@@ -23,8 +23,8 @@ describe("PdfUpload", () => {
   it("renders the drop zone", () => {
     render(<PdfUpload onText={() => {}} />);
 
-    expect(screen.getByText("Click to upload")).toBeInTheDocument();
-    expect(screen.getByText("PDF only, up to 10 MB")).toBeInTheDocument();
+    expect(screen.getByText("Drop your contract here")).toBeInTheDocument();
+    expect(screen.getByText("PDF · up to 10 MB")).toBeInTheDocument();
   });
 
   it("shows loading state during extraction", async () => {
@@ -40,7 +40,7 @@ describe("PdfUpload", () => {
     fireEvent.change(input, { target: { files: [file] } });
 
     await waitFor(() => {
-      expect(screen.getByText("Extracting text from PDF…")).toBeInTheDocument();
+      expect(screen.getByText("Reading your contract…")).toBeInTheDocument();
     });
   });
 
@@ -97,10 +97,10 @@ describe("PdfUpload", () => {
     const dropZone = screen.getByRole("button", { name: "Upload PDF file" });
 
     fireEvent.dragOver(dropZone);
-    expect(dropZone.className).toContain("bg-gray-50");
+    expect(dropZone.className).toContain("bg-[#f5f0e8]");
 
     fireEvent.dragLeave(dropZone);
-    expect(dropZone.className).not.toContain("bg-gray-50");
+    expect(dropZone.className).not.toContain("bg-[#f5f0e8]");
   });
 
   it("processes file on drop", async () => {

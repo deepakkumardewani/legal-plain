@@ -19,9 +19,7 @@ export function JurisdictionMismatchBanner({ mismatch }: JurisdictionMismatchBan
     <div
       className={cn(
         "mt-6 rounded-lg border p-4",
-        isHigh
-          ? "border-amber-400 bg-amber-50"
-          : "border-amber-300 bg-amber-50/50 border-dashed",
+        isHigh ? "border-amber-400 bg-amber-50" : "border-amber-300 bg-amber-50/50 border-dashed",
       )}
     >
       <div className="flex items-start gap-3">
@@ -30,9 +28,7 @@ export function JurisdictionMismatchBanner({ mismatch }: JurisdictionMismatchBan
         </span>
         <div className="min-w-0 flex-1">
           <h2 className="text-sm font-semibold text-amber-900">
-            {isHigh
-              ? "Jurisdiction Mismatch Detected"
-              : "Possible Jurisdiction Mismatch"}
+            {isHigh ? "Jurisdiction Mismatch Detected" : "Possible Jurisdiction Mismatch"}
           </h2>
 
           <p className="mt-1 text-sm text-amber-800">{mismatch.plainEnglish}</p>
@@ -53,8 +49,7 @@ export function JurisdictionMismatchBanner({ mismatch }: JurisdictionMismatchBan
 
           {!isHigh && (
             <p className="mt-2 text-sm text-amber-700">
-              Verify your contract&apos;s governing law clause to confirm whether a mismatch
-              exists.
+              Verify your contract&apos;s governing law clause to confirm whether a mismatch exists.
             </p>
           )}
 

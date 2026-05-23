@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen, fireEvent, within } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { RiskDashboard } from "@/components/analysis/RiskDashboard";
 import type { AnalysisResult } from "@/lib/types";
 
@@ -69,6 +69,7 @@ const mockAnalysis: AnalysisResult = {
   yourRights: [],
   yourObligations: [],
   analyzedAt: "2026-05-18T12:00:00Z",
+  analysisId: "660e8400-e29b-41d4-a716-446655440001",
   followUpQuestionsRemaining: 3,
 };
 

@@ -43,45 +43,29 @@ export function LoadingProgress({ active }: LoadingProgressProps) {
   if (!active) return null;
 
   return (
-    <div className="mt-6 w-full">
+    <div className="mt-8 w-full rounded-2xl border border-[#e4dfd6] bg-white p-6">
       <div className="mb-4 flex items-center gap-3">
-        <svg
-          className="h-5 w-5 animate-spin text-gray-900"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          />
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-          />
-        </svg>
-        <p className="text-sm font-medium text-gray-900">{STAGES[stage].label}</p>
+        <span
+          className="h-5 w-5 animate-spin rounded-full border-2 border-[#e4dfd6] border-t-[#c8791a]"
+          aria-hidden
+        />
+        <p className="text-[15px] font-semibold text-[#18181f]">{STAGES[stage].label}</p>
       </div>
-      <div className="flex gap-1">
+      <div className="flex gap-1.5">
         {STAGES.map((s, i) => (
           <div
             key={s.label}
             className={cn(
-              "h-1 flex-1 rounded-full transition-colors duration-300",
-              i < stage && "bg-gray-900",
-              i === stage && "animate-pulse bg-gray-900",
-              i > stage && "bg-gray-200",
+              "h-1.5 flex-1 rounded-full transition-colors duration-300",
+              i < stage && "bg-[#c8791a]",
+              i === stage && "animate-pulse bg-[#c8791a]",
+              i > stage && "bg-[#e4dfd6]",
             )}
           />
         ))}
       </div>
-      <p className="mt-2 text-xs text-gray-400">
-        Stage {stage + 1} of {STAGES.length}
+      <p className="mt-3 text-xs font-medium uppercase tracking-wider text-[#a3a0a8]">
+        Step {stage + 1} of {STAGES.length}
       </p>
     </div>
   );

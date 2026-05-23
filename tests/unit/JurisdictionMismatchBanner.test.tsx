@@ -10,11 +10,9 @@ const highMismatch: JurisdictionMismatch = {
   riskLevel: "HIGH",
   plainEnglish:
     "Your contract is governed by New York law, but you appear to be based in California.",
-  whyItMatters:
-    "Employment laws differ significantly between New York and California.",
+  whyItMatters: "Employment laws differ significantly between New York and California.",
   affectedClauseIds: ["clause-1", "clause-3"],
-  whatToAskFor:
-    "Ask the employer to change the governing law clause to California.",
+  whatToAskFor: "Ask the employer to change the governing law clause to California.",
 };
 
 const lowMismatch: JurisdictionMismatch = {
@@ -53,9 +51,7 @@ describe("JurisdictionMismatchBanner", () => {
     render(<JurisdictionMismatchBanner mismatch={lowMismatch} />);
 
     expect(screen.getByText("Possible Jurisdiction Mismatch")).toBeTruthy();
-    expect(
-      screen.getByText(/Verify your contract's governing law clause/),
-    ).toBeTruthy();
+    expect(screen.getByText(/Verify your contract's governing law clause/)).toBeTruthy();
 
     // Should have dashed border
     const heading = screen.getByText("Possible Jurisdiction Mismatch");

@@ -1,11 +1,4 @@
-import type { Pass1Result } from "@/lib/types";
-
-interface Pass2PromptInput {
-  documentText: string;
-  effectiveJurisdiction: string;
-  mismatchSnippet?: string;
-  pass1: Pass1Result;
-}
+import type { Pass2Input } from "./pass2-selector";
 
 interface Pass2Prompt {
   system: string;
@@ -16,8 +9,7 @@ export function buildPass2Prompt({
   documentText,
   effectiveJurisdiction,
   mismatchSnippet,
-  pass1: _pass1,
-}: Pass2PromptInput): Pass2Prompt {
+}: Pass2Input): Pass2Prompt {
   const mismatchSection = mismatchSnippet ? `\n${mismatchSnippet}\n` : "";
 
   const system = `You are a senior contract lawyer analyzing this NDA on behalf of the receiving party (the person being asked to keep information confidential). Your analysis must be thorough, specific, and jurisdiction-aware.
@@ -66,7 +58,7 @@ IMPORTANT OUTPUT RULES:
 - overallRiskScore: integer 0-100, where 0 = perfectly balanced, 100 = maximally one-sided against receiving party
 - overallRiskLabel: concise label
 - redFlagCount, unusualCount, contextDependentCount, standardCount: accurate counts matching clause risk levels
-- keyDates: dates, deadlines, notice periods with urgency (HIGH/MEDIUM/LOW)
+- keyDates: array of { label, value, urgency } for dates, deadlines, notice periods (urgency: HIGH/MEDIUM/LOW)
 - yourRights: list of rights the receiving party has
 - yourObligations: list of what the receiving party must do
 - If mismatch confidence is HIGH, floor the overallRiskScore at 60

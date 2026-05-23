@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface AnalyzeButtonProps {
@@ -11,40 +10,34 @@ interface AnalyzeButtonProps {
 
 export function AnalyzeButton({ disabled, loading, onClick }: AnalyzeButtonProps) {
   return (
-    <Button
+    <button
+      type="button"
       onClick={onClick}
       disabled={disabled || loading}
-      className={cn("w-full text-base font-semibold", loading && "cursor-wait")}
-      size="lg"
       aria-label="Analyze document"
+      style={{ fontFamily: "var(--font-display)" }}
+      className={cn(
+        "inline-flex w-full items-center justify-center gap-2 rounded-full px-7 py-4 text-base font-semibold text-white transition-all",
+        "bg-[#c8791a] hover:bg-[#b36815] hover:-translate-y-0.5",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c8791a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf9f6]",
+        "disabled:cursor-not-allowed disabled:bg-[#dccab0] disabled:text-white/80 disabled:translate-y-0 disabled:hover:translate-y-0",
+        loading && "cursor-wait",
+      )}
     >
       {loading ? (
-        <span className="flex items-center gap-2">
-          <svg
-            className="h-4 w-4 animate-spin"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-            />
-          </svg>
+        <>
+          <span
+            className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+            aria-hidden
+          />
           Analyzing…
-        </span>
+        </>
       ) : (
-        "Analyze Document"
+        <>
+          Analyze my contract
+          <span aria-hidden>→</span>
+        </>
       )}
-    </Button>
+    </button>
   );
 }

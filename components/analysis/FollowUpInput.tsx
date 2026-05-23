@@ -82,7 +82,7 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
           question: trimmed,
           analysisResult: analysis,
           documentText,
-          analysisId: analysis.analyzedAt,
+          analysisId: analysis.analysisId,
           userId,
         }),
       });
@@ -148,9 +148,7 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
           )}
           rows={3}
           placeholder={
-            remaining === 0
-              ? "Question limit reached"
-              : "Ask anything about this contract…"
+            remaining === 0 ? "Question limit reached" : "Ask anything about this contract…"
           }
           value={question}
           onChange={(e) => setQuestion(e.target.value)}

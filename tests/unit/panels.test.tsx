@@ -91,9 +91,7 @@ describe("KeyDatesPanel", () => {
   });
 
   it("renders MEDIUM urgency bonus", () => {
-    const dates: KeyDate[] = [
-      { label: "Test", value: "test", urgency: "MEDIUM" },
-    ];
+    const dates: KeyDate[] = [{ label: "Test", value: "test", urgency: "MEDIUM" }];
 
     render(<KeyDatesPanel dates={dates} />);
 

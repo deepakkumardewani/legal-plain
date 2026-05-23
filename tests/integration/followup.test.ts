@@ -19,7 +19,7 @@ const mockFollowupResponse = {
 describe("POST /api/followup", () => {
   beforeEach(() => {
     vi.resetModules();
-    process.env.ANTHROPIC_API_KEY = "test-key";
+    process.env.DEEPSEEK_API_KEY = "test-key";
     process.env.UPSTASH_REDIS_REST_URL = "https://test.upstash.io";
     process.env.UPSTASH_REDIS_REST_TOKEN = "test-token";
   });
@@ -31,8 +31,8 @@ describe("POST /api/followup", () => {
       getRedis: () => mockRedis,
     }));
 
-    vi.doMock("@/lib/anthropic", () => ({
-      callClaude: vi.fn().mockResolvedValue(mockFollowupResponse),
+    vi.doMock("@/lib/ai", () => ({
+      callAI: vi.fn().mockResolvedValue(mockFollowupResponse),
     }));
 
     const { POST } = await import("@/app/api/followup/route");
@@ -115,8 +115,8 @@ describe("POST /api/followup", () => {
       getRedis: () => createMockRedis(),
     }));
 
-    vi.doMock("@/lib/anthropic", () => ({
-      callClaude: vi.fn().mockResolvedValue({
+    vi.doMock("@/lib/ai", () => ({
+      callAI: vi.fn().mockResolvedValue({
         answer: "Answer with fake clause IDs.",
         citedClauseIds: ["clause-1", "non-existent-id", "also-fake"],
       }),

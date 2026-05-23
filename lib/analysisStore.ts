@@ -7,6 +7,10 @@ let _documentText: string | null = null;
 const listeners = new Set<Listener>();
 
 export function getStoredAnalysis(): AnalysisResult | null {
+  if (!_analysis) return null;
+  if (_analysis.analysisId) return _analysis;
+  _analysis = { ..._analysis, analysisId: crypto.randomUUID() };
+  listeners.forEach((fn) => fn());
   return _analysis;
 }
 
@@ -15,7 +19,10 @@ export function getStoredDocumentText(): string | null {
 }
 
 export function setStoredAnalysis(analysis: AnalysisResult, documentText?: string): void {
-  _analysis = analysis;
+  _analysis = {
+    ...analysis,
+    analysisId: analysis.analysisId || crypto.randomUUID(),
+  };
   if (documentText !== undefined) {
     _documentText = documentText;
   }

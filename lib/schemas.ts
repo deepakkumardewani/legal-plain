@@ -43,7 +43,7 @@ const keyDateSchema = z.object({
 
 export const pass1ResultSchema = z.object({
   valid: z.boolean(),
-  reason: z.string().optional(),
+  reason: z.string().nullable().optional(),
   documentType: documentTypeSchema,
   governingLawJurisdiction: z.string().nullable(),
   partyLocations: z.array(z.string()),
@@ -52,12 +52,11 @@ export const pass1ResultSchema = z.object({
   clauseMap: z.array(z.string()),
 });
 
-export const analysisResultSchema = z.object({
+// Fields the AI must produce
+export const aiAnalysisResultSchema = z.object({
   documentType: documentTypeSchema,
   governingLawJurisdiction: z.string().nullable(),
   partyLocations: z.array(z.string()),
-  userJurisdiction: z.string().nullable(),
-  effectiveJurisdiction: z.string().min(1),
   jurisdictionMismatch: jurisdictionMismatchSchema.nullable(),
   overallRiskScore: z.number().int().min(0).max(100),
   overallRiskLabel: z.string().min(1),
@@ -70,6 +69,13 @@ export const analysisResultSchema = z.object({
   keyDates: z.array(keyDateSchema),
   yourRights: z.array(z.string()),
   yourObligations: z.array(z.string()),
+});
+
+// Full shape after server enrichment (used for followup/share validation)
+export const analysisResultSchema = aiAnalysisResultSchema.extend({
+  userJurisdiction: z.string().nullable(),
+  effectiveJurisdiction: z.string().min(1),
+  analysisId: z.string().uuid(),
   analyzedAt: z.string().datetime(),
   followUpQuestionsRemaining: z.number().int().min(0).max(10),
 });
@@ -79,7 +85,7 @@ export const analyzeRequestSchema = z.object({
     .string()
     .min(1, "Document text is required")
     .max(150000, "Document exceeds 150,000 character limit"),
-  userJurisdiction: z.string().nullable(),
+  documentType: documentTypeSchema,
   userId: z.string().uuid("Invalid userId format"),
 });
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { fontVariables } from "@/lib/fonts";
 
 const STORAGE_KEY = "legalplain_disclaimer";
 const ACK_VALUE = "ack";
@@ -97,26 +97,41 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
     <>
       {show && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          className={`fixed inset-0 z-50 flex items-center justify-center bg-[#0e0f16]/60 p-4 backdrop-blur-sm ${fontVariables}`}
+          style={{ fontFamily: "var(--font-body)" }}
           role="dialog"
           aria-modal="true"
           aria-labelledby="disclaimer-title"
           aria-describedby="disclaimer-body"
           ref={dialogRef}
         >
-          <div className="max-w-lg rounded-xl bg-white p-6 shadow-xl">
-            <h2 id="disclaimer-title" className="text-lg font-semibold text-gray-900">
-              Legal Disclaimer
+          <div className="max-w-lg rounded-2xl border border-[#e4dfd6] bg-[#faf9f6] p-8 shadow-[0_24px_64px_-16px_rgba(14,15,22,0.5)]">
+            <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#c8791a]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#c8791a]">
+              Before you start
+            </span>
+            <h2
+              id="disclaimer-title"
+              className="text-2xl font-bold text-[#18181f]"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              This is guidance, not legal advice.
             </h2>
-            <p id="disclaimer-body" className="mt-3 text-sm leading-relaxed text-gray-600">
+            <p id="disclaimer-body" className="mt-3 text-[15px] leading-relaxed text-[#72728a]">
               LegalPlain provides general educational information only — not legal advice. No
               attorney-client relationship is formed by using this tool. The analysis may contain
               errors and does not account for all applicable laws. Do not rely on this analysis
               alone to make legal decisions. For matters of significant consequence, consult a
               licensed attorney in your jurisdiction.
             </p>
-            <div className="mt-6 flex justify-end">
-              <Button onClick={handleAcknowledge}>I understand — continue</Button>
+            <div className="mt-7 flex justify-end">
+              <button
+                type="button"
+                onClick={handleAcknowledge}
+                style={{ fontFamily: "var(--font-display)" }}
+                className="rounded-full bg-[#c8791a] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#b36815] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c8791a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf9f6]"
+              >
+                I understand — continue
+              </button>
             </div>
           </div>
         </div>

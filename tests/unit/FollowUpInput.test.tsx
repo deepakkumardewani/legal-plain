@@ -37,6 +37,7 @@ const mockAnalysis: AnalysisResult = {
   yourRights: [],
   yourObligations: [],
   analyzedAt: "2026-05-18T12:00:00Z",
+  analysisId: "660e8400-e29b-41d4-a716-446655440001",
   followUpQuestionsRemaining: 3,
 };
 

@@ -30,7 +30,10 @@ export function KeyDatesPanel({ dates }: KeyDatesPanelProps) {
       <h2 className="text-lg font-semibold text-gray-900">Key Dates & Deadlines</h2>
       <ul className="mt-4 space-y-3">
         {sorted.map((date) => (
-          <li key={date.label} className="flex items-center justify-between gap-3 rounded-md bg-gray-50 p-3">
+          <li
+            key={date.label}
+            className="flex items-center justify-between gap-3 rounded-md bg-gray-50 p-3"
+          >
             <div>
               <span className="text-sm font-medium text-gray-900">{date.label}</span>
               <p className="text-sm text-gray-600">{date.value}</p>

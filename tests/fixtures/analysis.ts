@@ -150,6 +150,7 @@ export const sampleAnalysis: AnalysisResult = {
     "Maintain confidentiality",
   ],
   analyzedAt: "2026-05-18T12:00:00.000Z",
+  analysisId: "660e8400-e29b-41d4-a716-446655440001",
   followUpQuestionsRemaining: 3,
 };
 

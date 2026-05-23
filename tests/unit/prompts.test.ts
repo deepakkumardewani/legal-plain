@@ -6,12 +6,7 @@ import { buildPass2Prompt as buildNda } from "@/lib/prompts/pass2-nda";
 import { buildPass2Prompt as buildLease } from "@/lib/prompts/pass2-lease";
 import { buildFollowupPrompt } from "@/lib/prompts/followup";
 import { getPass2Builder } from "@/lib/prompts/pass2-selector";
-import {
-  validPass1Result,
-  pass1NoMismatch,
-  sampleAnalysis,
-  sampleDocumentText,
-} from "@/tests/fixtures/analysis";
+import { sampleAnalysis, sampleDocumentText } from "@/tests/fixtures/analysis";
 
 describe("buildPass1Prompt", () => {
   it("returns system and user prompt strings", () => {
@@ -89,7 +84,6 @@ describe("Pass 2 prompts", () => {
   const baseInput = {
     documentText: sampleDocumentText,
     effectiveJurisdiction: "New York, USA",
-    pass1: validPass1Result,
   };
 
   describe("employment", () => {
@@ -132,7 +126,6 @@ describe("Pass 2 prompts", () => {
     it("returns system and user prompt", () => {
       const { system, user: _user } = buildNda({
         ...baseInput,
-        pass1: pass1NoMismatch,
       });
       expect(typeof system).toBe("string");
       expect(system).toContain("NDA");
@@ -143,7 +136,6 @@ describe("Pass 2 prompts", () => {
     it("includes NDA-specific mandatory clauses", () => {
       const { system } = buildNda({
         ...baseInput,
-        pass1: pass1NoMismatch,
       });
       expect(system).toContain("Definition of confidential information");
       expect(system).toContain("Exclusions from confidential information");
@@ -224,7 +216,6 @@ describe("getPass2Builder", () => {
   const input = {
     documentText: sampleDocumentText,
     effectiveJurisdiction: "New York, USA",
-    pass1: validPass1Result,
   };
 
   it("returns employment builder for EMPLOYMENT_CONTRACT", () => {
@@ -235,7 +226,7 @@ describe("getPass2Builder", () => {
 
   it("returns NDA builder for NDA", () => {
     const builder = getPass2Builder("NDA");
-    const { system } = builder({ ...input, pass1: pass1NoMismatch });
+    const { system } = builder({ ...input });
     expect(system).toContain("NDA");
   });
 

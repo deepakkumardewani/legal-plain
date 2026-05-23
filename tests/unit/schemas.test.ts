@@ -54,6 +54,7 @@ function validAnalysisResult() {
     yourRights: ["Right to terminate with 30 days notice"],
     yourObligations: ["Maintain confidentiality"],
     analyzedAt: "2026-05-18T12:00:00.000Z",
+    analysisId: validUuid,
     followUpQuestionsRemaining: 3,
   };
 }

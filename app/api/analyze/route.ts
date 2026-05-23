@@ -1,13 +1,12 @@
 import type { NextRequest } from "next/server";
+import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
-import { analyzeRequestSchema, analysisResultSchema, pass1ResultSchema } from "@/lib/schemas";
+import { analyzeRequestSchema, aiAnalysisResultSchema } from "@/lib/schemas";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { getRedis } from "@/lib/redis";
-import { callClaude } from "@/lib/anthropic";
-import { buildPass1Prompt } from "@/lib/prompts/pass1-detect";
-import { getMismatchSnippet } from "@/lib/prompts/jurisdiction-mismatch";
+import { callAI } from "@/lib/ai";
 import { getPass2Builder } from "@/lib/prompts/pass2-selector";
-import type { AnalysisResult, Pass1Result } from "@/lib/types";
+import type { AnalysisResult } from "@/lib/types";
 
 const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -42,11 +41,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const { documentText, userJurisdiction } = parsed.data;
-
+    const { documentText, documentType } = parsed.data;
     const ip = getClientIP(request);
 
-    try {
+    if (process.env.NODE_ENV !== "development") {
       const redis = getRedis();
       const rateResult = await checkRateLimit(redis, userId, ip, "analyze");
       if (!rateResult.allowed) {
@@ -55,88 +53,36 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           { status: 429 },
         );
       }
-    } catch (redisError) {
-      // If Redis is unavailable, log and proceed (fail open for dev)
-      if (process.env.NODE_ENV === "production") {
-        throw redisError;
-      }
     }
 
-    // Pass 1: Document detection
-    const pass1Prompt = buildPass1Prompt(documentText);
-    const pass1Result = await callClaude({
-      system: pass1Prompt.system,
-      user: pass1Prompt.user,
-      maxTokens: 1024,
-      schema: pass1ResultSchema,
-    });
+    console.log("[analyze] docType=%s docLen=%d", documentType, documentText.length);
 
-    const pass1 = pass1Result as Pass1Result;
+    const pass2Builder = getPass2Builder(documentType);
+    const pass2Prompt = pass2Builder({ documentText, effectiveJurisdiction: "unknown" });
+    console.log(
+      "[analyze] systemLen=%d userLen=%d",
+      pass2Prompt.system.length,
+      pass2Prompt.user.length,
+    );
 
-    if (!pass1.valid) {
-      return NextResponse.json(
-        {
-          error: "Document not supported",
-          reason: pass1.reason || "This document type is not supported.",
-        },
-        { status: 422 },
-      );
-    }
-
-    // Effective jurisdiction: user override > detected > "unknown"
-    const effectiveJurisdiction = userJurisdiction || pass1.governingLawJurisdiction || "unknown";
-
-    // Build mismatch snippet when applicable
-    let mismatchSnippet: string | undefined;
-    const hasMismatch =
-      pass1.jurisdictionMismatch ||
-      (pass1.governingLawJurisdiction !== null &&
-        pass1.partyLocations.some((loc) => loc !== pass1.governingLawJurisdiction));
-
-    if (hasMismatch && pass1.governingLawJurisdiction && pass1.partyLocations.length > 0) {
-      mismatchSnippet = getMismatchSnippet(
-        pass1.documentType,
-        pass1.governingLawJurisdiction,
-        pass1.partyLocations[0],
-      );
-    }
-
-    // Pass 2: Full analysis
-    const pass2Builder = getPass2Builder(pass1.documentType);
-    const pass2Prompt = pass2Builder({
-      documentText,
-      effectiveJurisdiction,
-      mismatchSnippet,
-      pass1,
-    });
-
-    const analysisResult = await callClaude({
+    const analysisResult = await callAI({
       system: pass2Prompt.system,
       user: pass2Prompt.user,
-      maxTokens: 8192,
-      schema: analysisResultSchema,
+      maxTokens: 32_768,
+      schema: aiAnalysisResultSchema,
+      label: "pass2-analyze",
     });
 
     const result = analysisResult as AnalysisResult;
 
-    // Enrich with server-set fields
-    result.userJurisdiction = userJurisdiction;
-    result.effectiveJurisdiction = effectiveJurisdiction;
+    result.userJurisdiction = null;
+    result.effectiveJurisdiction = "unknown";
     result.followUpQuestionsRemaining = 10;
+    result.analysisId = randomUUID();
     result.analyzedAt = new Date().toISOString();
-
-    // Floor risk score on HIGH confidence mismatch
-    if (
-      pass1.jurisdictionMismatch &&
-      pass1.mismatchConfidence === "HIGH" &&
-      result.overallRiskScore < 60
-    ) {
-      result.overallRiskScore = 60;
-    }
 
     return NextResponse.json(result);
   } catch (error) {
-    // Structured error logging — never include document text
     console.error("Analyze error:", {
       message: error instanceof Error ? error.message : "Unknown error",
       name: error instanceof Error ? error.name : "Unknown",
