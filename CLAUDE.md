@@ -1,4 +1,5 @@
 ## Important CLI Tools (use these, not the defaults)
+
 - `bun` instead of `npm`
 - `bun install` instead of `npm install`
 - `bun run` instead of `npm run`
@@ -7,9 +8,10 @@
 
 ## Conditional Reference Table
 
-| Task                                      | Reference                                           |
-| ----------------------------------------- | --------------------------------------------------- |                    |
-| Component Rules                           | `.claude/skills/shadcn-component-rules/SKILL.md`           |
+| Task | Reference |
+| ----------------------------------------- | --------------------------------------------------- | |
+| Component Rules | `.claude/skills/shadcn-component-rules/SKILL.md` |
+
 ---
 
 # context-mode — MANDATORY routing rules
