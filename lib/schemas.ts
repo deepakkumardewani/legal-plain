@@ -15,24 +15,42 @@ const jurisdictionMismatchSchema = z.object({
   whatToAskFor: z.string().min(1),
 });
 
+// LLMs output `null` for absent optional fields — use .nullish() (null | undefined | T) throughout
 const clauseAnalysisSchema = z.object({
   id: z.string().min(1),
   title: z.string().min(1),
-  originalExcerpt: z.string(),
+  originalExcerpt: z.string().nullable(),
   plainEnglish: z.string().min(1),
   riskLevel: riskLevelSchema,
   riskReason: z.string().min(1),
-  contextNote: z.string().optional(),
+  contextNote: z.string().nullish(),
+  vaguenessFlags: z.array(z.string()).nullish(),
   comparisonToStandard: z.string().min(1),
   obligation: z.string().min(1),
-  negotiationTip: z.string().optional(),
-  affectedByMismatch: z.boolean().optional(),
+  negotiationTip: z.string().nullish(),
+  negotiability: z.enum(["HIGH", "MEDIUM", "LOW", "TAKE_IT_OR_LEAVE_IT"]).nullish(),
+  affectedByMismatch: z.boolean().nullish(),
+  confidence: z.enum(["HIGH", "MEDIUM", "LOW"]).nullish(),
+  incorporatedReferences: z.array(z.string()).nullish(),
+  dealBreaker: z.boolean().nullish(),
 });
 
 const missingClauseSchema = z.object({
   title: z.string().min(1),
   whyItMatters: z.string().min(1),
   whatToAskFor: z.string().min(1),
+});
+
+const contradictionSchema = z.object({
+  description: z.string().min(1),
+  clauseIds: z.array(z.string()),
+});
+
+const statutoryProtectionSchema = z.object({
+  name: z.string().min(1),
+  jurisdiction: z.string().min(1),
+  summary: z.string().min(1),
+  overridesClauseId: z.string().nullish(),
 });
 
 const keyDateSchema = z.object({
@@ -50,14 +68,16 @@ export const pass1ResultSchema = z.object({
   jurisdictionMismatch: z.boolean(),
   mismatchConfidence: z.enum(["HIGH", "LOW"]).nullable(),
   clauseMap: z.array(z.string()),
+  subtype: z.enum(["residential", "commercial", "ambiguous"]).nullable().optional(),
 });
 
-// Fields the AI must produce
+// Fields the AI must produce — top-level metadata fields are optional here
+// because prompts don't instruct the AI to produce them; route.ts fills them in.
 export const aiAnalysisResultSchema = z.object({
-  documentType: documentTypeSchema,
-  governingLawJurisdiction: z.string().nullable(),
-  partyLocations: z.array(z.string()),
-  jurisdictionMismatch: jurisdictionMismatchSchema.nullable(),
+  documentType: documentTypeSchema.optional(),
+  governingLawJurisdiction: z.string().nullable().optional(),
+  partyLocations: z.array(z.string()).optional(),
+  jurisdictionMismatch: jurisdictionMismatchSchema.nullable().optional(),
   overallRiskScore: z.number().int().min(0).max(100),
   overallRiskLabel: z.string().min(1),
   redFlagCount: z.number().int().min(0),
@@ -66,13 +86,22 @@ export const aiAnalysisResultSchema = z.object({
   standardCount: z.number().int().min(0),
   clauses: z.array(clauseAnalysisSchema),
   missingClauses: z.array(missingClauseSchema),
+  statutoryProtections: z.array(statutoryProtectionSchema).optional(),
+  contradictions: z.array(contradictionSchema).optional(),
   keyDates: z.array(keyDateSchema),
   yourRights: z.array(z.string()),
   yourObligations: z.array(z.string()),
 });
 
 // Full shape after server enrichment (used for followup/share validation)
+// Server-enriched shape: the parent aiAnalysisResultSchema makes these optional
+// because the AI prompts don't produce them, but route.ts always fills them in.
+// Override them to required (or nullable-required) so the enriched type matches AnalysisResult.
 export const analysisResultSchema = aiAnalysisResultSchema.extend({
+  documentType: documentTypeSchema,
+  governingLawJurisdiction: z.string().nullable(),
+  partyLocations: z.array(z.string()),
+  jurisdictionMismatch: jurisdictionMismatchSchema.nullable(),
   userJurisdiction: z.string().nullable(),
   effectiveJurisdiction: z.string().min(1),
   analysisId: z.string().uuid(),
