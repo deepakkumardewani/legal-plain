@@ -8,10 +8,13 @@ interface Pass2Prompt {
   user: string;
 }
 
+export type NDAUserRole = "RECEIVING" | "DISCLOSING" | "MUTUAL";
+
 export interface Pass2Input {
   documentText: string;
   effectiveJurisdiction: string;
   mismatchSnippet?: string;
+  userRole?: NDAUserRole;
 }
 
 type Pass2Builder = (input: Pass2Input) => Pass2Prompt;

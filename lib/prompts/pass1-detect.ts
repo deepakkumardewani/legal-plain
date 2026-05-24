@@ -22,6 +22,7 @@ EXTRACTION RULES:
 4. mismatchConfidence: Set to "HIGH" only when there is an explicit governing law clause. Set to "LOW" when inferred from context. Set to null when no mismatch exists.
 5. clauseMap: List all section/clause titles you detect in the document (e.g., "Section 1: Employment Terms", "Section 2: Non-Compete").
 6. clueSummary: A one-sentence summary of what jurisdiction clues you found and where.
+7. subtype: For RESIDENTIAL_LEASE documents only: detect whether this is "residential", "commercial", or "ambiguous". Check for clues like unit numbers, residential amenities, HOA references (residential) vs. square footage, build-out allowances, CAM charges, business use (commercial). Set to null for non-lease documents.
 
 VALIDATION:
 - If the document is NOT a legal document at all (e.g., a news article, a love letter, code), set valid: false with a clear reason.
@@ -38,7 +39,8 @@ OUTPUT: A single JSON object matching this exact shape:
   "jurisdictionMismatch": boolean,
   "mismatchConfidence": "HIGH" | "LOW" | null,
   "clauseMap": string[],
-  "clueSummary": string
+  "clueSummary": string,
+  "subtype": "residential" | "commercial" | "ambiguous" | null
 }
 
 IMPORTANT: Respond with ONLY the JSON object. No markdown, no explanations.`;
