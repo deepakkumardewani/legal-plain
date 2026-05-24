@@ -1,3 +1,4 @@
+.env
 .env.local
 .env*.local
 node_modules
@@ -6,4 +7,5 @@ coverage
 playwright-report
 test-results
 node-compile-cache/
+*.tsbuildinfo
 tsconfig.tsbuildinfo.env
