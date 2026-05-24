@@ -6,6 +6,8 @@ import { checkRateLimit } from "@/lib/rateLimit";
 import { getRedis } from "@/lib/redis";
 import { callAI } from "@/lib/ai";
 import { getPass2Builder } from "@/lib/prompts/pass2-selector";
+import { buildPass1Prompt } from "@/lib/prompts/pass1-detect";
+import { pass1ResultSchema } from "@/lib/schemas";
 import type { AnalysisResult } from "@/lib/types";
 
 const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -42,6 +44,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     const { documentText, documentType } = parsed.data;
+    const userRole = (body as { userRole?: string }).userRole as
+      | "RECEIVING"
+      | "DISCLOSING"
+      | "MUTUAL"
+      | undefined;
     const ip = getClientIP(request);
 
     if (process.env.NODE_ENV !== "development") {
@@ -57,8 +64,35 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     console.log("[analyze] docType=%s docLen=%d", documentType, documentText.length);
 
+    // Commercial lease gate: run Pass-1 as lightweight pre-check for lease documents
+    if (documentType === "RESIDENTIAL_LEASE") {
+      const pass1Prompt = buildPass1Prompt(documentText);
+      const pass1Result = await callAI({
+        system: pass1Prompt.system,
+        user: pass1Prompt.user,
+        maxTokens: 2048,
+        schema: pass1ResultSchema,
+        label: "pass1-detect",
+      });
+
+      if (pass1Result.subtype === "commercial") {
+        return NextResponse.json(
+          {
+            error: "COMMERCIAL_LEASE_DETECTED",
+            message:
+              "This looks like a commercial lease. This analyzer is tuned for residential leases only — the tenant protections we'd cite don't apply to commercial tenancies.",
+          },
+          { status: 422 },
+        );
+      }
+    }
+
     const pass2Builder = getPass2Builder(documentType);
-    const pass2Prompt = pass2Builder({ documentText, effectiveJurisdiction: "unknown" });
+    const pass2Prompt = pass2Builder({
+      documentText,
+      effectiveJurisdiction: "unknown",
+      userRole: userRole as "RECEIVING" | "DISCLOSING" | "MUTUAL" | undefined,
+    });
     console.log(
       "[analyze] systemLen=%d userLen=%d",
       pass2Prompt.system.length,
@@ -68,12 +102,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const analysisResult = await callAI({
       system: pass2Prompt.system,
       user: pass2Prompt.user,
-      maxTokens: 32_768,
+      maxTokens: 131_072,
       schema: aiAnalysisResultSchema,
       label: "pass2-analyze",
     });
 
     const result = analysisResult as AnalysisResult;
+
+    // Always set fields the AI prompts don't explicitly instruct the AI to produce
+    result.documentType = documentType;
+    result.governingLawJurisdiction = result.governingLawJurisdiction ?? null;
+    result.partyLocations = result.partyLocations ?? [];
+    result.jurisdictionMismatch = result.jurisdictionMismatch ?? null;
 
     result.userJurisdiction = null;
     result.effectiveJurisdiction = "unknown";
