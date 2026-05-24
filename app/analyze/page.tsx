@@ -33,6 +33,7 @@ export default function AnalyzePage() {
   const { setAnalysis } = useAnalysisStore();
   const [documentText, setDocumentText] = useState("");
   const [documentType, setDocumentType] = useState<DocumentType | null>(null);
+  const [userRole, setUserRole] = useState<"RECEIVING" | "DISCLOSING" | "MUTUAL">("RECEIVING");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
@@ -58,6 +59,7 @@ export default function AnalyzePage() {
           documentText: documentText.trim(),
           documentType,
           userId,
+          ...(documentType === "NDA" ? { userRole } : {}),
         }),
       });
 
@@ -65,6 +67,11 @@ export default function AnalyzePage() {
         const body = await response.json().catch(() => ({}));
         if (response.status === 429) {
           setError("You've reached the analysis limit for today. Please try again in 24 hours.");
+        } else if (body.error === "COMMERCIAL_LEASE_DETECTED") {
+          setError(
+            body.message ??
+              "This looks like a commercial lease. This analyzer is tuned for residential leases only.",
+          );
         } else {
           setError(body.error ?? "Something went wrong. Please try again.");
         }
@@ -188,6 +195,55 @@ export default function AnalyzePage() {
                 ))}
               </div>
             </section>
+
+            {documentType === "NDA" && (
+              <section className="ap-rise ap-d3">
+                <StepHeading
+                  num="03"
+                  title="Your role in this NDA"
+                  hint="We'll tailor the analysis to your perspective"
+                />
+                <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  {[
+                    {
+                      value: "RECEIVING" as const,
+                      label: "Receiving Party",
+                      emoji: "📥",
+                      hint: "You're being asked to keep information confidential",
+                    },
+                    {
+                      value: "DISCLOSING" as const,
+                      label: "Disclosing Party",
+                      emoji: "📤",
+                      hint: "You're sharing your confidential information",
+                    },
+                    {
+                      value: "MUTUAL" as const,
+                      label: "Mutual NDA",
+                      emoji: "🔄",
+                      hint: "Both parties share confidential information",
+                    },
+                  ].map((role) => (
+                    <button
+                      key={role.value}
+                      type="button"
+                      onClick={() => setUserRole(role.value)}
+                      className={`flex flex-col items-start rounded-xl border px-4 py-4 text-left transition-all ${
+                        userRole === role.value
+                          ? "border-[#c8791a] bg-[#fff8f0] ring-2 ring-[#c8791a]/20"
+                          : "border-[#d8d2c6] bg-white hover:border-[#c8791a]/50"
+                      }`}
+                    >
+                      <span className="mb-2 text-2xl" aria-hidden>
+                        {role.emoji}
+                      </span>
+                      <span className="text-sm font-semibold text-[#18181f]">{role.label}</span>
+                      <span className="mt-0.5 text-xs text-[#72728a]">{role.hint}</span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
 
           {error && (

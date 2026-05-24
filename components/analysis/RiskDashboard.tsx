@@ -48,6 +48,17 @@ export function RiskDashboard({ analysis }: RiskDashboardProps) {
 
   const bucket = scoreBucket(analysis.overallRiskScore);
 
+  const dealBreakerClauses = useMemo(
+    () => analysis.clauses.filter((c) => c.dealBreaker === true),
+    [analysis.clauses],
+  );
+
+  const scrollToFirstDealBreaker = () => {
+    if (dealBreakerClauses.length === 0) return;
+    const el = document.getElementById(`clause-${dealBreakerClauses[0]!.id}`);
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
   return (
     <div>
       <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
@@ -78,6 +89,24 @@ export function RiskDashboard({ analysis }: RiskDashboardProps) {
 
       {analysis.jurisdictionMismatch && (
         <JurisdictionMismatchBanner mismatch={analysis.jurisdictionMismatch} />
+      )}
+
+      {dealBreakerClauses.length > 0 && (
+        <div className="mt-6 rounded-lg border-2 border-red-400 bg-red-50 p-4">
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-sm font-semibold text-red-800">
+              ⚠ {dealBreakerClauses.length} deal-breaker clause
+              {dealBreakerClauses.length !== 1 ? "s" : ""} found — review before signing
+            </p>
+            <button
+              type="button"
+              className="shrink-0 rounded-md bg-red-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-700"
+              onClick={scrollToFirstDealBreaker}
+            >
+              Review first →
+            </button>
+          </div>
+        </div>
       )}
 
       <div className="mt-6">

@@ -4,7 +4,9 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAnalysisStore } from "@/lib/useAnalysisStore";
 import { RiskDashboard } from "@/components/analysis/RiskDashboard";
+import { StatutoryProtectionsPanel } from "@/components/analysis/StatutoryProtectionsPanel";
 import { MissingClausesPanel } from "@/components/analysis/MissingClausesPanel";
+import { ContradictionsPanel } from "@/components/analysis/ContradictionsPanel";
 import { KeyDatesPanel } from "@/components/analysis/KeyDatesPanel";
 import { YourRightsPanel } from "@/components/analysis/YourRightsPanel";
 import { ObligationsPanel } from "@/components/analysis/ObligationsPanel";
@@ -29,7 +31,9 @@ export default function ResultsPage() {
       <RiskDashboard analysis={analysis} />
 
       <div className="mt-8 space-y-6">
+        <StatutoryProtectionsPanel protections={analysis.statutoryProtections} />
         <MissingClausesPanel clauses={analysis.missingClauses} />
+        <ContradictionsPanel contradictions={analysis.contradictions} />
         <KeyDatesPanel dates={analysis.keyDates} />
         <YourRightsPanel rights={analysis.yourRights} />
         <ObligationsPanel obligations={analysis.yourObligations} />
