@@ -13,6 +13,7 @@ interface PdfUploadProps {
 interface LoadedDoc {
   fileName: string;
   charCount: number;
+  pageCount: number;
   truncated: boolean;
 }
 
@@ -44,7 +45,12 @@ export function PdfUpload({ onText }: PdfUploadProps) {
         const result = await extractPdfText(file);
         const truncated = result.text.length > MAX_CHARS;
         const text = truncated ? result.text.slice(0, MAX_CHARS) : result.text;
-        setLoaded({ fileName: file.name, charCount: text.length, truncated });
+        setLoaded({
+          fileName: file.name,
+          charCount: text.length,
+          pageCount: result.pageCount,
+          truncated,
+        });
         setLoading(false);
         onText(text);
       } catch (err) {
@@ -94,7 +100,7 @@ export function PdfUpload({ onText }: PdfUploadProps) {
           onChange={handleFileChange}
           aria-hidden="true"
         />
-        <div className="rounded-2xl border border-[#e4dfd6] bg-white p-5">
+        <div className="rounded-[1.4rem] border border-[#e4dfd6] bg-[#fffdf8] p-5 shadow-[0_20px_60px_-50px_rgba(74,55,31,0.6)]">
           <div className="flex items-center gap-4">
             <span
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#1f7a4d]/10 text-[#1f7a4d]"
@@ -118,6 +124,7 @@ export function PdfUpload({ onText }: PdfUploadProps) {
                 {loaded.fileName}
               </p>
               <p className="mt-0.5 text-sm text-[#72728a] tabular-nums">
+                {loaded.pageCount} page{loaded.pageCount === 1 ? "" : "s"} ·{" "}
                 {loaded.charCount.toLocaleString("en-US")} characters · ready to analyze
               </p>
             </div>
@@ -144,10 +151,10 @@ export function PdfUpload({ onText }: PdfUploadProps) {
     <div className="w-full">
       <div
         className={cn(
-          "group relative flex min-h-[260px] cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed p-10 text-center transition-all duration-200",
+          "group relative flex min-h-[280px] cursor-pointer flex-col items-center justify-center rounded-[1.75rem] border border-dashed p-10 text-center transition-all duration-300",
           dragOver
-            ? "border-[#c8791a] bg-[#f5f0e8]"
-            : "border-[#d8d2c6] bg-white hover:border-[#c8791a]/50 hover:bg-[#faf9f6]",
+            ? "border-[#c8791a] bg-[#f4eddf]"
+            : "border-[#d8d2c6] bg-[#fffdf8] hover:-translate-y-0.5 hover:border-[#c8791a]/50 hover:bg-[#fbf8f1] hover:shadow-[0_26px_70px_-56px_rgba(74,55,31,0.7)]",
           loading && "pointer-events-none opacity-70",
         )}
         onDragOver={(e) => {
@@ -185,8 +192,8 @@ export function PdfUpload({ onText }: PdfUploadProps) {
               className="mb-4 h-9 w-9 animate-spin rounded-full border-[3px] border-[#e4dfd6] border-t-[#c8791a]"
               aria-hidden
             />
-            <p className="text-[15px] font-medium text-[#18181f]">Reading your contract…</p>
-            <p className="mt-1 text-sm text-[#72728a]">Extracting the text from your PDF</p>
+            <p className="text-[15px] font-medium text-[#18181f]">Reading your document…</p>
+            <p className="mt-1 text-sm text-[#72728a]">Extracting text from the PDF</p>
           </div>
         ) : (
           <>
@@ -217,7 +224,7 @@ export function PdfUpload({ onText }: PdfUploadProps) {
               className="text-xl font-bold text-[#18181f]"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              {dragOver ? "Drop to upload" : "Drop your contract here"}
+              {dragOver ? "Drop to upload" : "Drop your document here"}
             </p>
             <p className="mt-2 text-[15px] text-[#72728a]">
               or{" "}
@@ -226,7 +233,7 @@ export function PdfUpload({ onText }: PdfUploadProps) {
               </span>
             </p>
             <p className="mt-5 text-xs font-medium uppercase tracking-wider text-[#a3a0a8]">
-              PDF · up to 10 MB
+              PDF · up to 20 pages · 10 MB
             </p>
           </>
         )}

@@ -1,8 +1,10 @@
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+const MAX_PAGES = 20;
 const MIN_TEXT_LENGTH = 100;
 
 export interface PdfParseResult {
   text: string;
+  pageCount: number;
 }
 
 export interface PdfParseError {
@@ -40,9 +42,15 @@ export async function extractPdfText(file: File): Promise<PdfParseResult> {
   ).toString();
 
   const doc = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+  const pageCount = doc.numPages;
+
+  if (pageCount > MAX_PAGES) {
+    doc.destroy();
+    throw new Error(`PDF exceeds the ${MAX_PAGES}-page limit.`);
+  }
 
   const pages: string[] = [];
-  for (let i = 1; i <= doc.numPages; i++) {
+  for (let i = 1; i <= pageCount; i++) {
     const page = await doc.getPage(i);
     const content = await page.getTextContent();
     const text = content.items
@@ -61,11 +69,11 @@ export async function extractPdfText(file: File): Promise<PdfParseResult> {
 
   if (text.length < MIN_TEXT_LENGTH) {
     const error = new Error(
-      "This PDF appears to be scanned. Please paste the text or run OCR first.",
+      "This PDF appears to be scanned. Please upload a searchable PDF or run OCR first.",
     ) as Error & { isScanned: boolean };
     error.isScanned = true;
     throw error;
   }
 
-  return { text };
+  return { text, pageCount };
 }
