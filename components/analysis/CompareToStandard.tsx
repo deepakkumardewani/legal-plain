@@ -4,8 +4,8 @@ interface CompareToStandardProps {
 
 export function CompareToStandard({ text }: CompareToStandardProps) {
   return (
-    <div className="mt-2 rounded-md bg-blue-50 px-3 py-2 text-sm text-blue-800">
-      <span className="font-medium">Industry standard: </span>
+    <div className="mt-2 rounded-lg bg-[#f7efe2] px-3 py-2 text-sm text-[#5c4a32]">
+      <span className="font-medium text-[#18181f]">Industry standard: </span>
       {text}
     </div>
   );

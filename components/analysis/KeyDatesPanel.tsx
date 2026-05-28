@@ -2,9 +2,9 @@ import type { KeyDate } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const urgencyStyles: Record<string, string> = {
-  HIGH: "bg-red-100 text-red-800",
-  MEDIUM: "bg-yellow-100 text-yellow-800",
-  LOW: "bg-green-100 text-green-800",
+  HIGH: "bg-[#fdf2f0] text-[#8b2e24]",
+  MEDIUM: "bg-[#fef9ee] text-[#8a5a12]",
+  LOW: "bg-[#edf7f2] text-[#1f5c40]",
 };
 
 const urgencyLabels: Record<string, string> = {
@@ -26,17 +26,22 @@ export function KeyDatesPanel({ dates }: KeyDatesPanelProps) {
   });
 
   return (
-    <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-gray-900">Key Dates & Deadlines</h2>
+    <section className="rounded-2xl border border-[#e6dccd] bg-[#fffdf8] p-6 shadow-[0_20px_70px_-58px_rgba(74,55,31,0.65)] md:p-7">
+      <h2
+        className="text-lg font-semibold text-[#18181f]"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        Key Dates & Deadlines
+      </h2>
       <ul className="mt-4 space-y-3">
         {sorted.map((date) => (
           <li
             key={date.label}
-            className="flex items-center justify-between gap-3 rounded-md bg-gray-50 p-3"
+            className="flex items-center justify-between gap-3 rounded-xl bg-[#f5f0e8] p-3"
           >
             <div>
-              <span className="text-sm font-medium text-gray-900">{date.label}</span>
-              <p className="text-sm text-gray-600">{date.value}</p>
+              <span className="text-sm font-medium text-[#18181f]">{date.label}</span>
+              <p className="text-sm text-[#5c5c66]">{date.value}</p>
             </div>
             <span
               className={cn(

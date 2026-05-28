@@ -82,65 +82,65 @@ Full design notes: `~/.claude/plans/1-i-need-to-glistening-pie.md`.
 
 ### Phase 2: Clause identity + Q/A redesign
 
-- [ ] **Task 4 — Clause number badge on cards** (S)
+- [x] **Task 4 — Clause number badge on cards** (S)
   **Description:** In `ClauseCard.tsx` render a small monospace `#<n>` chip beside the title using
   `clauseNumber(clause.id)`.
   **Acceptance criteria:**
-  - [ ] Each card shows a `#n` chip matching the Q/A chip number
+  - [x] Each card shows a `#n` chip matching the Q/A chip number
   **Verification:** visual check across all tabs
   **Dependencies:** Task 2
   **Files:** `components/analysis/ClauseCard.tsx`
   **Scope:** Small
 
-- [ ] **Task 5 — Q/A clause chips (title + number)** (S)
+- [x] **Task 5 — Q/A clause chips (title + number)** (S)
   **Description:** Pass `idToClause` from `useClauseNav()` into `FollowUpInput`'s `renderAnswer`.
   Render each `[clause-16]` as a styled chip `"<title> #16"`; click → `goToClause(id)`. Render
   `citedClauseIds` as a row of the same chips instead of plain "Cited: ..." text.
   **Acceptance criteria:**
-  - [ ] Answer references show the real clause title + number, not raw `[clause-16]`
-  - [ ] Cited chips are clickable and navigate correctly
+  - [x] Answer references show the real clause title + number, not raw `[clause-16]`
+  - [x] Cited chips are clickable and navigate correctly
   **Verification:** ask "what happens if I break the nda"; verify chip text + navigation
   **Dependencies:** Tasks 1, 3
   **Files:** `components/analysis/FollowUpInput.tsx`
   **Scope:** Small
 
-- [ ] **Task 6 — Chat-style Q/A layout + empty state** (M)
+- [x] **Task 6 — Chat-style Q/A layout + empty state** (M)
   **Description:** Restructure `FollowUpInput` thread into a conversational layout (question bubble +
   answer card), add an empty state with 3-4 suggested starter-question pills that prefill+submit,
   and a typing/loading indicator. Restyle input + Ask button to warm palette.
   **Acceptance criteria:**
-  - [ ] Empty state shows clickable suggested questions that submit on click
-  - [ ] Thread renders as chat bubbles; loading shows an indicator
+  - [x] Empty state shows clickable suggested questions that submit on click
+  - [x] Thread renders as chat bubbles; loading shows an indicator
   **Verification:** manual run through several questions incl. empty state
   **Dependencies:** Task 5
   **Files:** `components/analysis/FollowUpInput.tsx`
   **Scope:** Medium
 
 ### Checkpoint: Identity + Q/A
-- [ ] Q/A references and card badges are consistent and navigable; empty state works
+- [x] Q/A references and card badges are consistent and navigable; empty state works
 
 ### Phase 3: Visual overhaul
 
-- [ ] **Task 7 — Summary header + tabs + clause card** (M)
+- [x] **Task 7 — Summary header + tabs + clause card** (M)
   **Description:** Recolor/retypeset `RiskDashboard.tsx` summary (prominent score, clickable stat
   chips via `goToTab`, warm card), `CategoryTabs.tsx` (accent underline, sticky under summary), and
   `ClauseCard.tsx` to the warm palette + Bricolage/Barlow + shallow shadows + `md`/`lg` radius +
   muted semantic colors.
   **Acceptance criteria:**
-  - [ ] Stat chips switch tabs; tabs stick on scroll; cards use muted semantic left-borders
+  - [x] Stat chips switch tabs; tabs stick on scroll; cards use muted semantic left-borders
   **Verification:** visual compare to `/` and `/analyze`
   **Dependencies:** Task 3
   **Files:** `components/analysis/RiskDashboard.tsx`, `components/analysis/CategoryTabs.tsx`,
   `components/analysis/ClauseCard.tsx`
   **Scope:** Medium
 
-- [ ] **Task 8 — Remaining panels + page entrance** (M)
+- [x] **Task 8 — Remaining panels + page entrance** (M)
   **Description:** Apply warm language to `MissingClausesPanel`, `KeyDatesPanel`, `YourRightsPanel`,
   `ObligationsPanel`, `JurisdictionMismatchBanner`, `CompareToStandard`. Add `ap-rise ap-d1..d4`
   stagger to top-level sections in `app/results/page.tsx`.
   **Acceptance criteria:**
-  - [ ] All panels match the design language; sections animate in with stagger
-  - [ ] No animation under `prefers-reduced-motion`
+  - [x] All panels match the design language; sections animate in with stagger
+  - [x] No animation under `prefers-reduced-motion`
   **Verification:** visual sweep + reduced-motion + mobile width
   **Dependencies:** Task 7
   **Files:** `components/analysis/MissingClausesPanel.tsx`,
@@ -150,9 +150,9 @@ Full design notes: `~/.claude/plans/1-i-need-to-glistening-pie.md`.
   **Scope:** Medium
 
 ### Checkpoint: Complete
-- [ ] All acceptance criteria met; `bun run lint` + typecheck clean
-- [ ] `/results` visually consistent with `/` and `/analyze`
-- [ ] Every clause reference (Q/A + panels + stat chips) navigates reliably with flash
+- [x] All acceptance criteria met; `bun run lint` + typecheck clean
+- [x] `/results` visually consistent with `/` and `/analyze`
+- [x] Every clause reference (Q/A + panels + stat chips) navigates reliably with flash
 
 ## Risks and Mitigations
 | Risk | Impact | Mitigation |

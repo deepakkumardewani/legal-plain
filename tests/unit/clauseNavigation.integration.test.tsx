@@ -95,10 +95,10 @@ describe("clause navigation integration", () => {
     fireEvent.click(screen.getByText("Ask"));
 
     await waitFor(() => {
-      expect(screen.getByText("[clause-green]")).toBeTruthy();
+      expect(screen.getAllByText("Standard Item #1").length).toBeGreaterThan(0);
     });
 
-    fireEvent.click(screen.getByText("[clause-green]"));
+    fireEvent.click(screen.getAllByText("Standard Item #1")[0]!);
 
     await waitFor(() => {
       expect(screen.getByText("Standard Item")).toBeTruthy();

@@ -38,6 +38,11 @@ describe("ClauseCard", () => {
     expect(screen.getByText("This is plain English explanation.")).toBeTruthy();
   });
 
+  it("shows clause number chip beside title", () => {
+    renderCard({ ...baseClause, id: "clause-16" });
+    expect(screen.getByText("#16")).toBeTruthy();
+  });
+
   it("renders YELLOW clause with yellow badge", () => {
     renderCard({ ...baseClause, riskLevel: "YELLOW" });
     expect(screen.getByText("Unusual")).toBeTruthy();

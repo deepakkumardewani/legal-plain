@@ -57,7 +57,6 @@ function renderInput(overrides: Partial<AnalysisResult> = {}) {
 describe("FollowUpInput", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
-    // Mock successful fetch by default
     globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -97,10 +96,28 @@ describe("FollowUpInput", () => {
     const textarea = screen.getByLabelText("Follow-up question");
     fireEvent.change(textarea, { target: { value: "a".repeat(460) } });
     const counter = screen.getByText("460/500");
-    expect(counter.className).toContain("text-amber-600");
+    expect(counter.className).toContain("text-[#c8791a]");
   });
 
-  it("submits and displays answer", async () => {
+  it("shows empty state with suggested questions", () => {
+    renderInput();
+    expect(screen.getByText("Try asking:")).toBeTruthy();
+    expect(screen.getByText("What happens if I break the NDA?")).toBeTruthy();
+    expect(screen.getByText("What are the main risks in this contract?")).toBeTruthy();
+  });
+
+  it("submits suggested question on click", async () => {
+    renderInput();
+    fireEvent.click(screen.getByText("What happens if I break the NDA?"));
+
+    await waitFor(() => {
+      expect(screen.getByText("What happens if I break the NDA?")).toBeTruthy();
+    });
+
+    expect(globalThis.fetch).toHaveBeenCalled();
+  });
+
+  it("submits and displays answer in chat layout", async () => {
     renderInput();
     const textarea = screen.getByLabelText("Follow-up question");
 
@@ -111,12 +128,26 @@ describe("FollowUpInput", () => {
       expect(screen.getByText("Is this non-compete enforceable?")).toBeTruthy();
     });
 
-    // Answer text should be rendered
     expect(screen.getByText(/This clause/)).toBeTruthy();
 
-    // Remaining should update from server response
     await waitFor(() => {
       expect(screen.getByText("2 questions remaining")).toBeTruthy();
+    });
+
+    expect(screen.queryByText("Try asking:")).toBeNull();
+  });
+
+  it("shows loading indicator while fetching", async () => {
+    globalThis.fetch = vi.fn().mockImplementation(() => new Promise(() => {}));
+
+    renderInput();
+    fireEvent.change(screen.getByLabelText("Follow-up question"), {
+      target: { value: "Test question?" },
+    });
+    fireEvent.click(screen.getByText("Ask"));
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("Generating answer")).toBeTruthy();
     });
   });
 
@@ -152,7 +183,30 @@ describe("FollowUpInput", () => {
     });
   });
 
-  it("renders clause ID citations as clickable links", async () => {
+  it("renders inline clause references as compact chips", async () => {
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        answer: "If you break (clause-1), you could be fired as described in clause-1.",
+        citedClauseIds: ["clause-1"],
+        remaining: 2,
+      }),
+    });
+
+    renderInput();
+    fireEvent.change(screen.getByLabelText("Follow-up question"), {
+      target: { value: "What happens if I break the NDA?" },
+    });
+    fireEvent.click(screen.getByText("Ask"));
+
+    await waitFor(() => {
+      const inlineChips = screen.getAllByText("#1");
+      expect(inlineChips.length).toBe(2);
+      expect(inlineChips[0]!.tagName).toBe("BUTTON");
+    });
+  });
+
+  it("renders cited clause chips with full title", async () => {
     renderInput();
     fireEvent.change(screen.getByLabelText("Follow-up question"), {
       target: { value: "Explain clause-1" },
@@ -160,8 +214,24 @@ describe("FollowUpInput", () => {
     fireEvent.click(screen.getByText("Ask"));
 
     await waitFor(() => {
-      const citation = screen.getByText("[clause-1]");
-      expect(citation.tagName).toBe("BUTTON");
+      const chips = screen.getAllByText("Non-Compete #1");
+      expect(chips.length).toBeGreaterThanOrEqual(1);
+      expect(chips[0]!.tagName).toBe("BUTTON");
     });
+  });
+
+  it("renders cited clause chips that are clickable", async () => {
+    renderInput();
+    fireEvent.change(screen.getByLabelText("Follow-up question"), {
+      target: { value: "Explain clause-1" },
+    });
+    fireEvent.click(screen.getByText("Ask"));
+
+    await waitFor(() => {
+      expect(screen.getByText("Cited:")).toBeTruthy();
+    });
+
+    expect(screen.getByText("Non-Compete #1")).toBeTruthy();
+    expect(screen.getByText("#1")).toBeTruthy();
   });
 });

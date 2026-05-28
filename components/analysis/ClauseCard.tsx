@@ -4,20 +4,20 @@ import { useState } from "react";
 import type { ClauseAnalysis } from "@/lib/types";
 import { CompareToStandard } from "./CompareToStandard";
 import { useClauseNav } from "./ClauseNavigationContext";
-import { cn } from "@/lib/utils";
+import { cn, clauseNumber } from "@/lib/utils";
 
 const borderColors: Record<string, string> = {
-  RED: "border-l-red-500",
-  YELLOW: "border-l-yellow-500",
-  CONTEXT_DEPENDENT: "border-l-gray-400",
-  GREEN: "border-l-green-500",
+  RED: "border-l-[#c0392b]/55",
+  YELLOW: "border-l-[#b45309]/55",
+  CONTEXT_DEPENDENT: "border-l-[#b8aea0]",
+  GREEN: "border-l-[#2d6a4f]/55",
 };
 
 const badgeStyles: Record<string, string> = {
-  RED: "bg-red-100 text-red-800",
-  YELLOW: "bg-yellow-100 text-yellow-800",
-  CONTEXT_DEPENDENT: "bg-gray-100 text-gray-700",
-  GREEN: "bg-green-100 text-green-800",
+  RED: "bg-[#fdf2f0] text-[#8b2e24]",
+  YELLOW: "bg-[#fef9ee] text-[#8a5a12]",
+  CONTEXT_DEPENDENT: "bg-[#f5f0e8] text-[#5c5c66]",
+  GREEN: "bg-[#edf7f2] text-[#1f5c40]",
 };
 
 const riskLabels: Record<string, string> = {
@@ -39,20 +39,20 @@ export function ClauseCard({ clause }: ClauseCardProps) {
     <div
       id={`clause-${clause.id}`}
       className={cn(
-        "rounded-lg border border-gray-200 bg-white p-4 shadow-sm",
+        "rounded-xl border border-[#e6dccd] bg-[#fffdf8] p-4 shadow-[0_16px_50px_-48px_rgba(74,55,31,0.55)] md:rounded-2xl md:p-5",
         "border-l-4",
         borderColors[clause.riskLevel],
         flashId === clause.id && "clause-flash",
       )}
     >
       {clause.dealBreaker && (
-        <div className="-mx-4 -mt-4 mb-4 rounded-t-lg bg-red-600 px-4 py-2 text-center text-sm font-semibold text-white">
-          ⚠ Walk-away clause — read this first
+        <div className="-mx-4 -mt-4 mb-4 rounded-t-xl bg-[#c0392b] px-4 py-2 text-center text-sm font-semibold text-white md:-mx-5 md:-mt-5 md:rounded-t-2xl">
+          Walk-away clause — read this first
         </div>
       )}
 
       <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span
             className={cn(
               "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
@@ -62,19 +62,30 @@ export function ClauseCard({ clause }: ClauseCardProps) {
             {riskLabels[clause.riskLevel]}
           </span>
           {clause.confidence === "LOW" && (
-            <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
+            <span className="inline-flex items-center rounded-full bg-[#f5f0e8] px-2 py-0.5 text-xs font-medium text-[#737373]">
               Low confidence
             </span>
           )}
-          <h3 className="text-base font-semibold text-gray-900">{clause.title}</h3>
+          <span
+            className="inline-flex shrink-0 items-center rounded bg-[#f5f0e8] px-1.5 py-0.5 font-mono text-xs tabular-nums text-[#5c5c66]"
+            aria-label={`Clause ${clauseNumber(clause.id)}`}
+          >
+            #{clauseNumber(clause.id)}
+          </span>
+          <h3
+            className="text-base font-semibold text-[#18181f]"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            {clause.title}
+          </h3>
         </div>
         {clause.affectedByMismatch && (
-          <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
+          <span className="shrink-0 rounded-full bg-[#fef9ee] px-2 py-0.5 text-xs font-medium text-[#8a5a12]">
             Mismatch affected
           </span>
         )}
         {clause.incorporatedReferences && clause.incorporatedReferences.length > 0 && (
-          <span className="shrink-0 rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-700">
+          <span className="shrink-0 rounded-full bg-[#fef9ee] px-2 py-0.5 text-xs font-medium text-[#ad6414]">
             {clause.incorporatedReferences.length === 1
               ? `References ${clause.incorporatedReferences[0]} (not shown)`
               : `References ${clause.incorporatedReferences.length} external documents`}
@@ -82,16 +93,16 @@ export function ClauseCard({ clause }: ClauseCardProps) {
         )}
       </div>
 
-      <p className="mt-3 text-sm leading-relaxed text-gray-700">{clause.plainEnglish}</p>
+      <p className="mt-3 text-sm leading-relaxed text-[#4a4a52]">{clause.plainEnglish}</p>
 
-      <div className="mt-2 rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-600">
-        <span className="font-medium">Why: </span>
+      <div className="mt-2 rounded-lg bg-[#f5f0e8] px-3 py-2 text-sm text-[#5c5c66]">
+        <span className="font-medium text-[#18181f]">Why: </span>
         {clause.riskReason}
       </div>
 
       {clause.vaguenessFlags && clause.vaguenessFlags.length > 0 && (
-        <p className="mt-1 text-sm text-amber-700">
-          ⚠ Watch for discretionary language:{" "}
+        <p className="mt-1 text-sm text-[#8a5a12]">
+          Watch for discretionary language:{" "}
           {clause.vaguenessFlags.map((f, i) => (
             <span key={f}>
               &lsquo;{f}&rsquo;
@@ -103,15 +114,15 @@ export function ClauseCard({ clause }: ClauseCardProps) {
 
       <CompareToStandard text={clause.comparisonToStandard} />
 
-      <div className="mt-2 text-sm text-gray-700">
-        <span className="font-medium">Your obligation: </span>
+      <div className="mt-2 text-sm text-[#4a4a52]">
+        <span className="font-medium text-[#18181f]">Your obligation: </span>
         {clause.obligation}
       </div>
 
       {clause.riskLevel !== "GREEN" &&
         clause.riskLevel !== "CONTEXT_DEPENDENT" &&
         clause.negotiationTip && (
-          <div className="mt-2 rounded-md bg-purple-50 px-3 py-2 text-sm text-purple-800">
+          <div className="mt-2 rounded-lg bg-[#f7efe2] px-3 py-2 text-sm text-[#6b4a12]">
             <span className="font-medium">
               {clause.negotiability === "TAKE_IT_OR_LEAVE_IT"
                 ? "What you can do: "
@@ -128,7 +139,7 @@ export function ClauseCard({ clause }: ClauseCardProps) {
         )}
 
       {clause.riskLevel === "CONTEXT_DEPENDENT" && clause.contextNote && (
-        <div className="mt-2 rounded-md bg-gray-100 px-3 py-2 text-sm text-gray-700 italic">
+        <div className="mt-2 rounded-lg bg-[#f5f0e8] px-3 py-2 text-sm italic text-[#5c5c66]">
           {clause.contextNote}
         </div>
       )}
@@ -137,7 +148,7 @@ export function ClauseCard({ clause }: ClauseCardProps) {
         <>
           <button
             type="button"
-            className="mt-3 text-sm font-medium text-blue-600 hover:text-blue-800"
+            className="mt-3 text-sm font-medium text-[#c8791a] transition-colors hover:text-[#ad6414] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c8791a]/40"
             onClick={() => setShowOriginal(!showOriginal)}
             aria-expanded={showOriginal}
           >
@@ -145,13 +156,13 @@ export function ClauseCard({ clause }: ClauseCardProps) {
           </button>
 
           {showOriginal && (
-            <pre className="mt-2 overflow-x-auto rounded-md bg-gray-50 p-3 font-mono text-xs leading-relaxed text-gray-700 whitespace-pre-wrap">
+            <pre className="mt-2 overflow-x-auto rounded-lg bg-[#f5f0e8] p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap text-[#4a4a52]">
               {clause.originalExcerpt}
             </pre>
           )}
         </>
       ) : (
-        <p className="mt-3 text-sm italic text-gray-400">
+        <p className="mt-3 text-sm italic text-[#737373]">
           Source text not quotable — see plain-English explanation above.
         </p>
       )}

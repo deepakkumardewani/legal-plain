@@ -6,12 +6,20 @@ export function ObligationsPanel({ obligations }: ObligationsPanelProps) {
   if (obligations.length === 0) return null;
 
   return (
-    <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-gray-900">Your Obligations</h2>
+    <section className="rounded-2xl border border-[#e6dccd] bg-[#fffdf8] p-6 shadow-[0_20px_70px_-58px_rgba(74,55,31,0.65)] md:p-7">
+      <h2
+        className="text-lg font-semibold text-[#18181f]"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        Your Obligations
+      </h2>
       <ul className="mt-4 space-y-2">
         {obligations.map((obligation) => (
-          <li key={obligation} className="flex items-start gap-2 text-sm text-gray-700">
-            <span className="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500" />
+          <li key={obligation} className="flex items-start gap-2 text-sm text-[#4a4a52]">
+            <span
+              className="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-[#c8791a]"
+              aria-hidden
+            />
             {obligation}
           </li>
         ))}

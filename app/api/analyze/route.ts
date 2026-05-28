@@ -7,6 +7,7 @@ import { getPass2Builder } from "@/lib/prompts/pass2-selector";
 import { buildPass1Prompt } from "@/lib/prompts/pass1-detect";
 import { pass1ResultSchema } from "@/lib/schemas";
 import type { AnalysisResult } from "@/lib/types";
+import { reconcileAnalysisCounts } from "@/lib/utils";
 
 const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -99,7 +100,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     result.analysisId = randomUUID();
     result.analyzedAt = new Date().toISOString();
 
-    return NextResponse.json(result);
+    return NextResponse.json(reconcileAnalysisCounts(result));
   } catch (error) {
     console.error("Analyze error:", {
       message: error instanceof Error ? error.message : "Unknown error",
