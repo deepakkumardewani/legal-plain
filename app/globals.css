@@ -22,3 +22,164 @@
   --color-ring: #0a0a0a;
   --radius: 0.5rem;
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes lp-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lp-ambient {
+  0%,
+  100% {
+    opacity: 0.58;
+    transform: translate3d(-2%, -1%, 0) scale(1);
+  }
+  50% {
+    opacity: 0.86;
+    transform: translate3d(3%, 2%, 0) scale(1.06);
+  }
+}
+
+@keyframes lp-scan-x {
+  from {
+    transform: translateX(-42%);
+  }
+  to {
+    transform: translateX(42%);
+  }
+}
+
+@keyframes lp-scan-y {
+  from {
+    transform: translateY(-26%);
+  }
+  to {
+    transform: translateY(26%);
+  }
+}
+
+@keyframes lp-card-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(1deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(-0.35deg);
+  }
+}
+
+@keyframes ap-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lp-rise {
+  animation: lp-rise 0.74s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ap-rise {
+  animation: ap-rise 0.62s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.lp-d1 {
+  animation-delay: 0.04s;
+}
+
+.ap-d1 {
+  animation-delay: 0.04s;
+}
+
+.lp-d2 {
+  animation-delay: 0.14s;
+}
+
+.ap-d2 {
+  animation-delay: 0.12s;
+}
+
+.lp-d3 {
+  animation-delay: 0.24s;
+}
+
+.ap-d3 {
+  animation-delay: 0.22s;
+}
+
+.lp-d4 {
+  animation-delay: 0.36s;
+}
+
+.ap-d4 {
+  animation-delay: 0.32s;
+}
+
+.lp-ambient::before,
+.lp-ambient::after {
+  position: absolute;
+  inset: -22%;
+  pointer-events: none;
+  content: '';
+  background:
+    radial-gradient(circle at 22% 18%, rgba(200, 121, 26, 0.22), transparent 31%),
+    radial-gradient(circle at 76% 34%, rgba(239, 207, 162, 0.12), transparent 29%),
+    conic-gradient(from 180deg at 50% 50%, transparent, rgba(200, 121, 26, 0.08), transparent 34%);
+  filter: blur(36px);
+  animation: lp-ambient 16s ease-in-out infinite;
+}
+
+.lp-ambient::after {
+  opacity: 0.46;
+  animation-direction: reverse;
+  animation-duration: 22s;
+}
+
+.lp-grid {
+  background-image:
+    linear-gradient(rgba(247, 239, 226, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(247, 239, 226, 0.08) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+.lp-scan-x {
+  animation: lp-scan-x 7s cubic-bezier(0.65, 0, 0.35, 1) infinite alternate;
+}
+
+.lp-scan-y {
+  animation: lp-scan-y 8s cubic-bezier(0.65, 0, 0.35, 1) infinite alternate;
+}
+
+.lp-report-card {
+  animation: lp-card-float 9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .lp-rise,
+  .ap-rise,
+  .lp-report-card,
+  .lp-scan-x,
+  .lp-scan-y,
+  .lp-ambient::before,
+  .lp-ambient::after {
+    animation: none;
+  }
+}

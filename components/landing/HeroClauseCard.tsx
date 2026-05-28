@@ -1,48 +1,49 @@
 export function HeroClauseCard() {
   return (
-    <div className="w-[360px] xl:w-[420px] rounded-2xl bg-[#14151f] border border-[#2a2b3a] p-7 shadow-2xl rotate-1 select-none">
-      <div className="flex items-center justify-between mb-5">
-        <span className="rounded-full bg-red-500/15 border border-red-500/25 px-3 py-1 text-xs font-semibold text-red-400">
-          🔴 Red Flag
+    <div className="lp-report-card relative w-[360px] select-none rounded-[1.75rem] border border-[#2c2b25] bg-[#131311]/95 p-7 shadow-[0_34px_90px_-42px_rgba(0,0,0,0.9)] xl:w-[430px]">
+      <div className="absolute inset-x-7 top-0 h-px bg-gradient-to-r from-transparent via-[#e0a14a]/60 to-transparent" />
+      <div className="mb-6 flex items-center justify-between">
+        <span className="rounded-full border border-[#d1493f]/35 bg-[#d1493f]/12 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#f06d61]">
+          Red flag
         </span>
-        <span className="text-xs text-[#5a5a72] font-medium">NDA · Section 8</span>
+        <span className="text-xs font-medium text-[#827d70]">NDA · Restrictive covenant</span>
       </div>
 
       <h4
-        className="text-[#f0ebe2] text-base font-bold mb-3"
+        className="mb-3 text-[1.05rem] font-bold text-[#f2eadc]"
         style={{ fontFamily: "var(--font-display)" }}
       >
-        Non-Compete Clause
+        Post-engagement restriction
       </h4>
 
-      <p className="text-sm text-[#9d9db8] leading-relaxed mb-4">
-        You can&apos;t work for any competitor in your industry for{" "}
-        <strong className="text-[#c8c8dc]">24 months</strong> after leaving — even if you&apos;re
-        fired or laid off.
+      <p className="mb-5 text-sm leading-relaxed text-[#b7ad9d]">
+        This clause may restrict work with a broad category of competitors after the relationship
+        ends. The impact depends heavily on role, duration, geography, and governing law.
       </p>
 
-      <div className="rounded-lg bg-[#1e1f2e] px-4 py-3 mb-4">
-        <p className="text-xs text-[#8888a0] leading-relaxed">
-          <span className="font-semibold text-[#9d9db8]">Why this matters: </span>
-          Broader than standard. Most NDAs limit non-compete to 6–12 months and your specific role —
-          not your entire industry.
+      <div className="mb-4 rounded-2xl border border-[#363328] bg-[#1a1915] px-4 py-3">
+        <p className="text-xs leading-relaxed text-[#9f9788]">
+          <span className="font-semibold text-[#d8cbb8]">Why it matters: </span>
+          Restrictions that are vague or wider than necessary can limit ordinary future work, not
+          just misuse of confidential information.
         </p>
       </div>
 
-      <div className="rounded-lg bg-[#c8791a]/10 border border-[#c8791a]/20 px-4 py-3">
-        <p className="text-xs leading-relaxed text-[#d4921f]">
-          <span className="font-semibold">💬 Ask for: </span>
-          &ldquo;Limit to 12 months and my specific product area only, not the whole
-          industry.&rdquo;
+      <div className="rounded-2xl border border-[#c8791a]/25 bg-[#c8791a]/10 px-4 py-3">
+        <p className="text-xs leading-relaxed text-[#e0a14a]">
+          <span className="font-semibold">Ask for: </span>
+          narrower language tied to specific confidential information, a defined time period, and a
+          clear territory.
         </p>
       </div>
 
-      <div className="mt-5 pt-4 border-t border-[#2a2b3a] flex items-center gap-3">
-        <span className="h-1.5 w-1.5 rounded-full bg-red-500/60" aria-hidden />
-        <span className="h-1.5 w-1.5 rounded-full bg-yellow-500/40" aria-hidden />
-        <span className="h-1.5 w-1.5 rounded-full bg-gray-500/30" aria-hidden />
-        <span className="h-1.5 w-1.5 rounded-full bg-green-500/30" aria-hidden />
-        <span className="text-[10px] text-[#5a5a72] ml-1">14 clauses analyzed</span>
+      <div className="mt-6 flex items-center gap-3 border-t border-[#2c2b25] pt-4">
+        <span className="h-1.5 w-10 rounded-full bg-[#d1493f]" aria-hidden />
+        <span className="h-1.5 w-7 rounded-full bg-[#d9a524]/70" aria-hidden />
+        <span className="h-1.5 w-5 rounded-full bg-[#b8aea0]/35" aria-hidden />
+        <span className="ml-1 text-[10px] font-medium uppercase tracking-[0.18em] text-[#827d70]">
+          clause-level review
+        </span>
       </div>
     </div>
   );

@@ -34,7 +34,7 @@ export function AnalyzeButton({ disabled, loading, onClick }: AnalyzeButtonProps
         </>
       ) : (
         <>
-          Analyze my contract
+          Analyze my document
           <span aria-hidden>→</span>
         </>
       )}

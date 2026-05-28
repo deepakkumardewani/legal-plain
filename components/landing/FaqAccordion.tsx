@@ -15,12 +15,12 @@ export function FaqAccordion({ items }: FaqAccordionProps) {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <div className="divide-y divide-[#e4dfd6]">
+    <div className="overflow-hidden rounded-[1.25rem] divide-y divide-[#e4dfd6]">
       {items.map((item, i) => (
         <div key={item.q}>
           <button
             type="button"
-            className="w-full flex items-center justify-between gap-4 py-6 text-left group"
+            className="group flex w-full items-center justify-between gap-4 rounded-[1rem] px-5 py-6 text-left transition-colors duration-200 hover:bg-[#f4eddf]/70"
             onClick={() => setOpen(open === i ? null : i)}
             aria-expanded={open === i}
           >
@@ -53,7 +53,7 @@ export function FaqAccordion({ items }: FaqAccordionProps) {
             }}
           >
             <div className="overflow-hidden">
-              <p className="pb-6 text-[0.9375rem] text-[#72728a] leading-relaxed max-w-[65ch]">
+              <p className="max-w-[65ch] px-5 pb-6 text-[0.9375rem] leading-relaxed text-[#72728a]">
                 {item.a}
               </p>
             </div>

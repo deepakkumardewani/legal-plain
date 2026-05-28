@@ -6,6 +6,10 @@
 - `gh` is installed - use for all Git operations
 - **IMPORTANT**: NEVER run `npm` commands (e.g., `npm install`, `npm run`) at the root directory. This will break the project. All package operations must be run using `bun`.
 
+## Design Reference
+
+- use the `DESIGN.md` and `.impeccable.md` files for any design related decisions
+
 ## Conditional Reference Table
 
 | Task | Reference |
