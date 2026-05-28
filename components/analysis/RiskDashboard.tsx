@@ -6,7 +6,7 @@ import { cn, countClausesByRiskLevel } from "@/lib/utils";
 import { CategoryTabs } from "./CategoryTabs";
 import { ClauseCard } from "./ClauseCard";
 import { JurisdictionMismatchBanner } from "./JurisdictionMismatchBanner";
-import { CLAUSE_CATEGORY_TABS_ID, useClauseNav } from "./ClauseNavigationContext";
+import { CLAUSE_CATEGORY_TABS_ID, CLAUSE_LIST_ID, useClauseNav } from "./ClauseNavigationContext";
 
 const documentTypeLabels: Record<string, string> = {
   EMPLOYMENT_CONTRACT: "Employment Contract",
@@ -170,7 +170,7 @@ export function RiskDashboard({ analysis }: RiskDashboardProps) {
         />
       </div>
 
-      <div className="mt-4 space-y-4">
+      <div id={CLAUSE_LIST_ID} className="mt-4 scroll-mt-28 space-y-4">
         {filteredClauses.length === 0 ? (
           <p className="py-8 text-center text-sm text-[#737373]">No clauses in this category.</p>
         ) : (

@@ -62,7 +62,10 @@ export function ClauseCard({ clause }: ClauseCardProps) {
             {riskLabels[clause.riskLevel]}
           </span>
           {clause.confidence === "LOW" && (
-            <span className="inline-flex items-center rounded-full bg-[#f5f0e8] px-2 py-0.5 text-xs font-medium text-[#737373]">
+            <span
+              title="The model is unsure about this reading — e.g. vague wording, uncommon jurisdiction, or facts not in the document."
+              className="inline-flex items-center rounded-full bg-[#f5f0e8] px-2 py-0.5 text-xs font-medium text-[#737373]"
+            >
               Low confidence
             </span>
           )}
