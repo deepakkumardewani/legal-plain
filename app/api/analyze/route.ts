@@ -7,7 +7,8 @@ import { getPass2Builder } from "@/lib/prompts/pass2-selector";
 import { buildPass1Prompt } from "@/lib/prompts/pass1-detect";
 import { pass1ResultSchema } from "@/lib/schemas";
 import type { AnalysisResult } from "@/lib/types";
-import { reconcileAnalysisCounts } from "@/lib/utils";
+import { buildAnalysisCacheKey, getCachedAnalysis, setCachedAnalysis } from "@/lib/analysisCache";
+import { finalizeAnalysisResult } from "@/lib/utils";
 
 const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -42,6 +43,27 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       | undefined;
 
     console.log("[analyze] docType=%s docLen=%d", documentType, documentText.length);
+
+    const cacheKey = buildAnalysisCacheKey({
+      documentText,
+      documentType,
+      userRole: userRole as "RECEIVING" | "DISCLOSING" | "MUTUAL" | undefined,
+    });
+
+    const cached = await getCachedAnalysis(cacheKey);
+    if (cached) {
+      console.log("[analyze] cache HIT %s", cacheKey.slice(0, 40));
+      const hit = finalizeAnalysisResult({
+        ...cached,
+        documentType,
+        followUpQuestionsRemaining: Number.MAX_SAFE_INTEGER,
+        analysisId: randomUUID(),
+        analyzedAt: new Date().toISOString(),
+      });
+      return NextResponse.json(hit);
+    }
+
+    console.log("[analyze] cache MISS %s", cacheKey.slice(0, 40));
 
     // Commercial lease gate: run Pass-1 as lightweight pre-check for lease documents
     if (documentType === "RESIDENTIAL_LEASE") {
@@ -100,7 +122,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     result.analysisId = randomUUID();
     result.analyzedAt = new Date().toISOString();
 
-    return NextResponse.json(reconcileAnalysisCounts(result));
+    const finalized = finalizeAnalysisResult(result);
+    await setCachedAnalysis(cacheKey, finalized);
+    return NextResponse.json(finalized);
   } catch (error) {
     console.error("Analyze error:", {
       message: error instanceof Error ? error.message : "Unknown error",

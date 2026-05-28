@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getShare } from "@/lib/kv";
+import { getShare } from "@/lib/redis";
 
 export async function GET(
   _request: NextRequest,

@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { shareRequestSchema, analysisResultSchema } from "@/lib/schemas";
-import { saveShare } from "@/lib/kv";
+import { saveShare } from "@/lib/redis";
 
 const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const SHARE_TTL_SECONDS = 86400;

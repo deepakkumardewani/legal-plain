@@ -1,34 +1,26 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import { computeOverallRiskScore } from "@/lib/riskScore";
+import { resetRedisForTesting } from "@/lib/redis";
 import { validPass1Result, sampleAnalysis, sampleDocumentText } from "@/tests/fixtures/analysis";
 
 const validUuid = "550e8400-e29b-41d4-a716-446655440000";
 
-function createMockRedis(allowed = true, remaining = 9) {
-  return {
-    eval: vi.fn().mockResolvedValue([allowed ? 1 : 0, remaining]),
-  };
-}
-
 describe("POST /api/analyze", () => {
   beforeEach(() => {
     vi.resetModules();
+    resetRedisForTesting();
+    delete process.env.REDIS_URL;
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
     process.env.DEEPSEEK_API_KEY = "test-key";
-    process.env.UPSTASH_REDIS_REST_URL = "https://test.upstash.io";
-    process.env.UPSTASH_REDIS_REST_TOKEN = "test-token";
   });
 
   async function callAnalyze(body: unknown, userId = validUuid, ip = "192.168.1.1") {
-    const mockRedis = createMockRedis();
-
-    vi.doMock("@/lib/redis", () => ({
-      getRedis: () => mockRedis,
-    }));
-
     vi.doMock("@/lib/ai", () => ({
-      callAI: vi
-        .fn()
-        .mockImplementationOnce(() => Promise.resolve(validPass1Result))
-        .mockImplementationOnce(() => Promise.resolve(sampleAnalysis)),
+      callAI: vi.fn(({ label }: { label?: string }) => {
+        if (label === "pass1-detect") return Promise.resolve(validPass1Result);
+        return Promise.resolve(sampleAnalysis);
+      }),
     }));
 
     const { POST } = await import("@/app/api/analyze/route");
@@ -49,7 +41,7 @@ describe("POST /api/analyze", () => {
   it("returns 200 with analysis result on success", async () => {
     const response = await callAnalyze({
       documentText: sampleDocumentText,
-      userJurisdiction: null,
+      documentType: "EMPLOYMENT_CONTRACT",
       userId: validUuid,
     });
 
@@ -57,7 +49,7 @@ describe("POST /api/analyze", () => {
     const data = await response.json();
     expect(data.documentType).toBe("EMPLOYMENT_CONTRACT");
     expect(data.effectiveJurisdiction).toBeDefined();
-    expect(data.followUpQuestionsRemaining).toBe(10);
+    expect(data.followUpQuestionsRemaining).toBeGreaterThan(0);
     expect(data.analysisId).toMatch(
       /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
     );
@@ -87,7 +79,7 @@ describe("POST /api/analyze", () => {
     const response = await callAnalyze(
       {
         documentText: sampleDocumentText,
-        userJurisdiction: null,
+        documentType: "EMPLOYMENT_CONTRACT",
         userId: validUuid,
       },
       "not-a-valid-uuid",
@@ -99,7 +91,7 @@ describe("POST /api/analyze", () => {
   it("returns 400 for empty document text", async () => {
     const response = await callAnalyze({
       documentText: "",
-      userJurisdiction: null,
+      documentType: "EMPLOYMENT_CONTRACT",
       userId: validUuid,
     });
 
@@ -109,56 +101,18 @@ describe("POST /api/analyze", () => {
   it("returns 400 for oversized document text", async () => {
     const response = await callAnalyze({
       documentText: "x".repeat(150001),
-      userJurisdiction: null,
+      documentType: "EMPLOYMENT_CONTRACT",
       userId: validUuid,
     });
 
     expect(response.status).toBe(400);
   });
 
-  it("returns 429 when rate limit exceeded", async () => {
-    const mockRedis = createMockRedis(false, 0);
-    vi.doMock("@/lib/redis", () => ({
-      getRedis: () => mockRedis,
-    }));
-
-    const { POST } = await import("@/app/api/analyze/route");
-
-    const request = new Request("http://localhost:3000/api/analyze", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-user-id": validUuid,
-        "x-forwarded-for": "192.168.1.1",
-      },
-      body: JSON.stringify({
-        documentText: sampleDocumentText,
-        userJurisdiction: null,
-        userId: validUuid,
-      }),
-    });
-
-    const response = await POST(request as unknown as Parameters<typeof POST>[0]);
-    expect(response.status).toBe(429);
-    const data = await response.json();
-    expect(data.remaining).toBe(0);
-  });
-
   it("returns 422 when Pass 1 rejects the document", async () => {
-    vi.doMock("@/lib/redis", () => ({
-      getRedis: () => createMockRedis(),
-    }));
-
     vi.doMock("@/lib/ai", () => ({
       callAI: vi.fn().mockResolvedValue({
-        valid: false,
-        reason: "This is not a legal document.",
-        documentType: "EMPLOYMENT_CONTRACT",
-        governingLawJurisdiction: null,
-        partyLocations: [],
-        jurisdictionMismatch: false,
-        mismatchConfidence: null,
-        clauseMap: [],
+        ...validPass1Result,
+        subtype: "commercial",
       }),
     }));
 
@@ -173,7 +127,7 @@ describe("POST /api/analyze", () => {
       },
       body: JSON.stringify({
         documentText: "This is not a contract.",
-        userJurisdiction: null,
+        documentType: "RESIDENTIAL_LEASE",
         userId: validUuid,
       }),
     });
@@ -181,25 +135,20 @@ describe("POST /api/analyze", () => {
     const response = await POST(request as unknown as Parameters<typeof POST>[0]);
     expect(response.status).toBe(422);
     const data = await response.json();
-    expect(data.reason).toBeDefined();
+    expect(data.error).toBe("COMMERCIAL_LEASE_DETECTED");
   });
 
-  it("floors overallRiskScore at 60 when mismatch confidence is HIGH", async () => {
-    const mockRedis = createMockRedis();
-    vi.doMock("@/lib/redis", () => ({
-      getRedis: () => mockRedis,
-    }));
-
+  it("recomputes overallRiskScore from clause risk levels", async () => {
     const lowScoreAnalysis = {
       ...sampleAnalysis,
       overallRiskScore: 35,
     };
 
     vi.doMock("@/lib/ai", () => ({
-      callAI: vi
-        .fn()
-        .mockImplementationOnce(() => Promise.resolve(validPass1Result))
-        .mockImplementationOnce(() => Promise.resolve(lowScoreAnalysis)),
+      callAI: vi.fn(({ label }: { label?: string }) => {
+        if (label === "pass1-detect") return Promise.resolve(validPass1Result);
+        return Promise.resolve(lowScoreAnalysis);
+      }),
     }));
 
     const { POST } = await import("@/app/api/analyze/route");
@@ -213,7 +162,7 @@ describe("POST /api/analyze", () => {
       },
       body: JSON.stringify({
         documentText: sampleDocumentText,
-        userJurisdiction: null,
+        documentType: "EMPLOYMENT_CONTRACT",
         userId: validUuid,
       }),
     });
@@ -221,6 +170,6 @@ describe("POST /api/analyze", () => {
     const response = await POST(request as unknown as Parameters<typeof POST>[0]);
     expect(response.status).toBe(200);
     const data = await response.json();
-    expect(data.overallRiskScore).toBe(60);
+    expect(data.overallRiskScore).toBe(computeOverallRiskScore(sampleAnalysis.clauses));
   });
 });

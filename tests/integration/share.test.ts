@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { sampleAnalysis } from "@/tests/fixtures/analysis";
-import { resetKvMock } from "@/tests/mocks/vercel-kv";
+import { resetRedisForTesting } from "@/lib/redis";
 
 const validUuid = "550e8400-e29b-41d4-a716-446655440000";
 
 describe("Share API", () => {
   beforeEach(() => {
     vi.resetModules();
-    resetKvMock();
+    resetRedisForTesting();
   });
 
   describe("POST /api/share", () => {
