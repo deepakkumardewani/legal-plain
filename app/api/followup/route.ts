@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { followupRequestSchema, followupResponseSchema } from "@/lib/schemas";
 import { callAI } from "@/lib/ai";
 import { buildFollowupPrompt } from "@/lib/prompts/followup";
+import { serverError } from "@/lib/apiError";
 import type { AnalysisResult } from "@/lib/types";
 
 const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -61,14 +62,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       remaining: Number.MAX_SAFE_INTEGER,
     });
   } catch (error) {
-    console.error("Followup error:", {
-      message: error instanceof Error ? error.message : "Unknown error",
-      name: error instanceof Error ? error.name : "Unknown",
-    });
-
-    return NextResponse.json(
-      { error: "Internal server error. Please try again." },
-      { status: 500 },
-    );
+    return serverError("Followup error", error);
   }
 }

@@ -1,5 +1,6 @@
 import type { KeyDate } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { PanelCard } from "./PanelCard";
 
 const urgencyStyles: Record<string, string> = {
   HIGH: "bg-[#fdf2f0] text-[#8b2e24]",
@@ -26,13 +27,11 @@ export function KeyDatesPanel({ dates }: KeyDatesPanelProps) {
   });
 
   return (
-    <section className="rounded-2xl border border-[#e6dccd] bg-[#fffdf8] p-6 shadow-[0_20px_70px_-58px_rgba(74,55,31,0.65)] md:p-7">
-      <h2
-        className="text-lg font-semibold text-[#18181f]"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
-        Key Dates & Deadlines
-      </h2>
+    <PanelCard
+      className="border-[#e6dccd] bg-[#fffdf8]"
+      titleClassName="text-[#18181f]"
+      title="Key Dates & Deadlines"
+    >
       <ul className="mt-4 space-y-3">
         {sorted.map((date) => (
           <li
@@ -54,6 +53,6 @@ export function KeyDatesPanel({ dates }: KeyDatesPanelProps) {
           </li>
         ))}
       </ul>
-    </section>
+    </PanelCard>
   );
 }

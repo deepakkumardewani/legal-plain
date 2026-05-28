@@ -9,6 +9,7 @@ import { pass1ResultSchema } from "@/lib/schemas";
 import type { AnalysisResult } from "@/lib/types";
 import { buildAnalysisCacheKey, getCachedAnalysis, setCachedAnalysis } from "@/lib/analysisCache";
 import { finalizeAnalysisResult } from "@/lib/utils";
+import { serverError } from "@/lib/apiError";
 
 const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -126,14 +127,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     await setCachedAnalysis(cacheKey, finalized);
     return NextResponse.json(finalized);
   } catch (error) {
-    console.error("Analyze error:", {
-      message: error instanceof Error ? error.message : "Unknown error",
-      name: error instanceof Error ? error.name : "Unknown",
-    });
-
-    return NextResponse.json(
-      { error: "Internal server error. Please try again." },
-      { status: 500 },
-    );
+    return serverError("Analyze error", error);
   }
 }

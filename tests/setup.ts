@@ -10,7 +10,7 @@ vi.mock("next/font/google", () => {
     variable: "mock-font-variable",
     style: { fontFamily: "mock-font" },
   });
-  return new Proxy({}, { get: () => loader });
+  return { Bricolage_Grotesque: loader, Barlow: loader };
 });
 
 afterEach(() => {

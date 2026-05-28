@@ -1,3 +1,5 @@
+import { PanelCard } from "./PanelCard";
+
 interface ObligationsPanelProps {
   obligations: string[];
 }
@@ -6,13 +8,11 @@ export function ObligationsPanel({ obligations }: ObligationsPanelProps) {
   if (obligations.length === 0) return null;
 
   return (
-    <section className="rounded-2xl border border-[#e6dccd] bg-[#fffdf8] p-6 shadow-[0_20px_70px_-58px_rgba(74,55,31,0.65)] md:p-7">
-      <h2
-        className="text-lg font-semibold text-[#18181f]"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
-        Your Obligations
-      </h2>
+    <PanelCard
+      className="border-[#e6dccd] bg-[#fffdf8]"
+      titleClassName="text-[#18181f]"
+      title="Your Obligations"
+    >
       <ul className="mt-4 space-y-2">
         {obligations.map((obligation) => (
           <li key={obligation} className="flex items-start gap-2 text-sm text-[#4a4a52]">
@@ -24,6 +24,6 @@ export function ObligationsPanel({ obligations }: ObligationsPanelProps) {
           </li>
         ))}
       </ul>
-    </section>
+    </PanelCard>
   );
 }

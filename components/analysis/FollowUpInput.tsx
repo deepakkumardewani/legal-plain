@@ -99,6 +99,37 @@ function renderAnswer(
   return parts;
 }
 
+interface ThreadMessageProps {
+  entry: FollowUpEntry;
+  idToClause: Map<string, ClauseAnalysis>;
+  goToClause: (id: string) => void;
+}
+
+function ThreadMessage({ entry, idToClause, goToClause }: ThreadMessageProps) {
+  return (
+    <div className="space-y-3">
+      <div className="flex justify-end">
+        <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-[#c8791a] px-4 py-2.5 text-sm text-white">
+          {entry.question}
+        </div>
+      </div>
+      <div className="max-w-[90%] rounded-2xl rounded-bl-sm border border-[#e6dccd] bg-white px-4 py-3 shadow-sm">
+        <div className="text-sm leading-relaxed text-[#18181f]">
+          {renderAnswer(entry.answer, idToClause, goToClause)}
+        </div>
+        {entry.citedClauseIds.length > 0 && (
+          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#e6dccd] pt-3">
+            <span className="text-xs font-medium text-[#6b6560]">Cited:</span>
+            {entry.citedClauseIds.map((id) => (
+              <ClauseChip key={id} id={id} clause={idToClause.get(id)} onNavigate={goToClause} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function TypingIndicator() {
   return (
     <div
@@ -298,31 +329,12 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
       {(thread.length > 0 || loading) && (
         <div className="mt-6 space-y-4" role="log" aria-live="polite" aria-label="Question thread">
           {thread.map((entry, idx) => (
-            <div key={idx} className="space-y-3">
-              <div className="flex justify-end">
-                <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-[#c8791a] px-4 py-2.5 text-sm text-white">
-                  {entry.question}
-                </div>
-              </div>
-              <div className="max-w-[90%] rounded-2xl rounded-bl-sm border border-[#e6dccd] bg-white px-4 py-3 shadow-sm">
-                <div className="text-sm leading-relaxed text-[#18181f]">
-                  {renderAnswer(entry.answer, idToClause, goToClause)}
-                </div>
-                {entry.citedClauseIds.length > 0 && (
-                  <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-[#e6dccd] pt-3">
-                    <span className="text-xs font-medium text-[#6b6560]">Cited:</span>
-                    {entry.citedClauseIds.map((id) => (
-                      <ClauseChip
-                        key={id}
-                        id={id}
-                        clause={idToClause.get(id)}
-                        onNavigate={goToClause}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
+            <ThreadMessage
+              key={idx}
+              entry={entry}
+              idToClause={idToClause}
+              goToClause={goToClause}
+            />
           ))}
           {loading && (
             <div className="max-w-[90%] rounded-2xl rounded-bl-sm border border-[#e6dccd] bg-white shadow-sm">

@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getShare } from "@/lib/redis";
+import { serverError } from "@/lib/apiError";
 
 export async function GET(
   _request: NextRequest,
@@ -21,10 +22,6 @@ export async function GET(
 
     return NextResponse.json(analysis);
   } catch (error) {
-    console.error("Share retrieval error:", {
-      message: error instanceof Error ? error.message : "Unknown error",
-    });
-
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return serverError("Share retrieval error", error, "Internal server error");
   }
 }
