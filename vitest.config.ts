@@ -7,7 +7,6 @@ export default defineConfig({
       "@": path.resolve(__dirname, "."),
       "server-only": path.resolve(__dirname, "tests/mocks/server-only.ts"),
       "next/server": path.resolve(__dirname, "tests/mocks/next-server.ts"),
-      "@vercel/kv": path.resolve(__dirname, "tests/mocks/vercel-kv.ts"),
     },
   },
   test: {

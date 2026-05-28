@@ -51,6 +51,14 @@ describe("ClauseNavigationProvider", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     Element.prototype.scrollIntoView = vi.fn();
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn().mockReturnValue({
+        matches: false,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      }),
+    );
   });
 
   afterEach(() => {
@@ -96,15 +104,26 @@ describe("ClauseNavigationProvider", () => {
     expect(screen.getByTestId("flash-id").textContent).toBe("");
   });
 
-  it("goToTab changes active tab without scrolling", () => {
+  it("goToTab scrolls clause list to top after tab change", () => {
+    const listEl = document.createElement("div");
+    listEl.id = "clause-list";
+    listEl.scrollIntoView = vi.fn();
+    document.body.append(listEl);
+
     render(
       <ClauseNavigationProvider clauses={clauses}>
         <NavProbe />
       </ClauseNavigationProvider>,
     );
 
-    fireEvent.click(screen.getByText("Go yellow tab"));
+    act(() => {
+      fireEvent.click(screen.getByText("Go yellow tab"));
+    });
+    act(() => {
+      vi.runAllTimers();
+    });
+
     expect(screen.getByTestId("active-tab").textContent).toBe("YELLOW");
-    expect(Element.prototype.scrollIntoView).not.toHaveBeenCalled();
+    expect(listEl.scrollIntoView).toHaveBeenCalledWith(expect.objectContaining({ block: "start" }));
   });
 });

@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type { AnalysisResult, ClauseAnalysis } from "@/lib/types";
+import { computeOverallRiskScore, overallRiskLabelForScore } from "@/lib/riskScore";
 
 export interface ClauseRiskCounts {
   redFlagCount: number;
@@ -41,6 +42,18 @@ export function countClausesByRiskLevel(clauses: ClauseAnalysis[]): ClauseRiskCo
 /** Overwrite summary counts when the model's totals disagree with clause risk levels. */
 export function reconcileAnalysisCounts(analysis: AnalysisResult): AnalysisResult {
   return { ...analysis, ...countClausesByRiskLevel(analysis.clauses) };
+}
+
+/** Derive counts and risk score from clauses (deterministic; used after AI + on cache read). */
+export function finalizeAnalysisResult(analysis: AnalysisResult): AnalysisResult {
+  const counts = countClausesByRiskLevel(analysis.clauses);
+  const overallRiskScore = computeOverallRiskScore(analysis.clauses);
+  return {
+    ...analysis,
+    ...counts,
+    overallRiskScore,
+    overallRiskLabel: overallRiskLabelForScore(overallRiskScore),
+  };
 }
 
 export function cn(...inputs: ClassValue[]) {

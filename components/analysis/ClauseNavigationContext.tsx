@@ -15,13 +15,21 @@ import type { ClauseAnalysis, RiskLevel } from "@/lib/types";
 const FLASH_DURATION_MS = 1600;
 
 export const CLAUSE_CATEGORY_TABS_ID = "clause-category-tabs";
+export const CLAUSE_LIST_ID = "clause-list";
 
-function scrollToClauseCategoryTabs(): void {
-  const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ? "auto"
-    : "smooth";
+function scrollBehavior(): ScrollBehavior {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+}
+
+/** Scroll so the first card in the active tab sits below the sticky tab bar. */
+function scrollClauseListToTop(): void {
+  const list = document.getElementById(CLAUSE_LIST_ID);
+  if (list) {
+    list.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
+    return;
+  }
   document.getElementById(CLAUSE_CATEGORY_TABS_ID)?.scrollIntoView({
-    behavior,
+    behavior: scrollBehavior(),
     block: "start",
   });
 }
@@ -55,6 +63,7 @@ export function ClauseNavigationProvider({ clauses, children }: ClauseNavigation
   const [pendingScrollId, setPendingScrollId] = useState<string | null>(null);
   const [flashId, setFlashId] = useState<string | null>(null);
   const flashTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingTabListScrollRef = useRef(false);
 
   const idToClause = useMemo(() => {
     const map = new Map<string, ClauseAnalysis>();
@@ -104,13 +113,20 @@ export function ClauseNavigationProvider({ clauses, children }: ClauseNavigation
       setPendingScrollId(null);
       clearFlashTimeout();
       setFlashId(null);
+      pendingTabListScrollRef.current = true;
       setActiveTab(level);
-      requestAnimationFrame(() => {
-        requestAnimationFrame(scrollToClauseCategoryTabs);
-      });
     },
     [clearFlashTimeout],
   );
+
+  useEffect(() => {
+    if (pendingScrollId || !pendingTabListScrollRef.current) return;
+    pendingTabListScrollRef.current = false;
+    const frame = requestAnimationFrame(() => {
+      requestAnimationFrame(scrollClauseListToTop);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [activeTab, pendingScrollId]);
 
   useEffect(() => {
     if (!pendingScrollId) return;
