@@ -2,8 +2,6 @@ import type { NextRequest } from "next/server";
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { analyzeRequestSchema, aiAnalysisResultSchema } from "@/lib/schemas";
-import { checkRateLimit } from "@/lib/rateLimit";
-import { getRedis } from "@/lib/redis";
 import { callAI } from "@/lib/ai";
 import { getPass2Builder } from "@/lib/prompts/pass2-selector";
 import { buildPass1Prompt } from "@/lib/prompts/pass1-detect";
@@ -11,14 +9,6 @@ import { pass1ResultSchema } from "@/lib/schemas";
 import type { AnalysisResult } from "@/lib/types";
 
 const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-function getClientIP(request: NextRequest): string {
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    return forwarded.split(",")[0].trim();
-  }
-  return request.headers.get("x-real-ip") || "127.0.0.1";
-}
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
@@ -49,18 +39,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       | "DISCLOSING"
       | "MUTUAL"
       | undefined;
-    const ip = getClientIP(request);
-
-    if (process.env.NODE_ENV !== "development") {
-      const redis = getRedis();
-      const rateResult = await checkRateLimit(redis, userId, ip, "analyze");
-      if (!rateResult.allowed) {
-        return NextResponse.json(
-          { error: "Rate limit exceeded", remaining: rateResult.remaining },
-          { status: 429 },
-        );
-      }
-    }
 
     console.log("[analyze] docType=%s docLen=%d", documentType, documentText.length);
 
@@ -117,7 +95,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     result.userJurisdiction = null;
     result.effectiveJurisdiction = "unknown";
-    result.followUpQuestionsRemaining = 10;
+    result.followUpQuestionsRemaining = Number.MAX_SAFE_INTEGER;
     result.analysisId = randomUUID();
     result.analyzedAt = new Date().toISOString();
 

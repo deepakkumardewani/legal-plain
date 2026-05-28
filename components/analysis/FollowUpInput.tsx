@@ -17,6 +17,7 @@ interface FollowUpInputProps {
 }
 
 const CLAUSE_ID_RE = /\[([a-zA-Z0-9-]+)\]/g;
+const UNLIMITED_REMAINING_THRESHOLD = 1_000_000;
 
 function renderAnswer(text: string): React.ReactNode {
   const parts: React.ReactNode[] = [];
@@ -60,7 +61,8 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const disabled = remaining === 0 || loading;
+  const hasUnlimitedQuestions = remaining >= UNLIMITED_REMAINING_THRESHOLD;
+  const disabled = (!hasUnlimitedQuestions && remaining === 0) || loading;
   const overCap = question.length > 500;
 
   const handleSubmit = useCallback(async () => {
@@ -90,14 +92,7 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
       const data = await res.json();
 
       if (!res.ok) {
-        if (res.status === 429) {
-          setRemaining(data.remaining ?? 0);
-          setError(
-            `You've reached the question limit for this analysis. ${data.remaining ?? 0} remaining.`,
-          );
-        } else {
-          setError(data.error || "Something went wrong. Please try again.");
-        }
+        setError(data.error || "Something went wrong. Please try again.");
         return;
       }
 
@@ -133,9 +128,11 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
     <section className="mt-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
       <h2 className="text-lg font-semibold text-gray-900">Ask a Follow-Up Question</h2>
       <p className="mt-1 text-sm text-gray-500">
-        {remaining > 0
-          ? `${remaining} question${remaining === 1 ? "" : "s"} remaining`
-          : "No questions remaining for this analysis"}
+        {hasUnlimitedQuestions
+          ? "Unlimited questions for this analysis"
+          : remaining > 0
+            ? `${remaining} question${remaining === 1 ? "" : "s"} remaining`
+            : "No questions remaining for this analysis"}
       </p>
 
       <div className="mt-4">
@@ -148,7 +145,9 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
           )}
           rows={3}
           placeholder={
-            remaining === 0 ? "Question limit reached" : "Ask anything about this contract…"
+            !hasUnlimitedQuestions && remaining === 0
+              ? "Question limit reached"
+              : "Ask anything about this contract…"
           }
           value={question}
           onChange={(e) => setQuestion(e.target.value)}

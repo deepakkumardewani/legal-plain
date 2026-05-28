@@ -106,13 +106,13 @@ export const analysisResultSchema = aiAnalysisResultSchema.extend({
   effectiveJurisdiction: z.string().min(1),
   analysisId: z.string().uuid(),
   analyzedAt: z.string().datetime(),
-  followUpQuestionsRemaining: z.number().int().min(0).max(10),
+  followUpQuestionsRemaining: z.number().int().min(0),
 });
 
 export const analyzeRequestSchema = z.object({
   documentText: z
     .string()
-    .min(1, "Document text is required")
+    .min(1, "Document is required")
     .max(150000, "Document exceeds 150,000 character limit"),
   documentType: documentTypeSchema,
   userId: z.string().uuid("Invalid userId format"),

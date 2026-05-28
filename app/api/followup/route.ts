@@ -1,21 +1,11 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { followupRequestSchema, followupResponseSchema } from "@/lib/schemas";
-import { checkRateLimit } from "@/lib/rateLimit";
-import { getRedis } from "@/lib/redis";
 import { callAI } from "@/lib/ai";
 import { buildFollowupPrompt } from "@/lib/prompts/followup";
 import type { AnalysisResult } from "@/lib/types";
 
 const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-function getClientIP(request: NextRequest): string {
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    return forwarded.split(",")[0].trim();
-  }
-  return request.headers.get("x-real-ip") || "127.0.0.1";
-}
 
 function validClauseIds(analysis: AnalysisResult): Set<string> {
   return new Set(analysis.clauses.map((c) => c.id));
@@ -44,24 +34,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const { question, analysisResult, documentText, analysisId } = parsed.data;
-
-    const ip = getClientIP(request);
-
-    try {
-      const redis = getRedis();
-      const rateResult = await checkRateLimit(redis, userId, ip, "followup", analysisId);
-      if (!rateResult.allowed) {
-        return NextResponse.json(
-          { error: "Rate limit exceeded", remaining: rateResult.remaining },
-          { status: 429 },
-        );
-      }
-    } catch (redisError) {
-      if (process.env.NODE_ENV === "production") {
-        throw redisError;
-      }
-    }
+    const { question, analysisResult, documentText } = parsed.data;
 
     const prompt = buildFollowupPrompt({
       question,
@@ -82,19 +55,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const existingIds = validClauseIds(analysisResult);
     const validIds = citedClauseIds.filter((id) => existingIds.has(id));
 
-    let remaining: number;
-    try {
-      const redis = getRedis();
-      const rateResult = await checkRateLimit(redis, userId, ip, "followup", analysisId);
-      remaining = rateResult.remaining;
-    } catch {
-      remaining = analysisResult.followUpQuestionsRemaining - 1;
-    }
-
     return NextResponse.json({
       answer,
       citedClauseIds: validIds,
-      remaining,
+      remaining: Number.MAX_SAFE_INTEGER,
     });
   } catch (error) {
     console.error("Followup error:", {
