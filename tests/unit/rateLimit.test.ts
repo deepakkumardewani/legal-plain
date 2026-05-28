@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { Redis } from "@upstash/redis";
+import type { AppRedis as Redis } from "@/lib/redis";
 import type { RateLimitResult } from "@/lib/rateLimit";
 
 type CheckRateLimitFn = (
