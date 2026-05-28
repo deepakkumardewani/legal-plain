@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { FollowUpInput } from "@/components/analysis/FollowUpInput";
+import { ClauseNavigationProvider } from "@/components/analysis/ClauseNavigationContext";
 import type { AnalysisResult } from "@/lib/types";
 
 vi.mock("@/lib/userId", () => ({
@@ -42,11 +43,14 @@ const mockAnalysis: AnalysisResult = {
 };
 
 function renderInput(overrides: Partial<AnalysisResult> = {}) {
+  const analysis = { ...mockAnalysis, ...overrides };
   return render(
-    <FollowUpInput
-      analysis={{ ...mockAnalysis, ...overrides }}
-      documentText="Sample contract text for follow-up questions."
-    />,
+    <ClauseNavigationProvider clauses={analysis.clauses}>
+      <FollowUpInput
+        analysis={analysis}
+        documentText="Sample contract text for follow-up questions."
+      />
+    </ClauseNavigationProvider>,
   );
 }
 
@@ -130,7 +134,7 @@ describe("FollowUpInput", () => {
     fireEvent.click(screen.getByText("Ask"));
 
     await waitFor(() => {
-      expect(screen.getByText(/question limit/)).toBeTruthy();
+      expect(screen.getByText(/Rate limit exceeded/i)).toBeTruthy();
     });
   });
 

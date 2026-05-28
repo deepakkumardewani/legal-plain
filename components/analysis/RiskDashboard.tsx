@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import type { AnalysisResult, RiskLevel } from "@/lib/types";
+import { useMemo } from "react";
+import type { AnalysisResult } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { CategoryTabs } from "./CategoryTabs";
 import { ClauseCard } from "./ClauseCard";
 import { JurisdictionMismatchBanner } from "./JurisdictionMismatchBanner";
+import { useClauseNav } from "./ClauseNavigationContext";
 
 const documentTypeLabels: Record<string, string> = {
   EMPLOYMENT_CONTRACT: "Employment Contract",
@@ -30,7 +31,7 @@ interface RiskDashboardProps {
 }
 
 export function RiskDashboard({ analysis }: RiskDashboardProps) {
-  const [activeTab, setActiveTab] = useState<RiskLevel>("RED");
+  const { activeTab, setActiveTab, goToClause } = useClauseNav();
 
   const filteredClauses = useMemo(() => {
     let clauses = analysis.clauses.filter((c) => c.riskLevel === activeTab);
@@ -54,9 +55,8 @@ export function RiskDashboard({ analysis }: RiskDashboardProps) {
   );
 
   const scrollToFirstDealBreaker = () => {
-    if (dealBreakerClauses.length === 0) return;
-    const el = document.getElementById(`clause-${dealBreakerClauses[0]!.id}`);
-    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    const first = dealBreakerClauses[0];
+    if (first) goToClause(first.id);
   };
 
   return (

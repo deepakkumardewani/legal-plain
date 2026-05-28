@@ -1,18 +1,16 @@
 "use client";
 
 import type { Contradiction } from "@/lib/types";
+import { useClauseNav } from "./ClauseNavigationContext";
 
 interface ContradictionsPanelProps {
   contradictions: Contradiction[] | undefined;
 }
 
 export function ContradictionsPanel({ contradictions }: ContradictionsPanelProps) {
-  if (!contradictions || contradictions.length === 0) return null;
+  const { goToClause } = useClauseNav();
 
-  const scrollToClause = (clauseId: string) => {
-    const el = document.getElementById(`clause-${clauseId}`);
-    el?.scrollIntoView({ behavior: "smooth", block: "center" });
-  };
+  if (!contradictions || contradictions.length === 0) return null;
 
   return (
     <section className="rounded-lg border border-orange-200 bg-orange-50/50 p-6 shadow-sm">
@@ -31,7 +29,7 @@ export function ContradictionsPanel({ contradictions }: ContradictionsPanelProps
                   key={clauseId}
                   type="button"
                   className="text-sm font-medium text-orange-700 underline hover:text-orange-600"
-                  onClick={() => scrollToClause(clauseId)}
+                  onClick={() => goToClause(clauseId)}
                 >
                   See clause {clauseId} →
                 </button>

@@ -4,6 +4,7 @@ import { useState, useCallback, useRef } from "react";
 import type { AnalysisResult } from "@/lib/types";
 import { getOrCreateUserId } from "@/lib/userId";
 import { cn } from "@/lib/utils";
+import { useClauseNav } from "./ClauseNavigationContext";
 
 interface FollowUpEntry {
   question: string;
@@ -19,7 +20,7 @@ interface FollowUpInputProps {
 const CLAUSE_ID_RE = /\[([a-zA-Z0-9-]+)\]/g;
 const UNLIMITED_REMAINING_THRESHOLD = 1_000_000;
 
-function renderAnswer(text: string): React.ReactNode {
+function renderAnswer(text: string, goToClause: (id: string) => void): React.ReactNode {
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match: RegExpExecArray | null;
@@ -35,10 +36,7 @@ function renderAnswer(text: string): React.ReactNode {
         key={`${clauseId}-${match.index}`}
         type="button"
         className="font-medium text-blue-600 underline hover:text-blue-800"
-        onClick={() => {
-          const el = document.getElementById(`clause-${clauseId}`);
-          el?.scrollIntoView({ behavior: "smooth", block: "center" });
-        }}
+        onClick={() => goToClause(clauseId)}
       >
         [{clauseId}]
       </button>,
@@ -54,6 +52,7 @@ function renderAnswer(text: string): React.ReactNode {
 }
 
 export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
+  const { goToClause } = useClauseNav();
   const [question, setQuestion] = useState("");
   const [remaining, setRemaining] = useState(analysis.followUpQuestionsRemaining);
   const [thread, setThread] = useState<FollowUpEntry[]>([]);
@@ -192,7 +191,7 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
             <div key={idx} className="rounded-md bg-gray-50 p-4">
               <p className="text-sm font-medium text-gray-900">{entry.question}</p>
               <div className="mt-2 text-sm leading-relaxed text-gray-700">
-                {renderAnswer(entry.answer)}
+                {renderAnswer(entry.answer, goToClause)}
               </div>
               {entry.citedClauseIds.length > 0 && (
                 <p className="mt-2 text-xs text-gray-400">

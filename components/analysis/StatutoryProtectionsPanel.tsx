@@ -1,18 +1,16 @@
 "use client";
 
 import type { StatutoryProtection } from "@/lib/types";
+import { useClauseNav } from "./ClauseNavigationContext";
 
 interface StatutoryProtectionsPanelProps {
   protections: StatutoryProtection[] | undefined;
 }
 
 export function StatutoryProtectionsPanel({ protections }: StatutoryProtectionsPanelProps) {
-  if (!protections || protections.length === 0) return null;
+  const { goToClause } = useClauseNav();
 
-  const scrollToClause = (clauseId: string) => {
-    const el = document.getElementById(`clause-${clauseId}`);
-    el?.scrollIntoView({ behavior: "smooth", block: "center" });
-  };
+  if (!protections || protections.length === 0) return null;
 
   return (
     <section className="rounded-lg border border-teal-200 bg-teal-50/50 p-6 shadow-sm">
@@ -37,7 +35,7 @@ export function StatutoryProtectionsPanel({ protections }: StatutoryProtectionsP
               <button
                 type="button"
                 className="mt-2 text-sm font-medium text-teal-700 underline hover:text-teal-600"
-                onClick={() => scrollToClause(p.overridesClauseId!)}
+                onClick={() => goToClause(p.overridesClauseId!)}
               >
                 See affected clause →
               </button>

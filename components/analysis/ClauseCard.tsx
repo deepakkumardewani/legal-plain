@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { ClauseAnalysis } from "@/lib/types";
 import { CompareToStandard } from "./CompareToStandard";
+import { useClauseNav } from "./ClauseNavigationContext";
 import { cn } from "@/lib/utils";
 
 const borderColors: Record<string, string> = {
@@ -32,6 +33,7 @@ interface ClauseCardProps {
 
 export function ClauseCard({ clause }: ClauseCardProps) {
   const [showOriginal, setShowOriginal] = useState(false);
+  const { flashId } = useClauseNav();
 
   return (
     <div
@@ -40,6 +42,7 @@ export function ClauseCard({ clause }: ClauseCardProps) {
         "rounded-lg border border-gray-200 bg-white p-4 shadow-sm",
         "border-l-4",
         borderColors[clause.riskLevel],
+        flashId === clause.id && "clause-flash",
       )}
     >
       {clause.dealBreaker && (

@@ -168,6 +168,20 @@ html {
   animation: lp-card-float 9s ease-in-out infinite;
 }
 
+@keyframes clause-flash {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  50% {
+    box-shadow: 0 0 0 3px #c8791a;
+  }
+}
+
+.clause-flash {
+  animation: clause-flash 1.6s ease-in-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -179,7 +193,8 @@ html {
   .lp-scan-x,
   .lp-scan-y,
   .lp-ambient::before,
-  .lp-ambient::after {
+  .lp-ambient::after,
+  .clause-flash {
     animation: none;
   }
 }

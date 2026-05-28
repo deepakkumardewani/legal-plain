@@ -1,7 +1,16 @@
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { RiskDashboard } from "@/components/analysis/RiskDashboard";
+import { ClauseNavigationProvider } from "@/components/analysis/ClauseNavigationContext";
 import type { AnalysisResult } from "@/lib/types";
+
+function renderDashboard(analysis: AnalysisResult) {
+  return render(
+    <ClauseNavigationProvider clauses={analysis.clauses}>
+      <RiskDashboard analysis={analysis} />
+    </ClauseNavigationProvider>,
+  );
+}
 
 const mockAnalysis: AnalysisResult = {
   documentType: "EMPLOYMENT_CONTRACT",
@@ -75,7 +84,7 @@ const mockAnalysis: AnalysisResult = {
 
 describe("RiskDashboard", () => {
   it("renders document type and governing law", () => {
-    render(<RiskDashboard analysis={mockAnalysis} />);
+    renderDashboard(mockAnalysis);
     expect(screen.getByText("Analysis Results")).toBeTruthy();
     const subtitle = screen.getByText(/Employment Contract/);
     expect(subtitle).toBeTruthy();
@@ -83,14 +92,14 @@ describe("RiskDashboard", () => {
   });
 
   it("renders overall risk score and label", () => {
-    render(<RiskDashboard analysis={mockAnalysis} />);
+    renderDashboard(mockAnalysis);
     const scores = screen.getAllByText("75");
     expect(scores.length).toBeGreaterThan(0);
     expect(screen.getByText("Moderate Risk")).toBeTruthy();
   });
 
   it("renders all count badges with correct labels", () => {
-    render(<RiskDashboard analysis={mockAnalysis} />);
+    renderDashboard(mockAnalysis);
     // CountBadge and CategoryTab labels may appear multiple times for same text
     expect(screen.getAllByText("Red Flags").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("Unusual").length).toBeGreaterThanOrEqual(1);
@@ -98,13 +107,13 @@ describe("RiskDashboard", () => {
   });
 
   it("shows RED clauses by default", () => {
-    render(<RiskDashboard analysis={mockAnalysis} />);
+    renderDashboard(mockAnalysis);
     expect(screen.getByText("Non-Compete")).toBeTruthy();
     expect(screen.queryByText("At-Will")).toBeNull();
   });
 
   it("switches tabs to show GREEN clauses", () => {
-    render(<RiskDashboard analysis={mockAnalysis} />);
+    renderDashboard(mockAnalysis);
     const standardTabs = screen.getAllByRole("tab", { name: /Standard/ });
     fireEvent.click(standardTabs[0]!);
     expect(screen.getByText("At-Will")).toBeTruthy();
@@ -142,7 +151,7 @@ describe("RiskDashboard", () => {
       ],
     };
 
-    render(<RiskDashboard analysis={twoRed} />);
+    renderDashboard(twoRed);
     const clauseCards = document.querySelectorAll("[id^='clause-']");
     const cardIds = Array.from(clauseCards).map((el) => el.id);
     const mismatchIdx = cardIds.indexOf("clause-c-mismatch");
@@ -156,7 +165,7 @@ describe("RiskDashboard", () => {
       unusualCount: 0,
       clauses: mockAnalysis.clauses.filter((c) => c.riskLevel !== "YELLOW"),
     };
-    render(<RiskDashboard analysis={noYellow} />);
+    renderDashboard(noYellow);
     const unusualTabs = screen.getAllByRole("tab", { name: /Unusual/ });
     fireEvent.click(unusualTabs[0]!);
     expect(screen.getByText("No clauses in this category.")).toBeTruthy();
