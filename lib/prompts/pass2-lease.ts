@@ -1,4 +1,5 @@
 import type { Pass2Input } from "./pass2-selector";
+import { PASS2_CLAUSE_SEGMENTATION_RULES, PASS2_SCORE_RUBRIC } from "./pass2-shared";
 
 interface Pass2Prompt {
   system: string;
@@ -65,6 +66,10 @@ RISK LEVEL EXAMPLES (for calibration):
 - CONTEXT_DEPENDENT examples: "Reasonable subletting permitted with Landlord consent, such consent not to be unreasonably withheld." (standard but "reasonable" depends on landlord behavior). "Rent increase upon renewal shall be at prevailing market rate." (depends on local market and rent control applicability).
 - GREEN examples: "Landlord shall provide 24 hours written notice before entering the premises, except in emergencies." (standard notice). "Security deposit shall be held in an interest-bearing account and returned within 14 days of lease termination." (tenant-friendly and compliant).
 
+${PASS2_CLAUSE_SEGMENTATION_RULES}
+
+${PASS2_SCORE_RUBRIC}
+
 READING LEVEL REQUIREMENT:
 All \`plainEnglish\`, \`riskReason\`, \`negotiationTip\`, and \`contextNote\` text MUST be written at an 8th-grade reading level or below:
 - Use plain, everyday words. No Latin phrases (e.g., avoid "bona fide", "inter alia", "ipso facto", "pursuant to", "aforementioned", "heretofore").
@@ -94,15 +99,15 @@ IMPORTANT OUTPUT RULES:
 - governingLawJurisdiction: string extracted from the document (e.g. "California", "New York"), or null if not stated
 - partyLocations: array of strings — locations of parties or the premises (e.g. ["123 Main St, Austin TX"]); empty array if not stated
 - jurisdictionMismatch: null — do not populate; this is computed separately
-- overallRiskScore: integer 0-100, where 0 = perfectly balanced, 100 = maximally one-sided against tenant
-- overallRiskLabel: concise label
-- redFlagCount, unusualCount, contextDependentCount, standardCount: accurate counts matching clause risk levels
+- overallRiskScore: integer 0-100 per OVERALL RISK SCORE rubric above (server recomputes from clause risk levels).
+- overallRiskLabel: label matching the score band in the rubric
+- redFlagCount, unusualCount, contextDependentCount, standardCount: MUST match clause risk levels exactly
 - keyDates: array of { label, value, urgency } for rent due dates, lease start/end, notice deadlines, renewal windows (urgency: HIGH/MEDIUM/LOW)
 - yourRights: list of rights the tenant has
 - yourObligations: list of what the tenant must do
 - missingClauses: For each mandatory clause that is absent from the document, add an entry with \`title\`, \`whyItMatters\`, and \`whatToAskFor\`. Do NOT list missing clauses inside \`clauses[]\` — use \`missingClauses[]\` exclusively for absent items.
 - originalExcerpt: MUST be a verbatim substring of the source document. Never paraphrase, smooth, or reword. If an exact quote is impossible, set the field to null rather than fabricating a quote.
-- overallRiskScore: Compute strictly from clause analysis. Surface jurisdiction mismatch separately via mismatchSnippet.
+- Surface jurisdiction mismatch separately via mismatchSnippet; do not inflate scores for mismatch alone.
 - statutoryProtections: array of { name, jurisdiction, summary, overridesClauseId? }. List statutes that give the tenant rights this lease cannot override (e.g., state security deposit caps, habitability warranty, rent control ordinances, anti-retaliation laws). Positive framing — these are protections the tenant keeps regardless of what the lease says.
 - contradictions: array of { description: string, clauseIds: string[] (min 2) }. Scan the entire document for internal contradictions (e.g., one clause says 30-day notice, another says 60-day). Each contradiction must list the clause IDs involved.
 

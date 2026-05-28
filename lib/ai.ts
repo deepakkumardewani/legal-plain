@@ -28,6 +28,8 @@ interface AIOptions<T extends ZodSchema> {
   maxTokens?: number;
   schema?: T;
   label?: string;
+  /** Default 0 for structured legal analysis — reduces run-to-run drift. */
+  temperature?: number;
 }
 
 let _provider: ReturnType<typeof createDeepSeek> | null = null;
@@ -77,6 +79,7 @@ export async function callAI<T extends ZodSchema>({
   maxTokens = 4096,
   schema,
   label = "callAI",
+  temperature = 0,
 }: AIOptions<T>): Promise<T extends ZodSchema ? ReturnType<T["parse"]> : string> {
   const start = Date.now();
   let lastError: unknown;
@@ -101,6 +104,7 @@ export async function callAI<T extends ZodSchema>({
           system: `${system}\n\nRespond with valid JSON only. No markdown, no code fences, no explanation.`,
           prompt: user,
           maxOutputTokens: attemptMaxTokens,
+          temperature,
           output: Output.object({ schema }),
           abortSignal: controller.signal,
         });
@@ -127,6 +131,7 @@ export async function callAI<T extends ZodSchema>({
         system,
         prompt: user,
         maxOutputTokens: attemptMaxTokens,
+        temperature,
         abortSignal: controller.signal,
       });
 

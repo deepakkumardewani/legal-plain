@@ -1,4 +1,5 @@
 import type { Pass2Input } from "./pass2-selector";
+import { PASS2_CLAUSE_SEGMENTATION_RULES, PASS2_SCORE_RUBRIC } from "./pass2-shared";
 
 interface Pass2Prompt {
   system: string;
@@ -135,6 +136,10 @@ RISK LEVEL EXAMPLES (for calibration):
 - CONTEXT_DEPENDENT examples: "Confidential Information excludes information that is or becomes publicly available through no fault of the Receiving Party." (standard exclusion but depends on how "publicly available" is interpreted). "Receiving Party may disclose Confidential Information to employees who have a need to know." (standard but depends on employee training and controls).
 - GREEN examples: "This Agreement shall expire 3 years from the Effective Date, except that trade secrets shall remain protected indefinitely." (balanced with trade-secret carve-out). "Receiving Party may retain one copy of Confidential Information solely for compliance with applicable law or internal document retention policies." (reasonable retention right).
 
+${PASS2_CLAUSE_SEGMENTATION_RULES}
+
+${PASS2_SCORE_RUBRIC}
+
 READING LEVEL REQUIREMENT:
 All \`plainEnglish\`, \`riskReason\`, \`negotiationTip\`, and \`contextNote\` text MUST be written at an 8th-grade reading level or below:
 - Use plain, everyday words. No Latin phrases (e.g., avoid "bona fide", "inter alia", "ipso facto", "pursuant to", "aforementioned", "heretofore").
@@ -164,15 +169,15 @@ IMPORTANT OUTPUT RULES:
 - governingLawJurisdiction: string extracted from the document (e.g. "California", "Delaware", "England and Wales"), or null if not stated
 - partyLocations: array of strings — locations of parties mentioned in the document; empty array if not stated
 - jurisdictionMismatch: null — do not populate; this is computed separately
-- overallRiskScore: integer 0-100, where 0 = perfectly balanced, 100 = ${ctx.scorePerspective}
-- overallRiskLabel: concise label
-- redFlagCount, unusualCount, contextDependentCount, standardCount: accurate counts matching clause risk levels
+- overallRiskScore: integer 0-100 per OVERALL RISK SCORE rubric above (server recomputes from clause risk levels).
+- overallRiskLabel: label matching the score band in the rubric
+- redFlagCount, unusualCount, contextDependentCount, standardCount: MUST match clause risk levels exactly
 - keyDates: array of { label, value, urgency } for dates, deadlines, notice periods (urgency: HIGH/MEDIUM/LOW)
 - yourRights: list of ${ctx.rightsLabel}
 - yourObligations: list of ${ctx.obligationsLabel}
 - missingClauses: For each mandatory clause that is absent from the document, add an entry with \`title\`, \`whyItMatters\`, and \`whatToAskFor\`. Do NOT list missing clauses inside \`clauses[]\` — use \`missingClauses[]\` exclusively for absent items.
 - originalExcerpt: MUST be a verbatim substring of the source document. Never paraphrase, smooth, or reword. If an exact quote is impossible, set the field to null rather than fabricating a quote.
-- overallRiskScore: Compute strictly from clause analysis. Surface jurisdiction mismatch separately via mismatchSnippet.
+- Surface jurisdiction mismatch separately via mismatchSnippet; do not inflate scores for mismatch alone.
 - statutoryProtections: array of { name, jurisdiction, summary, overridesClauseId? }. List statutes that give parties rights this NDA cannot override (e.g., DTSA §1833(b) whistleblower immunity, Speak Out Act, SEC Rule 21F-17, state trade-secret law carve-outs). Positive framing — these are protections parties keep regardless of what the NDA says.
 - contradictions: array of { description: string, clauseIds: string[] (min 2) }. Scan the entire document for internal contradictions (e.g., one clause defines confidentiality broadly, another carves out exceptions that contradict it). Each contradiction must list the clause IDs involved.
 

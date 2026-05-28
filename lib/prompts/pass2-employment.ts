@@ -1,4 +1,5 @@
 import type { Pass2Input } from "./pass2-selector";
+import { PASS2_CLAUSE_SEGMENTATION_RULES, PASS2_SCORE_RUBRIC } from "./pass2-shared";
 
 interface Pass2Prompt {
   system: string;
@@ -74,6 +75,10 @@ RISK LEVEL EXAMPLES (for calibration):
 - CONTEXT_DEPENDENT examples: "Employee shall devote substantially all business time to the Company." (reasonable for full-time, problematic for side projects — depends on expectations). "Bonus eligibility based on Company and individual performance as determined by management." (standard structure but depends on actual metrics).
 - GREEN examples: "Employment is at-will and may be terminated by either party at any time." (standard US at-will language). "The Company shall reimburse reasonable business expenses in accordance with Company policy." (standard with policy reference).
 
+${PASS2_CLAUSE_SEGMENTATION_RULES}
+
+${PASS2_SCORE_RUBRIC}
+
 READING LEVEL REQUIREMENT:
 All \`plainEnglish\`, \`riskReason\`, \`negotiationTip\`, and \`contextNote\` text MUST be written at an 8th-grade reading level or below:
 - Use plain, everyday words. No Latin phrases (e.g., avoid "bona fide", "inter alia", "ipso facto", "pursuant to", "aforementioned", "heretofore").
@@ -103,15 +108,15 @@ IMPORTANT OUTPUT RULES:
 - governingLawJurisdiction: string extracted from the document (e.g. "California", "New York", "United Kingdom"), or null if not stated
 - partyLocations: array of strings — locations of parties mentioned in the document (e.g. ["San Francisco, CA", "New York, NY"]); empty array if not stated
 - jurisdictionMismatch: null — do not populate; this is computed separately
-- overallRiskScore: integer 0-100, where 0 = perfectly balanced, 100 = maximally one-sided against employee. Holistic assessment of combined clause impact.
-- overallRiskLabel: concise label (e.g. "High Risk", "Moderate Risk", "Low Risk", "Standard")
-- redFlagCount, unusualCount, contextDependentCount, standardCount: accurate counts matching clause risk levels
+- overallRiskScore: integer 0-100 per OVERALL RISK SCORE rubric above (server recomputes from clause risk levels).
+- overallRiskLabel: label matching the score band in the rubric
+- redFlagCount, unusualCount, contextDependentCount, standardCount: MUST match clause risk levels exactly
 - keyDates: array of { label, value, urgency } for dates, deadlines, notice periods (urgency: HIGH/MEDIUM/LOW)
 - yourRights: list of rights the employee has under this contract
 - yourObligations: list of what the employee must do
 - missingClauses: For each mandatory clause that is absent from the document, add an entry with \`title\`, \`whyItMatters\`, and \`whatToAskFor\`. Do NOT list missing clauses inside \`clauses[]\` — use \`missingClauses[]\` exclusively for absent items.
 - originalExcerpt: MUST be a verbatim substring of the source document. Never paraphrase, smooth, or reword. If an exact quote is impossible, set the field to null rather than fabricating a quote.
-- overallRiskScore: Compute strictly from clause analysis. Surface jurisdiction mismatch separately via mismatchSnippet.
+- Surface jurisdiction mismatch separately via mismatchSnippet; do not inflate scores for mismatch alone.
 - statutoryProtections: array of { name, jurisdiction, summary, overridesClauseId? }. List statutes that give the employee rights this contract cannot override (e.g., DTSA §1833(b), Speak Out Act, FLSA, FEHA, state wage-and-hour laws). Positive framing — these are protections the employee keeps regardless of what the contract says.
 - contradictions: array of { description: string, clauseIds: string[] (min 2) }. Scan the entire document for internal contradictions (e.g., one clause says 30-day notice, another says 60-day). Each contradiction must list the clause IDs involved.
 
