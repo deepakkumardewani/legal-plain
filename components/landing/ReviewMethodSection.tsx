@@ -21,8 +21,9 @@ export function ReviewMethodSection() {
               className="group rounded-[1.5rem] border border-transparent p-5 transition-all duration-300 hover:-translate-y-1 hover:border-[#e6dccd] hover:bg-[#fbf8f1]"
             >
               <span
-                className="text-6xl font-black leading-none tracking-[-0.08em] text-[#e9ded0] transition-colors duration-300 group-hover:text-[#d7bf9d]"
+                className="text-6xl font-black leading-none tracking-[-0.08em] text-[#9a8570] transition-colors duration-300 group-hover:text-[#8f7960]"
                 style={{ fontFamily: "var(--font-display)" }}
+                aria-hidden="true"
               >
                 {step.num}
               </span>

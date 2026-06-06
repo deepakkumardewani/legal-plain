@@ -17,7 +17,7 @@ export function LandingFooter() {
           legal decisions. For matters of significant consequence, consult a licensed attorney in
           your jurisdiction.
         </p>
-        <p className="text-xs text-[#5b554c]">© {new Date().getFullYear()} LegalPlain.</p>
+        <p className="text-xs text-[#827d70]">© {new Date().getFullYear()} LegalPlain.</p>
       </div>
     </footer>
   );

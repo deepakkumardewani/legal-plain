@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useRef, useState, type ChangeEvent, type DragEvent, type RefObject } from "react";
+import {
+  useCallback,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type DragEvent,
+  type RefObject,
+} from "react";
 import { cn } from "@/lib/utils";
 import { validatePdfFile, extractPdfText } from "@/lib/pdfParser";
 
@@ -41,12 +48,21 @@ function LoadedDocCard({ loaded, fileInputRef, onFileChange, onClear }: LoadedDo
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#1f7a4d]/10 text-[#1f7a4d]"
             aria-hidden
           >
-            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <svg
+              className="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
             </svg>
           </span>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[15px] font-semibold text-[#18181f]" title={loaded.fileName}>
+            <p
+              className="truncate text-[15px] font-semibold text-[#18181f]"
+              title={loaded.fileName}
+            >
               {loaded.fileName}
             </p>
             <p className="mt-0.5 text-sm text-[#72728a] tabular-nums">
@@ -153,7 +169,13 @@ function Dropzone({
               )}
               aria-hidden
             >
-              <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}>
+              <svg
+                className="h-7 w-7"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.75}
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -161,7 +183,10 @@ function Dropzone({
                 />
               </svg>
             </span>
-            <p className="text-xl font-bold text-[#18181f]" style={{ fontFamily: "var(--font-display)" }}>
+            <p
+              className="text-xl font-bold text-[#18181f]"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
               {dragOver ? "Drop to upload" : "Drop your document here"}
             </p>
             <p className="mt-2 text-[15px] text-[#72728a]">
@@ -178,7 +203,10 @@ function Dropzone({
       </div>
 
       {error && (
-        <p className="mt-3 rounded-xl bg-[#fbeceb] px-4 py-3 text-sm font-medium text-[#b3261e]" role="alert">
+        <p
+          className="mt-3 rounded-xl bg-[#fbeceb] px-4 py-3 text-sm font-medium text-[#b3261e]"
+          role="alert"
+        >
           {error}
         </p>
       )}

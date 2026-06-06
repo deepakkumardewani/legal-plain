@@ -15,7 +15,7 @@ export function LandingCtaSection() {
         >
           Read the agreement before it reads against you.
         </h2>
-        <p className="mx-auto mb-8 max-w-[54ch] text-[1.05rem] leading-relaxed text-white/82">
+        <p className="mx-auto mb-8 max-w-[54ch] text-xl font-bold leading-relaxed text-white">
           Upload a supported PDF and get a structured explanation of the clauses, risks, and
           questions that deserve attention.
         </p>
