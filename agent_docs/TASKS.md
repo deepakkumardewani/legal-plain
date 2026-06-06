@@ -73,12 +73,12 @@ Build LegalPlain per [SPEC.md](SPEC.md): a zero-account web tool that analyzes p
 
 ### Phase 4: Export & Sharing
 
-- [ ] **Task 19: Markdown export (native Blob)**
-- [ ] **Task 20: PDF export (jsPDF) with all sections**
-- [ ] **Task 21: Share link modal + `/results/[shareId]` page with 24hr expiry copy**
+- [x] **Task 19: Markdown export (native Blob)**
+- [x] **Task 20: PDF export (jsPDF) with all sections**
+- [x] **Task 21: Share link modal + `/results/[shareId]` page with 24hr expiry copy**
 
 #### Checkpoint: Export
-- [ ] All three export paths work; share link disclosure shown before copy
+- [x] All three export paths work; share link disclosure shown before copy
 
 ---
 

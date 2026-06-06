@@ -7,6 +7,7 @@ import { CategoryTabs } from "./CategoryTabs";
 import { ClauseCard } from "./ClauseCard";
 import { JurisdictionMismatchBanner } from "./JurisdictionMismatchBanner";
 import { CLAUSE_CATEGORY_TABS_ID, CLAUSE_LIST_ID, useClauseNav } from "./ClauseNavigationContext";
+import { ExportMenu } from "@/components/export/ExportMenu";
 
 const documentTypeLabels: Record<string, string> = {
   EMPLOYMENT_CONTRACT: "Employment Contract",
@@ -31,9 +32,10 @@ function scoreBucket(score: number): string {
 
 interface RiskDashboardProps {
   analysis: AnalysisResult;
+  readOnly?: boolean;
 }
 
-export function RiskDashboard({ analysis }: RiskDashboardProps) {
+export function RiskDashboard({ analysis, readOnly = false }: RiskDashboardProps) {
   const { activeTab, goToClause, goToTab } = useClauseNav();
 
   const riskCounts = useMemo(() => countClausesByRiskLevel(analysis.clauses), [analysis.clauses]);
@@ -75,8 +77,8 @@ export function RiskDashboard({ analysis }: RiskDashboardProps) {
     <div className="relative">
       <div className={cn("ap-rise ap-d1 space-y-6")}>
         <div className={cn(PANEL_CARD, "p-6 md:p-7")}>
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="flex-1 min-w-0">
               <h1
                 className="text-2xl font-semibold tracking-[-0.02em] text-[#18181f] md:text-[1.65rem]"
                 style={{ fontFamily: "var(--font-display)" }}
@@ -87,8 +89,13 @@ export function RiskDashboard({ analysis }: RiskDashboardProps) {
                 {documentTypeLabels[analysis.documentType] || analysis.documentType}
                 {" · "}Governing law: {analysis.governingLawJurisdiction || "Not specified"}
               </p>
+              {!readOnly && (
+                <div className="mt-3">
+                  <ExportMenu analysis={analysis} />
+                </div>
+              )}
             </div>
-            <div className="text-right">
+            <div className="text-right shrink-0">
               <p
                 className={cn("text-4xl font-bold tabular-nums md:text-5xl", scoreColors[bucket])}
                 style={{ fontFamily: "var(--font-display)" }}
