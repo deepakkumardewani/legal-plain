@@ -17,7 +17,7 @@ export function SupportedDocumentsSection() {
               key={doc.name}
               className="group rounded-[1.75rem] border border-[#e6dccd] bg-[#fffdf8] p-7 transition-all duration-300 hover:-translate-y-1 hover:border-[#d7bf9d] hover:shadow-[0_28px_70px_-48px_rgba(74,55,31,0.7)]"
             >
-              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.22em] text-[#c8791a] transition-transform duration-300 group-hover:translate-x-1">
+              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.22em] text-[#9c5a0f] transition-transform duration-300 group-hover:translate-x-1">
                 Reviewed for signers
               </p>
               <h3

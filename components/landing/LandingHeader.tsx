@@ -8,7 +8,7 @@ export function LandingHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-[#2a2924]/80 bg-[#0f100e]/88 px-5 py-3 backdrop-blur-xl md:px-8">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6">
-        <a href="#" className="group flex items-center gap-3" aria-label="LegalPlain home">
+        <a href="#" className="group flex items-center gap-3">
           <span className="grid h-8 w-8 place-items-center rounded-full border border-[#c8791a]/35 bg-[#c8791a]/12 text-sm font-bold text-[#e0a14a] transition-transform duration-200 group-hover:-rotate-6">
             LP
           </span>

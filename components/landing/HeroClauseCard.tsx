@@ -9,12 +9,12 @@ export function HeroClauseCard() {
         <span className="text-xs font-medium text-[#827d70]">NDA · Restrictive covenant</span>
       </div>
 
-      <h4
+      <p
         className="mb-3 text-[1.05rem] font-bold text-[#f2eadc]"
         style={{ fontFamily: "var(--font-display)" }}
       >
         Post-engagement restriction
-      </h4>
+      </p>
 
       <p className="mb-5 text-sm leading-relaxed text-[#b7ad9d]">
         This clause may restrict work with a broad category of competitors after the relationship

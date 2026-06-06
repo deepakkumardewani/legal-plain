@@ -25,13 +25,13 @@ export function FaqAccordion({ items }: FaqAccordionProps) {
             aria-expanded={open === i}
           >
             <span
-              className="text-base font-semibold text-[#18181f] group-hover:text-[#c8791a] transition-colors"
+              className="text-base font-semibold text-[#18181f] group-hover:text-[#9c5a0f] transition-colors"
               style={{ fontFamily: "var(--font-display)" }}
             >
               {item.q}
             </span>
             <span
-              className={`shrink-0 text-[#c8791a] transition-transform duration-200 ${open === i ? "rotate-45" : ""}`}
+              className={`shrink-0 text-[#9c5a0f] transition-transform duration-200 ${open === i ? "rotate-45" : ""}`}
               aria-hidden
             >
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none">

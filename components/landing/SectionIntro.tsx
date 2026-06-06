@@ -10,7 +10,7 @@ export function SectionIntro({ eyebrow, title, body, light = false }: SectionInt
     <div>
       <p
         className={`mb-4 text-xs font-semibold uppercase tracking-[0.22em] ${
-          light ? "text-[#e0a14a]" : "text-[#c8791a]"
+          light ? "text-[#e0a14a]" : "text-[#9c5a0f]"
         }`}
         style={{ fontFamily: "var(--font-display)" }}
       >

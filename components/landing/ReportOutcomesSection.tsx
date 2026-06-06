@@ -19,7 +19,7 @@ export function ReportOutcomesSection() {
                 className="group rounded-[1.35rem] border border-transparent p-5 transition-all duration-300 hover:border-[#e6dccd] hover:bg-[#fffdf8]"
               >
                 <p
-                  className="mb-3 text-sm font-bold tabular-nums text-[#c8791a] transition-transform duration-300 group-hover:translate-x-1"
+                  className="mb-3 text-sm font-bold tabular-nums text-[#9c5a0f] transition-transform duration-300 group-hover:translate-x-1"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
                   {String(index + 1).padStart(2, "0")}
