@@ -124,7 +124,7 @@ export const followupRequestSchema = z.object({
     .min(1, "Question is required")
     .max(500, "Question exceeds 500 character limit"),
   analysisResult: analysisResultSchema,
-  documentText: z.string().min(1),
+  documentText: z.string().min(1).max(150000, "Document exceeds 150,000 character limit"),
   userId: z.string().uuid("Invalid userId format"),
   analysisId: z.string().uuid("Invalid analysisId format"),
 });

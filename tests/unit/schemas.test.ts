@@ -139,6 +139,32 @@ describe("followupRequestSchema", () => {
     });
     expect(result.success).toBe(false);
   });
+
+  it("rejects documentText exceeding 150,000 characters", () => {
+    const result = followupRequestSchema.safeParse({
+      question: "What does clause 5 mean?",
+      analysisResult: validAnalysisResult(),
+      documentText: "a".repeat(150001),
+      userId: validUuid,
+      analysisId: validUuid,
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      const msg = result.error.issues[0].message;
+      expect(msg).toContain("150,000");
+    }
+  });
+
+  it("accepts documentText at exactly 150,000 characters", () => {
+    const result = followupRequestSchema.safeParse({
+      question: "What does clause 5 mean?",
+      analysisResult: validAnalysisResult(),
+      documentText: "a".repeat(150000),
+      userId: validUuid,
+      analysisId: validUuid,
+    });
+    expect(result.success).toBe(true);
+  });
 });
 
 describe("shareRequestSchema", () => {
