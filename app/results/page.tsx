@@ -13,6 +13,7 @@ import { YourRightsPanel } from "@/components/analysis/YourRightsPanel";
 import { ObligationsPanel } from "@/components/analysis/ObligationsPanel";
 import { FollowUpInput } from "@/components/analysis/FollowUpInput";
 import { ClauseNavigationProvider } from "@/components/analysis/ClauseNavigationContext";
+import { ResultsHeader } from "@/components/input/ResultsHeader";
 
 export default function ResultsPage() {
   const router = useRouter();
@@ -34,6 +35,7 @@ export default function ResultsPage() {
         className={`${fontVariables} min-h-screen bg-[#fbf8f1] text-[#18181f]`}
         style={{ fontFamily: "var(--font-body)" }}
       >
+        <ResultsHeader />
         <main className="mx-auto max-w-4xl px-4 py-10 md:px-6 md:py-12">
           <RiskDashboard analysis={analysis} />
 

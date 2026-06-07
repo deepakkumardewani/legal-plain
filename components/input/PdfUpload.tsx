@@ -114,7 +114,7 @@ function Dropzone({
     <div className="w-full">
       <div
         className={cn(
-          "group relative flex min-h-[280px] cursor-pointer flex-col items-center justify-center rounded-[1.75rem] border border-dashed p-10 text-center transition-all duration-300",
+          "group relative flex min-h-[200px] cursor-pointer flex-col items-center justify-center rounded-[1.75rem] border border-dashed p-6 text-center transition-all duration-300",
           dragOver
             ? "border-[#c8791a] bg-[#f4eddf]"
             : "border-[#d8d2c6] bg-[#fffdf8] hover:-translate-y-0.5 hover:border-[#c8791a]/50 hover:bg-[#fbf8f1] hover:shadow-[0_26px_70px_-56px_rgba(74,55,31,0.7)]",
