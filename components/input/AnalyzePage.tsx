@@ -13,6 +13,7 @@ import { getOrCreateUserId } from "@/lib/userId";
 import { useAnalysisStore } from "@/lib/useAnalysisStore";
 import { useUnloadGuard } from "@/lib/useUnloadGuard";
 import { AnalyzingGuardBanner } from "@/components/analysis/AnalyzingGuardBanner";
+import { saveAnalysis } from "@/lib/analysisHistory";
 import type { AnalysisResult, DocumentType } from "@/lib/types";
 
 type NdaRole = "RECEIVING" | "DISCLOSING" | "MUTUAL";
@@ -67,6 +68,12 @@ export function AnalyzePage() {
 
       const result: AnalysisResult = await response.json();
       setAnalysis(result, documentText.trim());
+      saveAnalysis({
+        analysisId: result.analysisId,
+        analysis: result,
+        documentText: documentText.trim(),
+        savedAt: Date.now(),
+      }).catch((err) => console.error("[AnalyzePage] saveAnalysis failed", err));
       router.push("/results");
     } catch {
       setError("Something went wrong. Please check your connection and try again.");
