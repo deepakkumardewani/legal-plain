@@ -57,37 +57,37 @@
 
 ## Phase 3 — History UI & Reopen
 
-### ☐ A3 — Persist on completion
+### ☑ A3 — Persist on completion
 - **File:** `components/input/AnalyzePage.tsx` (EDIT)
 - **Build:** After `setAnalysis(result, documentText)`, call `saveAnalysis({...})` (best-effort, catch+log). Covers fresh + cache-hit results.
 - **AC:** Every success → history record with full result + doc text; save failure never blocks `/results` nav.
 - **Verify:** Manual + E2E — record appears in `/history`.
 
-### ☐ A4 — `/history` route + list
+### ☑ A4 — `/history` route + list
 - **Files:** `app/history/page.tsx` · `components/history/HistoryList.tsx` · `components/history/HistoryItemCard.tsx` (all NEW)
 - **Build:** Card = auto-label (`Type · date`) + risk badge (A0) + snippet (A1 constant). Empty state with CTA → `/analyze`. Newest first.
 - **AC:** Records render newest-first; empty state when none; badge matches dashboard.
 - **Verify:** RTL — list + empty state; manual visual pass.
 
-### ☐ A5 — Reopen (no re-analysis)
+### ☑ A5 — Reopen (no re-analysis)
 - **File:** `components/history/HistoryItemCard.tsx` (EDIT)
 - **Build:** Click → `getAnalysis(id)` → `setAnalysis(result, documentText)` → `router.push('/results')`.
 - **AC:** Reopen makes **zero** `/api/analyze` calls; results render; follow-up + export work.
 - **Verify:** RTL — handler calls store with stored data, no fetch; E2E asserts no `/api/analyze` on reopen.
 
-### ☐ A6 — Rename
+### ☑ A6 — Rename
 - **File:** `components/history/HistoryItemMenu.tsx` (NEW, reuse `dropdown-menu`)
 - **Build:** Rename action (inline input or small dialog) → `renameAnalysis`; custom name overrides auto-label; clearing reverts.
 - **AC:** Rename persists across reload; empty name reverts to auto-label.
 - **Verify:** RTL + manual reload check.
 
-### ☐ A7 — Delete + Clear all
+### ☑ A7 — Delete + Clear all
 - **Files:** `components/history/HistoryItemMenu.tsx` (EDIT) · `components/history/ClearHistoryButton.tsx` (NEW, reuse `dialog`)
 - **Build:** Per-item delete; clear-all with confirm dialog.
 - **AC:** Delete removes one, list updates immediately; clear-all (after confirm) → empty state.
 - **Verify:** RTL — delete updates list; clear-all confirm path empties list.
 
-### ☐ A8 — Header entry points
+### ☑ A8 — Header entry points
 - **Files:** `components/input/AnalyzeHeader.tsx` (EDIT) · `components/input/ResultsHeader.tsx` (EDIT if it fits)
 - **Build:** "History" link → `/history`.
 - **AC:** Link visible in analyze/results flow; routes to `/history`.
@@ -99,13 +99,13 @@
 
 ## Phase 4 — End-to-End & Hardening
 
-### ☐ E1 — Playwright E2E
+### ☑ E1 — Playwright E2E
 - **File:** `e2e/` (NEW spec)
 - **Build:** analysis → guard banner → results → `/history` shows item → reopen (assert **no** `/api/analyze`) → rename → delete → clear all → empty state.
 - **AC:** Full flow passes headless.
 - **Verify:** `bun run test:e2e` green.
 
-### ☐ E2 — Final verification pass
+### ☑ E2 — Final verification pass
 - **Build:** `bun run verify` + `bun run test` + `bun run test:e2e`; fix issues; manually re-check every spec AC.
 - **AC:** All suites green; every spec AC confirmed.
 - **Verify:** Clean run logs.
