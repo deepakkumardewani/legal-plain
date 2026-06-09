@@ -11,6 +11,8 @@ import { NdaRoleSection } from "@/components/input/NdaRoleSection";
 import { fontVariables } from "@/lib/fonts";
 import { getOrCreateUserId } from "@/lib/userId";
 import { useAnalysisStore } from "@/lib/useAnalysisStore";
+import { useUnloadGuard } from "@/lib/useUnloadGuard";
+import { AnalyzingGuardBanner } from "@/components/analysis/AnalyzingGuardBanner";
 import type { AnalysisResult, DocumentType } from "@/lib/types";
 
 type NdaRole = "RECEIVING" | "DISCLOSING" | "MUTUAL";
@@ -73,6 +75,8 @@ export function AnalyzePage() {
     }
   }, [documentText, documentType, userId, userRole, setAnalysis, router]);
 
+  useUnloadGuard(loading);
+
   const canAnalyze = documentText.trim().length > 0 && documentType !== null && userId !== null;
 
   return (
@@ -91,6 +95,7 @@ export function AnalyzePage() {
           />
           <DocumentTypeSection value={documentType} onChange={setDocumentType} />
           {documentType === "NDA" && <NdaRoleSection value={userRole} onChange={setUserRole} />}
+          {loading && <AnalyzingGuardBanner />}
           <AnalyzeSubmitSection
             canAnalyze={canAnalyze}
             loading={loading}
