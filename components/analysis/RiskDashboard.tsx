@@ -8,6 +8,7 @@ import { ClauseCard } from "./ClauseCard";
 import { JurisdictionMismatchBanner } from "./JurisdictionMismatchBanner";
 import { CLAUSE_CATEGORY_TABS_ID, CLAUSE_LIST_ID, useClauseNav } from "./ClauseNavigationContext";
 import { ExportMenu } from "@/components/export/ExportMenu";
+import { getRiskBadge } from "@/lib/riskBadge";
 
 const documentTypeLabels: Record<string, string> = {
   EMPLOYMENT_CONTRACT: "Employment Contract",
@@ -15,20 +16,8 @@ const documentTypeLabels: Record<string, string> = {
   RESIDENTIAL_LEASE: "Residential Lease",
 };
 
-const scoreColors: Record<string, string> = {
-  high: "text-[#c0392b]",
-  moderate: "text-[#b45309]",
-  low: "text-[#2d6a4f]",
-};
-
 const PANEL_CARD =
   "rounded-2xl border border-[#e6dccd] bg-[#fffdf8] shadow-[0_20px_70px_-58px_rgba(74,55,31,0.65)]";
-
-function scoreBucket(score: number): string {
-  if (score >= 70) return "high";
-  if (score >= 40) return "moderate";
-  return "low";
-}
 
 interface RiskDashboardProps {
   analysis: AnalysisResult;
@@ -54,7 +43,7 @@ export function RiskDashboard({ analysis, readOnly = false }: RiskDashboardProps
     return clauses;
   }, [analysis.clauses, activeTab]);
 
-  const bucket = scoreBucket(analysis.overallRiskScore);
+  const riskBadge = getRiskBadge(analysis.overallRiskScore, analysis.overallRiskLabel);
 
   const dealBreakerClauses = useMemo(
     () => analysis.clauses.filter((c) => c.dealBreaker === true),
@@ -97,12 +86,15 @@ export function RiskDashboard({ analysis, readOnly = false }: RiskDashboardProps
             </div>
             <div className="text-right shrink-0">
               <p
-                className={cn("text-4xl font-bold tabular-nums md:text-5xl", scoreColors[bucket])}
+                className={cn(
+                  "text-4xl font-bold tabular-nums md:text-5xl",
+                  riskBadge.colorClasses,
+                )}
                 style={{ fontFamily: "var(--font-display)" }}
               >
                 {analysis.overallRiskScore}
               </p>
-              <p className="text-sm font-medium text-[#5c5c66]">{analysis.overallRiskLabel}</p>
+              <p className="text-sm font-medium text-[#5c5c66]">{riskBadge.label}</p>
             </div>
           </div>
 
