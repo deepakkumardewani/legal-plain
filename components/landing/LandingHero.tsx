@@ -16,7 +16,7 @@ export function LandingHero() {
             className="lp-rise lp-d1 mb-7 inline-flex items-center gap-2 rounded-full border border-[#c8791a]/30 bg-[#c8791a]/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-[#e0a14a]"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            Private contract review before you sign
+            Free & private review before you sign
           </div>
 
           <h1

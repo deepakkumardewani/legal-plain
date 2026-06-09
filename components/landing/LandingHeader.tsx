@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const NAV_ITEMS = [
   { href: "#documents", label: "Documents" },
   { href: "#method", label: "Method" },
@@ -9,9 +11,13 @@ export function LandingHeader() {
     <header className="sticky top-0 z-50 border-b border-[#2a2924]/80 bg-[#0f100e]/88 px-5 py-3 backdrop-blur-xl md:px-8">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6">
         <a href="#" className="group flex items-center gap-3">
-          <span className="grid h-8 w-8 place-items-center rounded-full border border-[#c8791a]/35 bg-[#c8791a]/12 text-sm font-bold text-[#e0a14a] transition-transform duration-200 group-hover:-rotate-6">
-            LP
-          </span>
+          <Image
+            src="/logo.svg"
+            alt="LegalPlain Logo"
+            width={32}
+            height={32}
+            className="transition-transform duration-200 group-hover:-rotate-6 rounded-full"
+          />
           <span
             className="text-lg font-semibold tracking-tight text-[#f7efe2]"
             style={{ fontFamily: "var(--font-display)" }}
@@ -34,10 +40,6 @@ export function LandingHeader() {
             </a>
           ))}
         </nav>
-
-        <span className="hidden rounded-full border border-[#3b362d] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#9f9788] sm:inline-flex">
-          Free private review
-        </span>
       </div>
     </header>
   );

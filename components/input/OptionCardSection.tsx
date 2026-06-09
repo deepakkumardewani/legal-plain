@@ -35,7 +35,7 @@ export function OptionCardSection<T extends string>({
               key={option.value}
               type="button"
               onClick={() => onChange(option.value)}
-              className={`group flex min-h-[150px] flex-col items-start rounded-[1.25rem] border px-4 py-4 text-left transition-all duration-300 ${
+              className={`group flex min-h-[110px] flex-col items-start rounded-[1.25rem] border px-4 py-4 text-left transition-all duration-300 ${
                 selected
                   ? "border-[#c8791a] bg-[#fff8f0] shadow-[0_18px_54px_-44px_rgba(200,121,26,0.9)] ring-2 ring-[#c8791a]/18"
                   : "border-[#e0d6c8] bg-[#fffdf8] hover:-translate-y-0.5 hover:border-[#c8791a]/45 hover:bg-[#fbf8f1]"

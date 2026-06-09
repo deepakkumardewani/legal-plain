@@ -86,7 +86,7 @@ export function AnalyzePage() {
         style={{ fontFamily: "var(--font-body)" }}
       >
         <AnalyzeHeader />
-        <main className="mx-auto w-full max-w-3xl space-y-8 px-5 py-10 md:px-8 lg:py-14">
+        <main className="mx-auto w-full max-w-3xl space-y-4 px-5 py-5 md:px-8 lg:py-8">
           <DocumentUploadSection
             onText={(text) => {
               setDocumentText(text);
