@@ -2,6 +2,24 @@
   "name": "legalplain",
   "version": "0.1.0",
   "private": true,
+  "description": "Free, plain-English legal document analysis — understand contracts, leases, and terms of service in seconds.",
+  "author": "Deepak Dewani",
+  "homepage": "https://legal-plain.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepakkumardewani/legal-plain.git"
+  },
+  "bugs": {
+    "url": "https://github.com/deepakkumardewani/legal-plain/issues"
+  },
+  "keywords": [
+    "legal",
+    "contract-analysis",
+    "plain-english",
+    "nextjs",
+    "ai",
+    "document-analysis"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
