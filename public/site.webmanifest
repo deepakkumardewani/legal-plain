@@ -1,0 +1,14 @@
+{
+  "name": "LegalPlain — Plain-English legal document analysis",
+  "short_name": "LegalPlain",
+  "description": "Free, plain-English legal document analysis. Understand contracts, leases, and terms of service in seconds.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf9f6",
+  "theme_color": "#0e0f16",
+  "icons": [
+    { "src": "/favicon-96x96.png", "sizes": "96x96", "type": "image/png" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/favicon.svg", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
