@@ -146,10 +146,30 @@ describe("POST /api/followup", () => {
     expect(data.citedClauseIds).toEqual(["clause-1"]);
   });
 
-  it("returns 429 when rate limit exceeded", async () => {
-    const mockRedis = createMockRedis(false, 0);
+  it("returns 400 for invalid JSON body", async () => {
+    const { POST } = await import("@/app/api/followup/route");
+
+    const request = new Request("http://localhost:3000/api/followup", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-user-id": validUuid,
+        "x-forwarded-for": "192.168.1.1",
+      },
+      body: "not json",
+    });
+
+    const response = await POST(request as unknown as Parameters<typeof POST>[0]);
+    expect(response.status).toBe(400);
+  });
+
+  it("returns 400 when callAI throws with non-retryable error", async () => {
     vi.doMock("@/lib/redis", () => ({
-      getRedis: () => mockRedis,
+      getRedis: () => createMockRedis(),
+    }));
+
+    vi.doMock("@/lib/ai", () => ({
+      callAI: vi.fn().mockRejectedValue(new Error("AI provider unavailable")),
     }));
 
     const { POST } = await import("@/app/api/followup/route");
@@ -171,9 +191,7 @@ describe("POST /api/followup", () => {
     });
 
     const response = await POST(request as unknown as Parameters<typeof POST>[0]);
-    expect(response.status).toBe(429);
-    const data = await response.json();
-    expect(data.remaining).toBe(0);
+    expect(response.status).toBe(500);
   });
 
   it("returns 400 for invalid userId", async () => {

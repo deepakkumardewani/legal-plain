@@ -63,25 +63,24 @@ describe("analyzeRequestSchema", () => {
   it("accepts a valid analyze request", () => {
     const result = analyzeRequestSchema.safeParse({
       documentText: "Employment agreement...",
-      userJurisdiction: "California, USA",
+      documentType: "EMPLOYMENT_CONTRACT",
       userId: validUuid,
     });
     expect(result.success).toBe(true);
   });
 
-  it("accepts null userJurisdiction", () => {
+  it("rejects missing documentType", () => {
     const result = analyzeRequestSchema.safeParse({
       documentText: "Employment agreement...",
-      userJurisdiction: null,
       userId: validUuid,
     });
-    expect(result.success).toBe(true);
+    expect(result.success).toBe(false);
   });
 
   it("rejects empty document text", () => {
     const result = analyzeRequestSchema.safeParse({
       documentText: "",
-      userJurisdiction: null,
+      documentType: "EMPLOYMENT_CONTRACT",
       userId: validUuid,
     });
     expect(result.success).toBe(false);
@@ -90,7 +89,7 @@ describe("analyzeRequestSchema", () => {
   it("rejects document over 150k chars", () => {
     const result = analyzeRequestSchema.safeParse({
       documentText: "x".repeat(150001),
-      userJurisdiction: null,
+      documentType: "EMPLOYMENT_CONTRACT",
       userId: validUuid,
     });
     expect(result.success).toBe(false);
@@ -99,7 +98,7 @@ describe("analyzeRequestSchema", () => {
   it("rejects invalid userId", () => {
     const result = analyzeRequestSchema.safeParse({
       documentText: "Employment agreement...",
-      userJurisdiction: null,
+      documentType: "EMPLOYMENT_CONTRACT",
       userId: "not-a-uuid",
     });
     expect(result.success).toBe(false);

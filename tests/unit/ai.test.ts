@@ -185,7 +185,7 @@ describe("callAI (DeepSeek)", () => {
         system: "You are a test assistant.",
         user: "Say hello",
       }),
-    ).rejects.toThrow("Request timed out after 60 seconds");
+    ).rejects.toThrow("Request timed out after 180 seconds");
   });
 
   it("throws if DEEPSEEK_API_KEY is missing", async () => {
