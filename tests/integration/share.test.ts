@@ -75,6 +75,31 @@ describe("Share API", () => {
 
       expect(response.status).toBe(400);
     });
+
+    it("returns 400 for invalid JSON body", async () => {
+      const { POST } = await import("@/app/api/share/route");
+
+      const request = new Request("http://localhost:3000/api/share", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-user-id": validUuid,
+        },
+        body: "not json",
+      });
+
+      const response = await POST(request as Parameters<typeof POST>[0]);
+      expect(response.status).toBe(400);
+    });
+
+    it("returns 400 for invalid analysis result structure", async () => {
+      const response = await createShare({
+        analysisResult: { notAnAnalysis: true },
+        userId: validUuid,
+      });
+
+      expect(response.status).toBe(400);
+    });
   });
 
   describe("GET /api/share/[shareId]", () => {
@@ -93,6 +118,16 @@ describe("Share API", () => {
       expect(response.status).toBe(404);
       const data = await response.json();
       expect(data.error).toContain("not found");
+    });
+
+    it("returns 400 for empty shareId param", async () => {
+      const { GET } = await import("@/app/api/share/[shareId]/route");
+
+      const request = new Request("http://localhost:3000/api/share/");
+      const response = await GET(request as unknown as Parameters<typeof GET>[0], {
+        params: Promise.resolve({ shareId: "" }),
+      });
+      expect(response.status).toBe(400);
     });
 
     it("round-trip: create then retrieve share", async () => {

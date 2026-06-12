@@ -172,4 +172,46 @@ describe("POST /api/analyze", () => {
     const data = await response.json();
     expect(data.overallRiskScore).toBe(computeOverallRiskScore(sampleAnalysis.clauses));
   });
+
+  it("returns 500 when callAI throws", async () => {
+    vi.doMock("@/lib/ai", () => ({
+      callAI: vi.fn().mockRejectedValue(new Error("AI service down")),
+    }));
+
+    const { POST } = await import("@/app/api/analyze/route");
+
+    const request = new Request("http://localhost:3000/api/analyze", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-user-id": validUuid,
+        "x-forwarded-for": "192.168.1.1",
+      },
+      body: JSON.stringify({
+        documentText: sampleDocumentText,
+        documentType: "EMPLOYMENT_CONTRACT",
+        userId: validUuid,
+      }),
+    });
+
+    const response = await POST(request as unknown as Parameters<typeof POST>[0]);
+    expect(response.status).toBe(500);
+  });
+
+  it("returns 400 for invalid JSON body", async () => {
+    const { POST } = await import("@/app/api/analyze/route");
+
+    const request = new Request("http://localhost:3000/api/analyze", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-user-id": validUuid,
+        "x-forwarded-for": "192.168.1.1",
+      },
+      body: "not valid json",
+    });
+
+    const response = await POST(request as unknown as Parameters<typeof POST>[0]);
+    expect(response.status).toBe(400);
+  });
 });

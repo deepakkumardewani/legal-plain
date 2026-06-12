@@ -34,4 +34,19 @@ describe("useUnloadGuard", () => {
     unmount();
     expect(removeSpy).toHaveBeenCalledWith("beforeunload", expect.any(Function));
   });
+
+  it("handler calls e.preventDefault", () => {
+    const addSpy = vi.spyOn(window, "addEventListener");
+    renderHook(() => useUnloadGuard(true));
+
+    const handler = addSpy.mock.calls.find((call) => call[0] === "beforeunload")?.[1] as
+      | ((e: BeforeUnloadEvent) => void)
+      | undefined;
+    expect(handler).toBeDefined();
+
+    const event = new Event("beforeunload") as BeforeUnloadEvent;
+    const preventDefaultSpy = vi.spyOn(event, "preventDefault");
+    handler!(event);
+    expect(preventDefaultSpy).toHaveBeenCalled();
+  });
 });

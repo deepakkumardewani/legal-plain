@@ -129,6 +129,106 @@ describe("getOrCreateUserId", () => {
     localStorageSpy.mockRestore();
   });
 
+  it("handles localStorage read error gracefully", async () => {
+    const getItemSpy = vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
+      throw new Error("QuotaExceeded");
+    });
+
+    const mockStore = {
+      get: vi.fn(() => {
+        const req = {
+          onsuccess: null as (() => void) | null,
+          onerror: null as (() => void) | null,
+          result: undefined,
+        };
+        setTimeout(() => {
+          if (req.onsuccess) req.onsuccess();
+        }, 0);
+        return req;
+      }),
+      put: vi.fn(),
+    };
+    const mockTx = {
+      objectStore: vi.fn().mockReturnValue(mockStore),
+      oncomplete: null as (() => void) | null,
+    };
+    const mockDb = {
+      transaction: vi.fn().mockReturnValue(mockTx),
+      objectStoreNames: { contains: vi.fn().mockReturnValue(true) },
+      close: vi.fn(),
+    };
+    const openRequest = {
+      result: mockDb,
+      onsuccess: null as (() => void) | null,
+      onerror: null as (() => void) | null,
+      onupgradeneeded: null as (() => void) | null,
+    };
+    vi.stubGlobal("indexedDB", {
+      open: vi.fn().mockImplementation(() => {
+        setTimeout(() => {
+          if (openRequest.onsuccess) openRequest.onsuccess();
+        }, 0);
+        return openRequest;
+      }),
+    });
+
+    await loadModule();
+    const uuid = await getOrCreateUserId();
+    expect(uuid).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+
+    getItemSpy.mockRestore();
+  });
+
+  it("handles localStorage write error gracefully", async () => {
+    vi.spyOn(Storage.prototype, "getItem").mockReturnValue(null);
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new Error("QuotaExceeded");
+    });
+
+    const mockStore = {
+      get: vi.fn(() => {
+        const req = {
+          onsuccess: null as (() => void) | null,
+          onerror: null as (() => void) | null,
+          result: undefined,
+        };
+        setTimeout(() => {
+          if (req.onsuccess) req.onsuccess();
+        }, 0);
+        return req;
+      }),
+      put: vi.fn(),
+    };
+    const mockTx = {
+      objectStore: vi.fn().mockReturnValue(mockStore),
+      oncomplete: null as (() => void) | null,
+    };
+    const mockDb = {
+      transaction: vi.fn().mockReturnValue(mockTx),
+      objectStoreNames: { contains: vi.fn().mockReturnValue(true) },
+      close: vi.fn(),
+    };
+    const openRequest = {
+      result: mockDb,
+      onsuccess: null as (() => void) | null,
+      onerror: null as (() => void) | null,
+      onupgradeneeded: null as (() => void) | null,
+    };
+    vi.stubGlobal("indexedDB", {
+      open: vi.fn().mockImplementation(() => {
+        setTimeout(() => {
+          if (openRequest.onsuccess) openRequest.onsuccess();
+        }, 0);
+        return openRequest;
+      }),
+    });
+
+    localStorage.clear();
+    await loadModule();
+    const uuid = await getOrCreateUserId();
+    expect(uuid).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+  });
+
   it("generates a new UUID when both stores are empty", async () => {
     const mockStore = {
       get: vi.fn(() => {

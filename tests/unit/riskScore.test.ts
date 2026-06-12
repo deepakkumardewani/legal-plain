@@ -18,6 +18,10 @@ describe("riskScore", () => {
     expect(computeOverallRiskScore([clause("GREEN"), clause("GREEN")])).toBe(0);
   });
 
+  it("returns 50 for empty clauses", () => {
+    expect(computeOverallRiskScore([])).toBe(50);
+  });
+
   it("returns 100 for all RED clauses", () => {
     expect(computeOverallRiskScore([clause("RED"), clause("RED")])).toBe(100);
   });
