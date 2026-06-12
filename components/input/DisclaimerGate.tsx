@@ -117,7 +117,7 @@ export function DisclaimerGate({ children }: DisclaimerGateProps) {
               This is guidance, not legal advice.
             </h2>
             <p id="disclaimer-body" className="mt-3 text-[15px] leading-relaxed text-[#72728a]">
-              LegalPlain provides general educational information only — not legal advice. No
+              LexLight provides general educational information only — not legal advice. No
               attorney-client relationship is formed by using this tool. The analysis may contain
               errors and does not account for all applicable laws. Do not rely on this analysis
               alone to make legal decisions. For matters of significant consequence, consult a

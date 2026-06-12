@@ -32,9 +32,8 @@ export function LandingHero() {
           </h1>
 
           <p className="lp-rise lp-d3 mt-7 max-w-[59ch] text-[1.08rem] leading-[1.75] text-[#b7ad9d]">
-            Upload an employment contract, NDA, or residential lease. LegalPlain reviews the
-            document clause by clause, highlights practical risk, and explains what to ask before
-            you sign.
+            Upload an employment contract, NDA, or residential lease. LexLight reviews the document
+            clause by clause, highlights practical risk, and explains what to ask before you sign.
           </p>
 
           <div className="lp-rise lp-d4 mt-10 flex flex-wrap items-center gap-4">

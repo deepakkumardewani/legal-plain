@@ -58,7 +58,7 @@ export function AnalyzePage() {
         if (body.error === "COMMERCIAL_LEASE_DETECTED") {
           setError(
             body.message ??
-              "This appears to be a commercial lease. LegalPlain currently supports residential leases only.",
+              "This appears to be a commercial lease. LexLight currently supports residential leases only.",
           );
         } else {
           setError(body.error ?? "Something went wrong. Please try again.");

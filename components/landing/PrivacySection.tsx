@@ -7,7 +7,7 @@ const PRIVACY_ITEMS = [
   },
   {
     title: "Document not stored",
-    body: "LegalPlain sends extracted text for analysis and does not keep the document in its own database.",
+    body: "LexLight sends extracted text for analysis and does not keep the document in its own database.",
   },
   {
     title: "Temporary sharing",

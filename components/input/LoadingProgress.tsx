@@ -241,7 +241,7 @@ export function LoadingProgress({ active }: LoadingProgressProps) {
             d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 0h10.5a2.25 2.25 0 0 1 2.25 2.25v6a2.25 2.25 0 0 1-2.25 2.25H6.75a2.25 2.25 0 0 1-2.25-2.25v-6a2.25 2.25 0 0 1 2.25-2.25Z"
           />
         </svg>
-        Your document is sent for AI analysis and never stored by LegalPlain.
+        Your document is sent for AI analysis and never stored by LexLight.
       </p>
     </div>
   );

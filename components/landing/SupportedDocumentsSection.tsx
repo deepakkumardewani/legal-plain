@@ -8,7 +8,7 @@ export function SupportedDocumentsSection() {
         <SectionIntro
           eyebrow="Supported documents"
           title="Narrow scope. Better answers."
-          body="LegalPlain focuses on contracts people often sign without a lawyer, then tailors the review to the risks that actually appear in that category. More document types are coming soon."
+          body="LexLight focuses on contracts people often sign without a lawyer, then tailors the review to the risks that actually appear in that category. More document types are coming soon."
         />
 
         <div className="mt-16 grid grid-cols-1 gap-5 lg:grid-cols-3">

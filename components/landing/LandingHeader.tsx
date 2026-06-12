@@ -13,7 +13,7 @@ export function LandingHeader() {
         <a href="#" className="group flex items-center gap-3">
           <Image
             src="/logo.svg"
-            alt="LegalPlain Logo"
+            alt="LexLight Logo"
             width={32}
             height={32}
             className="transition-transform duration-200 group-hover:-rotate-6 rounded-full"
@@ -22,7 +22,7 @@ export function LandingHeader() {
             className="text-lg font-semibold tracking-tight text-[#f7efe2]"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            LegalPlain
+            LexLight
           </span>
         </a>
 

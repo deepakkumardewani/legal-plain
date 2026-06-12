@@ -3,7 +3,7 @@ import Image from "next/image";
 import { fontVariables } from "@/lib/fonts";
 import { HistoryList } from "@/components/history/HistoryList";
 
-export const metadata = { title: "History – LegalPlain" };
+export const metadata = { title: "History – LexLight" };
 
 export default function HistoryPage() {
   return (
@@ -38,10 +38,10 @@ export default function HistoryPage() {
 
             <div className="h-4 w-px bg-[#ddd5c8]" aria-hidden />
 
-            <Link href="/" className="group flex items-center gap-2" aria-label="LegalPlain home">
+            <Link href="/" className="group flex items-center gap-2" aria-label="LexLight home">
               <Image
                 src="/logo.svg"
-                alt="LegalPlain Logo"
+                alt="LexLight Logo"
                 width={26}
                 height={26}
                 className="rounded-full transition-transform duration-200 group-hover:-rotate-6"
@@ -50,7 +50,7 @@ export default function HistoryPage() {
                 className="text-[15px] font-semibold tracking-tight text-[#18181f]"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                LegalPlain
+                LexLight
               </span>
             </Link>
           </div>
