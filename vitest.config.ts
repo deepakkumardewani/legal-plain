@@ -15,7 +15,15 @@ export default defineConfig({
     include: ["tests/**/*.test.ts", "tests/**/*.test.tsx", "components/**/__tests__/*.test.tsx"],
     coverage: {
       provider: "v8",
-      include: ["lib/**"],
+      include: ["lib/**", "app/api/**"],
+      exclude: [
+        "lib/prompts/**",
+        "lib/types.ts",
+        "lib/constants.ts",
+        "lib/fonts.ts",
+        "tests/**",
+        "**/*.test.*",
+      ],
       thresholds: {
         lines: 80,
         branches: 80,
