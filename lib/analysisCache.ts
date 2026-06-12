@@ -27,6 +27,7 @@ export async function getCachedAnalysis(cacheKey: string): Promise<AnalysisResul
   try {
     return await getRedis().get<AnalysisResult>(cacheKey);
   } catch (error) {
+    /* v8 ignore next 4 — defensive: in-memory redis never throws; production Upstash/ioredis errors surface here */
     console.warn("[analysisCache] get failed — skipping cache", {
       message: error instanceof Error ? error.message : String(error),
     });
@@ -43,6 +44,7 @@ export async function setCachedAnalysis(cacheKey: string, analysis: AnalysisResu
       ANALYSIS_CACHE_TTL_SECONDS,
     );
   } catch (error) {
+    /* v8 ignore next 3 — defensive: in-memory redis never throws; production Upstash/ioredis errors surface here */
     console.warn("[analysisCache] set failed — analysis not cached", {
       message: error instanceof Error ? error.message : String(error),
     });

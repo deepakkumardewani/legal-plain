@@ -9,6 +9,7 @@ const listeners = new Set<Listener>();
 
 export function getStoredAnalysis(): AnalysisResult | null {
   if (!_analysis) return null;
+  /* v8 ignore next 6 — defensive: setStoredAnalysis always sets analysisId; this guards against direct _analysis manipulation */
   if (!_analysis.analysisId) {
     _analysis = finalizeAnalysisResult({
       ..._analysis,
