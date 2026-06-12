@@ -4,7 +4,7 @@
   "private": true,
   "description": "Free, plain-English legal document analysis — understand contracts, leases, and terms of service in seconds.",
   "author": "Deepak Dewani",
-  "homepage": "https://legal-plain.vercel.app",
+  "homepage": "https://lexlight.vercel.app",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deepakkumardewani/legal-plain.git"
