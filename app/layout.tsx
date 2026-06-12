@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_THEME_COLOR, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -50,7 +51,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body className="min-h-screen bg-white text-gray-900 antialiased">{children}</body>
+      <body className="min-h-screen bg-white text-gray-900 antialiased">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
