@@ -9,3 +9,6 @@ test-results
 node-compile-cache/
 *.tsbuildinfo
 tsconfig.tsbuildinfo.env
+.vercel
+public/gif-frames/
+scripts/
