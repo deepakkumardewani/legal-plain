@@ -45,7 +45,7 @@ describe("DisclaimerGate", () => {
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(
-      screen.getByText(/LegalPlain provides general educational information/),
+      screen.getByText(/LexLight provides general educational information/),
     ).toBeInTheDocument();
     expect(screen.getByTestId("input-area").closest('[aria-hidden="true"]')).toBeInTheDocument();
   });

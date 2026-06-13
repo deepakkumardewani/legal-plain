@@ -65,11 +65,11 @@ describe("toPdf", () => {
     expect(mockOutput).toHaveBeenCalledWith("blob");
   });
 
-  it("includes LegalPlain in the text calls", async () => {
+  it("includes LexLight in the text calls", async () => {
     const { toPdf } = await import("@/lib/exportPdf");
     await toPdf(sampleAnalysis);
     const allTextCalls = mockDoc.text.mock.calls.flat(2).join(" ");
-    expect(allTextCalls).toContain("LegalPlain");
+    expect(allTextCalls).toContain("LexLight");
   });
 
   it("renders mismatch section when present", async () => {
@@ -149,7 +149,7 @@ describe("downloadPdf", () => {
     vi.spyOn(document, "createElement").mockReturnValue(mockLink as unknown as HTMLElement);
     const { downloadPdf } = await import("@/lib/exportPdf");
     await downloadPdf(sampleAnalysis);
-    expect(mockLink.download).toMatch(/legalplain-analysis-.+\.pdf$/);
+    expect(mockLink.download).toMatch(/lexlight-analysis-.+\.pdf$/);
   });
 
   it("revokes the object URL after download", async () => {
