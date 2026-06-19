@@ -55,12 +55,26 @@ const STAGES = [
   },
   {
     label: "Compiling your report",
-    subtexts: ["Organising findings by risk level…", "Formatting your summary…", "Almost ready…"],
-    duration: 1000,
+    subtexts: [
+      "Organising findings by risk level…",
+      "Formatting your summary…",
+      "Highlighting key concerns…",
+      "Preparing clause breakdown…",
+      "Building your risk score…",
+      "Almost ready…",
+    ],
+    duration: 5000,
     fromPct: 93,
     toPct: 98,
   },
 ] as const;
+
+const MIN_SUBTEXT_INTERVAL_MS = 2800;
+
+function getSubtextInterval(stageIndex: number): number {
+  const { duration, subtexts } = STAGES[stageIndex];
+  return Math.max(MIN_SUBTEXT_INTERVAL_MS, Math.floor(duration / subtexts.length));
+}
 
 interface LoadingProgressProps {
   active: boolean;
@@ -73,7 +87,7 @@ export function LoadingProgress({ active }: LoadingProgressProps) {
   const stageStartRef = useRef<number | null>(null);
   const stageRef = useRef(0);
   const rafRef = useRef<number | null>(null);
-  const subtextTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const subtextTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!active) {
@@ -83,18 +97,22 @@ export function LoadingProgress({ active }: LoadingProgressProps) {
       stageRef.current = 0;
       stageStartRef.current = null;
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-      if (subtextTimerRef.current !== null) clearInterval(subtextTimerRef.current);
+      if (subtextTimerRef.current !== null) clearTimeout(subtextTimerRef.current);
       return;
     }
 
     stageStartRef.current = performance.now();
     stageRef.current = 0;
 
-    // Rotate subtexts every 1.8 seconds
-    subtextTimerRef.current = setInterval(() => {
-      const currentStage = stageRef.current;
-      setSubtextIdx((i) => (i + 1) % STAGES[currentStage].subtexts.length);
-    }, 1800);
+    function scheduleSubtextRotation(stageIndex: number) {
+      if (subtextTimerRef.current !== null) clearTimeout(subtextTimerRef.current);
+      subtextTimerRef.current = setTimeout(() => {
+        setSubtextIdx((i) => (i + 1) % STAGES[stageIndex].subtexts.length);
+        scheduleSubtextRotation(stageIndex);
+      }, getSubtextInterval(stageIndex));
+    }
+
+    scheduleSubtextRotation(0);
 
     // Animate progress bar via rAF
     function tick(now: number) {
@@ -121,13 +139,14 @@ export function LoadingProgress({ active }: LoadingProgressProps) {
         stageStartRef.current = performance.now();
         setStage(i);
         setSubtextIdx(0);
+        scheduleSubtextRotation(i);
       }, accum);
       timeouts.push(t);
     });
 
     return () => {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-      if (subtextTimerRef.current !== null) clearInterval(subtextTimerRef.current);
+      if (subtextTimerRef.current !== null) clearTimeout(subtextTimerRef.current);
       timeouts.forEach(clearTimeout);
     };
   }, [active]);
@@ -137,14 +156,19 @@ export function LoadingProgress({ active }: LoadingProgressProps) {
   const currentSubtexts = STAGES[stage].subtexts;
 
   return (
-    <div className="mt-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300 rounded-2xl border border-[#e4dfd6] bg-white p-5 shadow-sm">
-      {/* Header */}
-      <div className="mb-3 flex items-center gap-2.5">
+    <div
+      role="status"
+      aria-live="polite"
+      className="mt-6 w-full animate-in fade-in slide-in-from-bottom-2 duration-300 rounded-2xl border border-[#e4dfd6] bg-white p-5 shadow-sm"
+    >
+      <div className="mb-3 flex items-start gap-2.5">
         <span
-          className="h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-[#e4dfd6] border-t-[#c8791a]"
+          className="mt-0.5 h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-[#e4dfd6] border-t-[#c8791a]"
           aria-hidden
         />
-        <p className="text-sm font-semibold text-[#18181f]">Reviewing your document…</p>
+        <p className="text-sm font-semibold leading-snug text-[#18181f]">
+          Analyzing your document — please don&apos;t close, refresh, or leave this page
+        </p>
       </div>
 
       {/* Overall progress bar */}
@@ -186,7 +210,7 @@ export function LoadingProgress({ active }: LoadingProgressProps) {
                 )}
                 {isCurrent && (
                   <span
-                    className="h-4 w-4 animate-spin rounded-full border-2 border-[#e4dfd6] border-t-[#c8791a]"
+                    className="h-2.5 w-2.5 rounded-full bg-[#c8791a] ring-4 ring-[#c8791a]/15"
                     aria-hidden
                   />
                 )}
@@ -241,7 +265,7 @@ export function LoadingProgress({ active }: LoadingProgressProps) {
             d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 0h10.5a2.25 2.25 0 0 1 2.25 2.25v6a2.25 2.25 0 0 1-2.25 2.25H6.75a2.25 2.25 0 0 1-2.25-2.25v-6a2.25 2.25 0 0 1 2.25-2.25Z"
           />
         </svg>
-        Your document is sent for AI analysis and never stored by LegalPlain.
+        Your document is sent for AI analysis and never stored by LexLight.
       </p>
     </div>
   );

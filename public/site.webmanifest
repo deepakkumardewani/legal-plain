@@ -1,6 +1,6 @@
 {
-  "name": "LegalPlain — Plain-English legal document analysis",
-  "short_name": "LegalPlain",
+  "name": "LexLight — Plain-English legal document analysis",
+  "short_name": "LexLight",
   "description": "Free, plain-English legal document analysis. Understand contracts, leases, and terms of service in seconds.",
   "start_url": "/",
   "display": "standalone",

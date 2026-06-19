@@ -50,16 +50,16 @@ describe("HistoryList", () => {
     });
 
     render(<HistoryList />);
-    expect(screen.getByText("2 analyses")).toBeTruthy();
+    expect(screen.getAllByRole("button", { name: /^Reopen:/ })).toHaveLength(2);
   });
 
-  it("shows correct singular count", () => {
+  it("shows clear all when entries exist", () => {
     vi.spyOn(useAnalysisHistoryModule, "useAnalysisHistory").mockReturnValue({
       ...mockHook,
       entries: [makeEntry("id-1")],
     });
 
     render(<HistoryList />);
-    expect(screen.getByText("1 analysis")).toBeTruthy();
+    expect(screen.getByRole("button", { name: /Clear all/i })).toBeTruthy();
   });
 });

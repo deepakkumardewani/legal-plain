@@ -45,7 +45,7 @@ describe("DisclaimerGate", () => {
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(
-      screen.getByText(/LegalPlain provides general educational information/),
+      screen.getByText(/LexLight provides general educational information/),
     ).toBeInTheDocument();
     expect(screen.getByTestId("input-area").closest('[aria-hidden="true"]')).toBeInTheDocument();
   });
@@ -62,7 +62,7 @@ describe("DisclaimerGate", () => {
   });
 
   it("persists acknowledgement within the same session", () => {
-    sessionStore.set("legalplain_disclaimer", "ack");
+    sessionStore.set("lexlight_disclaimer", "ack");
 
     renderGate();
 

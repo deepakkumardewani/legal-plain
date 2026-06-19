@@ -7,17 +7,17 @@ export function LandingFooter() {
             className="text-lg font-semibold tracking-tight text-[#f7efe2]"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            LegalPlain
+            LexLight
           </span>
         </div>
         <p className="mb-6 text-sm leading-relaxed text-[#827d70]">
-          LegalPlain provides general educational information only, not legal advice. No
+          LexLight provides general educational information only, not legal advice. No
           attorney-client relationship is formed by using this tool. The analysis may contain errors
           and does not account for all applicable laws. Do not rely on this analysis alone to make
           legal decisions. For matters of significant consequence, consult a licensed attorney in
           your jurisdiction.
         </p>
-        <p className="text-xs text-[#827d70]">© {new Date().getFullYear()} LegalPlain.</p>
+        <p className="text-xs text-[#827d70]">© {new Date().getFullYear()} LexLight.</p>
       </div>
     </footer>
   );

@@ -49,7 +49,7 @@ export const METHOD_STEPS = [
   {
     num: "02",
     title: "Identify the contract type",
-    body: "LegalPlain checks whether the document matches a supported category and reads governing-law signals when the agreement includes them.",
+    body: "LexLight checks whether the document matches a supported category and reads governing-law signals when the agreement includes them.",
   },
   {
     num: "03",
@@ -92,8 +92,8 @@ export const REPORT_ITEMS = [
 
 export const FAQ_ITEMS = [
   {
-    q: "Is LegalPlain really free?",
-    a: "Yes. LegalPlain currently supports unlimited analyses and unlimited follow-up questions without an account or credit card.",
+    q: "Is LexLight really free?",
+    a: "Yes. LexLight currently supports unlimited analyses and unlimited follow-up questions without an account or credit card.",
   },
   {
     q: "How long does analysis take?",
@@ -101,7 +101,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Is this legal advice?",
-    a: "No. LegalPlain provides educational information to help you understand a contract before you decide what to do next. It does not create an attorney-client relationship or replace advice from a licensed lawyer.",
+    a: "No. LexLight provides educational information to help you understand a contract before you decide what to do next. It does not create an attorney-client relationship or replace advice from a licensed lawyer.",
   },
   {
     q: "Which documents are supported?",
@@ -109,7 +109,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "What happens to my document?",
-    a: "Your document is sent for AI analysis and is not stored by LegalPlain. If you create a share link, only the analysis result is stored temporarily so the link can work.",
+    a: "Your document is sent for AI analysis and is not stored by LexLight. If you create a share link, only the analysis result is stored temporarily so the link can work.",
   },
   {
     q: "Can I paste contract text instead?",

@@ -6,7 +6,7 @@ const FALLBACK_URL = "https://legal-plain.vercel.app";
  */
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? FALLBACK_URL).replace(/\/$/, "");
 
-export const SITE_NAME = "LegalPlain";
+export const SITE_NAME = "LexLight";
 
 export const SITE_DESCRIPTION =
   "Free, plain-English legal document analysis. Understand contracts, leases, and terms of service in seconds — your documents are analyzed without being stored.";

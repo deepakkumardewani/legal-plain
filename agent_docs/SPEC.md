@@ -1,4 +1,4 @@
-# Spec: LegalPlain
+# Spec: LexLight
 *Updated after legal audit — v2*
 
 ---
@@ -76,7 +76,7 @@ bun run test:e2e         # Playwright end-to-end tests
 ## Project Structure
 
 ```
-legalplain/
+lexlight/
 ├── app/
 │   ├── page.tsx                        # Landing page — disclaimer gate + input area
 │   ├── results/
@@ -329,7 +329,7 @@ export interface AnalysisResult {
 Before any document is submitted for analysis, the user must actively acknowledge a disclaimer. This is a **blocking gate** — not a footer, not a checkbox that can be skipped.
 
 **Disclaimer text (exact, do not abbreviate):**
-> "LegalPlain provides general educational information only — not legal advice. No attorney-client relationship is formed by using this tool. The analysis may contain errors and does not account for all applicable laws. Do not rely on this analysis alone to make legal decisions. For matters of significant consequence, consult a licensed attorney in your jurisdiction."
+> "LexLight provides general educational information only — not legal advice. No attorney-client relationship is formed by using this tool. The analysis may contain errors and does not account for all applicable laws. Do not rely on this analysis alone to make legal decisions. For matters of significant consequence, consult a licensed attorney in your jurisdiction."
 
 **Implementation:**
 - `DisclaimerGate.tsx` renders as a full-screen overlay on first visit (session-scoped)
@@ -409,7 +409,7 @@ law would give the employee stronger protections that this contract overrides.
 
 ### Privacy Copy (accurate, not overclaimed)
 
-**Input screen:** *"Your document text is sent to Claude (Anthropic) for analysis and is not stored by LegalPlain."*
+**Input screen:** *"Your document text is sent to Claude (Anthropic) for analysis and is not stored by LexLight."*
 
 **Results screen:** *"Document text was not stored. Analysis results are stored for 24 hours only if you create a share link, then permanently deleted."*
 
@@ -500,7 +500,7 @@ Ask for: "2 weeks per year of service, up to 12 weeks maximum."
 - `affectedByMismatch: true` clauses are automatically surfaced first within their risk category tab
 
 ### Export
-- **PDF:** All sections — clauses, missing, dates, rights, obligations — with LegalPlain branding
+- **PDF:** All sections — clauses, missing, dates, rights, obligations — with LexLight branding
 - **Markdown:** All sections with risk tags
 - **Share Link:** 24hr TTL, stores analysis JSON only, expiry disclosure shown before copy
 
@@ -516,7 +516,7 @@ Ask for: "2 weeks per year of service, up to 12 weeks maximum."
 
 ### Anonymous userId
 - Generated client-side on first visit using `crypto.randomUUID()`
-- Persisted in `localStorage` under key `legalplain_uid`; on read failure, fall back to `indexedDB` (object store `legalplain`, key `uid`); on write, mirror to both for resilience
+- Persisted in `localStorage` under key `lexlight_uid`; on read failure, fall back to `indexedDB` (object store `lexlight`, key `uid`); on write, mirror to both for resilience
 - Sent with every API request in the `x-user-id` header
 - Server validates the header is a well-formed UUID v4; if missing/invalid, request is rejected with 400
 - No PII, no signup, no signin — userId is opaque and disposable

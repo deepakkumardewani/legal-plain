@@ -43,10 +43,7 @@ export function HistoryList() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-[#8a8070]">
-          {entries.length} {entries.length === 1 ? "analysis" : "analyses"}
-        </p>
+      <div className="flex justify-end">
         <ClearHistoryButton onClear={clearAll} />
       </div>
 

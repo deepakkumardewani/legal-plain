@@ -12,7 +12,6 @@ import { fontVariables } from "@/lib/fonts";
 import { getOrCreateUserId } from "@/lib/userId";
 import { useAnalysisStore } from "@/lib/useAnalysisStore";
 import { useUnloadGuard } from "@/lib/useUnloadGuard";
-import { AnalyzingGuardBanner } from "@/components/analysis/AnalyzingGuardBanner";
 import { saveAnalysis } from "@/lib/analysisHistory";
 import type { AnalysisResult, DocumentType } from "@/lib/types";
 
@@ -58,7 +57,7 @@ export function AnalyzePage() {
         if (body.error === "COMMERCIAL_LEASE_DETECTED") {
           setError(
             body.message ??
-              "This appears to be a commercial lease. LegalPlain currently supports residential leases only.",
+              "This appears to be a commercial lease. LexLight currently supports residential leases only.",
           );
         } else {
           setError(body.error ?? "Something went wrong. Please try again.");
@@ -102,7 +101,6 @@ export function AnalyzePage() {
           />
           <DocumentTypeSection value={documentType} onChange={setDocumentType} />
           {documentType === "NDA" && <NdaRoleSection value={userRole} onChange={setUserRole} />}
-          {loading && <AnalyzingGuardBanner />}
           <AnalyzeSubmitSection
             canAnalyze={canAnalyze}
             loading={loading}

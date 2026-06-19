@@ -1,4 +1,4 @@
-# LegalPlain
+# LexLight
 
 [![CI](https://github.com/deepakkumardewani/legal-plain/actions/workflows/ci.yml/badge.svg)](https://github.com/deepakkumardewani/legal-plain/actions/workflows/ci.yml)
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
@@ -10,11 +10,11 @@
 
 **Live:** https://legal-plain.vercel.app
 
-![LegalPlain preview](./public/og-image.png)
+![LexLight preview](./public/og-image.png)
 
 ## What is this
 
-LegalPlain reads a legal document and explains it the way a careful friend who happens to be a lawyer would — in plain English, clause by clause. Upload a contract, NDA, lease, or offer letter and get a structured report that flags the risks, the missing protections, and the deadlines that matter.
+LexLight reads a legal document and explains it the way a careful friend who happens to be a lawyer would — in plain English, clause by clause. Upload a contract, NDA, lease, or offer letter and get a structured report that flags the risks, the missing protections, and the deadlines that matter.
 
 It’s built for the person signing the document, not the one who wrote it.
 
@@ -57,4 +57,4 @@ Copy `.env.local.example` to `.env.local` and fill in the required values (AI pr
 
 ---
 
-> LegalPlain provides informational analysis only and is **not legal advice**. For decisions that matter, consult a qualified attorney.
+> LexLight provides informational analysis only and is **not legal advice**. For decisions that matter, consult a qualified attorney.

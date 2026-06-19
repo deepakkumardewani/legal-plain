@@ -26,10 +26,10 @@ export function AnalyzeHeader() {
 
           <div className="h-4 w-px bg-[#ddd5c8]" aria-hidden />
 
-          <Link href="/" className="group flex items-center gap-2" aria-label="LegalPlain home">
+          <Link href="/" className="group flex items-center gap-2" aria-label="LexLight home">
             <Image
               src="/logo.svg"
-              alt="LegalPlain Logo"
+              alt="LexLight Logo"
               width={26}
               height={26}
               className="rounded-full transition-transform duration-200 group-hover:-rotate-6"
@@ -38,7 +38,7 @@ export function AnalyzeHeader() {
               className="text-[15px] font-semibold tracking-tight text-[#18181f]"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              LegalPlain
+              LexLight
             </span>
           </Link>
         </div>

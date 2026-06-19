@@ -1,5 +1,5 @@
-const STORAGE_KEY = "legalplain_uid";
-const DB_NAME = "legalplain";
+const STORAGE_KEY = "lexlight_uid";
+const DB_NAME = "lexlight";
 const OBJECT_STORE = "uid_store";
 const KEY_NAME = "uid";
 

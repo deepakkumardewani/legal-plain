@@ -193,7 +193,7 @@ describe("downloadMarkdown", () => {
     const mockLink = { href: "", download: "", click: vi.fn() };
     vi.spyOn(document, "createElement").mockReturnValue(mockLink as unknown as HTMLElement);
     downloadMarkdown(sampleAnalysis);
-    expect(mockLink.download).toContain("legalplain-analysis-");
+    expect(mockLink.download).toContain("lexlight-analysis-");
     expect(mockLink.download).toMatch(/\.md$/);
   });
 });

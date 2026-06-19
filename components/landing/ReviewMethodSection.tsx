@@ -11,7 +11,7 @@ export function ReviewMethodSection() {
         <SectionIntro
           eyebrow="Review method"
           title="From document to decision."
-          body="LegalPlain turns a dense agreement into a structured review: what kind of contract it is, which clauses matter, where the risk sits, and what you may want to ask before signing."
+          body="LexLight turns a dense agreement into a structured review: what kind of contract it is, which clauses matter, where the risk sits, and what you may want to ask before signing."
         />
 
         <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">

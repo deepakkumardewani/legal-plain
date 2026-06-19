@@ -1,6 +1,6 @@
 import type { AnalysisResult } from "@/lib/types";
 
-const DB_NAME = "legalplain";
+const DB_NAME = "lexlight";
 const STORE_NAME = "analysis_history";
 const DB_VERSION = 2;
 const RETENTION_CAP = 50;

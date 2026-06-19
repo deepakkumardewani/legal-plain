@@ -9,8 +9,8 @@ export function ResultsHeader() {
   const { analysis } = useAnalysisStore();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[#e6dccd] bg-[#fbf8f1]/95 px-5 py-3 backdrop-blur-xl md:px-8">
-      <div className="mx-auto flex max-w-3xl items-center justify-between">
+    <header className="sticky top-0 z-40 border-b border-[#e6dccd] bg-[#fbf8f1]/95 px-4 py-3 backdrop-blur-xl md:px-6">
+      <div className="mx-auto flex max-w-4xl items-center justify-between">
         <div className="flex items-center gap-2.5">
           <Link
             href="/"
@@ -32,10 +32,10 @@ export function ResultsHeader() {
 
           <div className="h-4 w-px bg-[#ddd5c8]" aria-hidden />
 
-          <Link href="/" className="group flex items-center gap-2" aria-label="LegalPlain home">
+          <Link href="/" className="group flex items-center gap-2" aria-label="LexLight home">
             <Image
               src="/logo.svg"
-              alt="LegalPlain Logo"
+              alt="LexLight Logo"
               width={26}
               height={26}
               className="rounded-full transition-transform duration-200 group-hover:-rotate-6"
@@ -44,7 +44,7 @@ export function ResultsHeader() {
               className="text-[15px] font-semibold tracking-tight text-[#18181f]"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              LegalPlain
+              LexLight
             </span>
           </Link>
         </div>

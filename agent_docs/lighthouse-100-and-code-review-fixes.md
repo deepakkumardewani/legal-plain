@@ -61,9 +61,9 @@ Real (build-independent) failing audits: `color-contrast`, `label-content-name-m
   - **Scope:** XS
 
 - [x] **Task 4 (XS): Fix logo link accessible-name mismatch**
-  - **Description:** Logo `<a aria-label="LegalPlain home">` accessible name doesn't match visible text (`label-content-name-mismatch`).
+  - **Description:** Logo `<a aria-label="LexLight home">` accessible name doesn't match visible text (`label-content-name-mismatch`).
   - **Acceptance criteria:**
-    - [x] `aria-label` contains the visible text, or redundant label removed in favor of visible "LegalPlain" text.
+    - [x] `aria-label` contains the visible text, or redundant label removed in favor of visible "LexLight" text.
     - [x] `label-content-name-mismatch` audit passes.
   - **Verification:** Lighthouse a11y audit = pass.
   - **Dependencies:** None
