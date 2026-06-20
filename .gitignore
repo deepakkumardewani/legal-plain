@@ -9,3 +9,5 @@ test-results
 node-compile-cache/
 *.tsbuildinfo
 tsconfig.tsbuildinfo.env
+scripts
+agent_docs
