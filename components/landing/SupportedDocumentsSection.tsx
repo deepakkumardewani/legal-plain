@@ -3,8 +3,8 @@ import { SectionIntro } from "@/components/landing/SectionIntro";
 
 export function SupportedDocumentsSection() {
   return (
-    <section id="documents" className="scroll-mt-24 px-5 py-24 md:px-8 lg:py-32">
-      <div className="mx-auto max-w-6xl">
+    <section className="px-5 py-24 md:px-8 lg:py-32">
+      <div id="documents" className="mx-auto max-w-6xl scroll-mt-24">
         <SectionIntro
           eyebrow="Supported documents"
           title="Narrow scope. Better answers."

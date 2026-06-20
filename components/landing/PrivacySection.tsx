@@ -16,12 +16,12 @@ type IconKey = keyof typeof ICON_MAP;
 
 export function PrivacySection() {
   return (
-    <section id="privacy" className="scroll-mt-24 bg-surface-warm px-5 py-24 md:px-8 lg:py-32">
-      <div className="mx-auto max-w-6xl">
+    <section className="bg-surface-warm px-5 py-24 md:px-8 lg:py-32">
+      <div id="privacy" className="mx-auto max-w-6xl scroll-mt-24">
         <SectionIntro
           eyebrow="Security & privacy"
           title="Your contract stays yours."
-          body="Every claim below reflects how LexLight is built — not marketing language. Your document is analyzed, not stored, and never used to train any AI model."
+          body="Every claim below reflects how LexLight is built. Your document is analyzed, not stored, and never used to train any AI model."
         />
 
         <div className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">

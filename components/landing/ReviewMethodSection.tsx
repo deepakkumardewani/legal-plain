@@ -3,11 +3,8 @@ import { SectionIntro } from "@/components/landing/SectionIntro";
 
 export function ReviewMethodSection() {
   return (
-    <section
-      id="method"
-      className="scroll-mt-24 border-y border-[#e6dccd] bg-[#fffdf8] px-5 py-24 md:px-8 lg:py-32"
-    >
-      <div className="mx-auto max-w-6xl">
+    <section className="border-y border-[#e6dccd] bg-[#fffdf8] px-5 py-24 md:px-8 lg:py-32">
+      <div id="method" className="mx-auto max-w-6xl scroll-mt-24">
         <SectionIntro
           eyebrow="Review method"
           title="From document to decision."

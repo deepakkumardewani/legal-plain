@@ -58,8 +58,10 @@ export function WhyAiReviewSection() {
         </div>
 
         <p className="mt-5 text-xs leading-relaxed text-on-surface-variant/70">
-          * LexLight provides educational information only, not legal advice. For matters of
-          significant consequence, consult a licensed attorney in your jurisdiction.
+          Cost and timing figures are estimates: review times are based on typical contracts, and
+          cost comparisons reference average U.S. attorney rates. Individual results vary. LexLight
+          provides educational information only, not legal advice — for matters of significant
+          consequence, consult a licensed attorney in your jurisdiction.
         </p>
       </div>
     </section>

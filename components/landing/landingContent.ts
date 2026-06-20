@@ -229,4 +229,32 @@ export const FAQ_ITEMS = [
     q: "Can I paste contract text instead?",
     a: "No. The current workflow is PDF upload only, which keeps the experience closer to how people actually receive signed agreements and avoids maintaining two different input paths.",
   },
+  {
+    q: "Do I need an account to use LexLight?",
+    a: "No. There is no sign-up, no email address, and no credit card. You can upload a document and get a full analysis without creating a profile.",
+  },
+  {
+    q: "Is my document data secure?",
+    a: "Yes. Everything is encrypted in transit with SSL/TLS, your document is not stored after analysis, and personally identifiable information is redacted from the extracted text before it reaches the analysis layer.",
+  },
+  {
+    q: "Do you use my document to train AI models?",
+    a: "No. Your contract is never used to train, fine-tune, or improve any AI model. What you upload stays out of the training pipeline.",
+  },
+  {
+    q: "Which laws and jurisdictions does the analysis cover?",
+    a: "LexLight reads governing-law signals when an agreement includes them and flags common risks accordingly. It does not guarantee coverage of every applicable law in your jurisdiction, so it should complement — not replace — local legal advice.",
+  },
+  {
+    q: "How accurate is the analysis?",
+    a: "LexLight surfaces risks, missing clauses, and obligations to help you understand a document faster, but AI analysis can contain errors or miss context. Always confirm anything consequential with a licensed attorney before acting.",
+  },
+  {
+    q: "Who is LexLight for?",
+    a: "Anyone reviewing a standard contract before signing — employees weighing an offer, tenants reading a lease, or founders handling an NDA — who wants a plain-English understanding without the cost and scheduling of a full legal review.",
+  },
+  {
+    q: "The service is in beta. What does that mean?",
+    a: "LexLight is still being actively improved. Features, supported document types, and analysis quality will keep evolving, and you may occasionally encounter rough edges while we refine the experience.",
+  },
 ] as const;

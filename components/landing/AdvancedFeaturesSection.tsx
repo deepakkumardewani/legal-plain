@@ -28,7 +28,7 @@ type IconKey = keyof typeof ICON_MAP;
 export function AdvancedFeaturesSection() {
   return (
     <section className="border-y border-outline-warm bg-surface-warm px-5 py-24 md:px-8 lg:py-32">
-      <div className="mx-auto max-w-6xl">
+      <div id="features" className="mx-auto max-w-6xl scroll-mt-24">
         <SectionIntro
           eyebrow="Built for real use"
           title="Everything in one review."

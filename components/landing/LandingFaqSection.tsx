@@ -5,7 +5,7 @@ import { SectionIntro } from "@/components/landing/SectionIntro";
 export function LandingFaqSection() {
   return (
     <section className="border-t border-[#e6dccd] bg-[#fffdf8] px-5 py-24 md:px-8 lg:py-32">
-      <div className="mx-auto max-w-3xl">
+      <div id="faq" className="mx-auto max-w-3xl scroll-mt-24">
         <SectionIntro
           eyebrow="FAQ"
           title="Questions worth asking first."

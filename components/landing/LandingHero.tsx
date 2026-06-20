@@ -6,7 +6,10 @@ const VERTICAL_SCAN_LINES = ["left-8", "right-8", "right-20"] as const;
 
 export function LandingHero() {
   return (
-    <section className="lp-ambient lp-hero-dark relative isolate flex min-h-[92vh] items-center overflow-hidden px-5 py-24 md:px-8">
+    <section
+      id="hero"
+      className="lp-ambient lp-hero-dark relative isolate -mt-[72px] flex min-h-[92vh] items-center overflow-hidden px-5 pb-24 pt-[10.5rem] md:px-8"
+    >
       <div className="lp-grid absolute inset-0 opacity-[0.14]" />
 
       {/* warm corner glow — single accent light source, top-right */}
