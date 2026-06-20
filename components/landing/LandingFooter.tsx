@@ -1,3 +1,10 @@
+import Link from "next/link";
+
+const LEGAL_LINKS = [
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms of Service" },
+] as const;
+
 export function LandingFooter() {
   return (
     <footer className="border-t border-outline-warm bg-surface-warm px-5 py-12 text-center md:px-8">
@@ -17,6 +24,20 @@ export function LandingFooter() {
           legal decisions. For matters of significant consequence, consult a licensed attorney in
           your jurisdiction.
         </p>
+        <nav
+          className="mb-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2"
+          aria-label="Legal"
+        >
+          {LEGAL_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-sm font-medium text-on-surface-variant transition-colors duration-200 hover:text-foreground"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
         <p className="text-xs text-on-surface-variant/70">© {new Date().getFullYear()} LexLight.</p>
       </div>
     </footer>
