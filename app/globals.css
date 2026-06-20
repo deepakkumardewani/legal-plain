@@ -143,6 +143,22 @@ html {
   }
 }
 
+@keyframes lp-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.lp-menu-in {
+  transform-origin: top right;
+  animation: lp-menu-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 .lp-rise {
   animation: lp-rise 0.74s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -236,6 +252,22 @@ html {
   animation: clause-flash 1.6s ease-in-out;
 }
 
+/* Scroll reveal — one-time gentle fade-and-rise as a section enters the viewport.
+   Hidden by default; the .is-visible class is toggled by the Reveal component. */
+.lp-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.lp-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -250,5 +282,11 @@ html {
   .lp-ambient::after,
   .clause-flash {
     animation: none;
+  }
+
+  .lp-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

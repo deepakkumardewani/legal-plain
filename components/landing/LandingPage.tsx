@@ -6,6 +6,7 @@ import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingHero } from "@/components/landing/LandingHero";
 import { PrivacySection } from "@/components/landing/PrivacySection";
+import { Reveal } from "@/components/landing/Reveal";
 import { ReportOutcomesSection } from "@/components/landing/ReportOutcomesSection";
 import { ReviewMethodSection } from "@/components/landing/ReviewMethodSection";
 import { SupportedDocumentsSection } from "@/components/landing/SupportedDocumentsSection";
@@ -20,15 +21,33 @@ export function LandingPage() {
     >
       <LandingHeader />
       <LandingHero />
-      <TrustStrip />
-      <SupportedDocumentsSection />
-      <WhyAiReviewSection />
-      <ReviewMethodSection />
-      <ReportOutcomesSection />
-      <AdvancedFeaturesSection />
-      <PrivacySection />
-      <LandingFaqSection />
-      <LandingCtaSection />
+      <Reveal>
+        <TrustStrip />
+      </Reveal>
+      <Reveal>
+        <SupportedDocumentsSection />
+      </Reveal>
+      <Reveal>
+        <WhyAiReviewSection />
+      </Reveal>
+      <Reveal>
+        <ReviewMethodSection />
+      </Reveal>
+      <Reveal>
+        <ReportOutcomesSection />
+      </Reveal>
+      <Reveal>
+        <AdvancedFeaturesSection />
+      </Reveal>
+      <Reveal>
+        <PrivacySection />
+      </Reveal>
+      <Reveal>
+        <LandingFaqSection />
+      </Reveal>
+      <Reveal>
+        <LandingCtaSection />
+      </Reveal>
       <LandingFooter />
     </div>
   );
