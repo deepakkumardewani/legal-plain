@@ -1,26 +1,80 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-background: #ffffff;
-  --color-foreground: #0a0a0a;
-  --color-primary: #171717;
-  --color-primary-foreground: #fafafa;
-  --color-secondary: #f5f5f5;
-  --color-secondary-foreground: #171717;
-  --color-accent: #f5f5f5;
-  --color-accent-foreground: #171717;
-  --color-destructive: #ef4444;
-  --color-destructive-foreground: #fafafa;
+  /* === LexLight brand tokens === */
+  --color-background: #faf9f6;
+  --color-foreground: #0e0f16;
+
+  /* Surfaces */
+  --color-surface: #ffffff;
+  --color-surface-warm: #f5f0e8;
+  --color-surface-dim: #ede8e0;
+  --color-surface-dark-warm: #201a14;
+  --color-on-surface-dark: #f5f0e8;
+
+  /* Primary — maps to shadcn "primary" */
+  --color-primary: #0e0f16;
+  --color-primary-foreground: #faf9f6;
+
+  /* Accent — warm orange (shadcn "accent" role repurposed to brand accent) */
+  --color-accent: #c8791a;
+  --color-accent-foreground: #ffffff;
+  --color-accent-light: #efcfa2;
+  --color-accent-dim: #f7efe2;
+
+  /* Secondary — shadcn secondary maps to surface-warm */
+  --color-secondary: #f5f0e8;
+  --color-secondary-foreground: #0e0f16;
+
+  /* On-surface */
+  --color-on-surface: #0e0f16;
+  --color-on-surface-variant: #5c5c66;
   --color-muted: #f5f5f5;
   --color-muted-foreground: #737373;
+
+  /* Cards / Popover — keep white for shadcn ui primitives */
   --color-card: #ffffff;
-  --color-card-foreground: #0a0a0a;
+  --color-card-foreground: #0e0f16;
   --color-popover: #ffffff;
-  --color-popover-foreground: #0a0a0a;
+  --color-popover-foreground: #0e0f16;
+
+  /* Borders */
   --color-border: #e5e5e5;
+  --color-outline: #e5e5e5;
+  --color-outline-warm: #ddd5c8;
   --color-input: #e5e5e5;
-  --color-ring: #0a0a0a;
+
+  /* Focus ring — accent orange */
+  --color-ring: #c8791a;
+
+  /* Semantic */
+  --color-destructive: #c0392b;
+  --color-destructive-foreground: #fafafa;
+  --color-error: #c0392b;
+  --color-error-surface: #fdf2f0;
+  --color-success: #2d6a4f;
+  --color-success-surface: #edf7f2;
+  --color-warning: #b45309;
+  --color-warning-surface: #fef9ee;
+
   --radius: 0.5rem;
+}
+
+/* Brand token overrides — ensures runtime CSS vars match design tokens even before Tailwind
+   recompiles @theme on dev server restart */
+:root {
+  --brand-bg: #faf9f6;
+  --brand-fg: #0e0f16;
+  --brand-accent: #c8791a;
+  --brand-accent-light: #efcfa2;
+  --brand-surface-dark-warm: #201a14;
+  --brand-on-surface-dark: #f5f0e8;
+  --brand-outline-warm: #ddd5c8;
+}
+
+/* Hero espresso band — the one permitted dark surface */
+.lp-hero-dark {
+  background-color: var(--brand-surface-dark-warm);
 }
 
 html {

@@ -1,9 +1,123 @@
 export const TRUST_ITEMS = [
-  "No account or email",
-  "PDF upload only",
-  "Document not stored",
-  "Typically under 5 minutes",
-  "Unlimited analyses",
+  "Free & unlimited analyses",
+  "No account required",
+  "Document never stored",
+  "Never used for AI training",
+  "Results in minutes",
+] as const;
+
+export const SECURITY_ITEMS = [
+  {
+    icon: "lock",
+    title: "End-to-end encryption",
+    body: "All data in transit is protected with SSL/TLS. Your document never travels over an unencrypted connection.",
+  },
+  {
+    icon: "shield-off",
+    title: "Never used for AI training",
+    body: "Your contract is not used to train, fine-tune, or improve any AI model. What you upload stays out of the pipeline.",
+  },
+  {
+    icon: "eye-off",
+    title: "PII redacted before processing",
+    body: "Personally identifiable information is stripped from extracted text before it reaches the analysis layer.",
+  },
+  {
+    icon: "database",
+    title: "Document not stored",
+    body: "LexLight sends extracted text for analysis only. The original document is not saved to any database.",
+  },
+  {
+    icon: "user-x",
+    title: "No account required",
+    body: "Use the full analysis without creating a profile, handing over an email address, or accepting a tracking cookie wall.",
+  },
+  {
+    icon: "timer",
+    title: "Temporary auto-expiring shares",
+    body: "Share links store the analysis result only when you choose to create one, and they expire automatically.",
+  },
+] as const;
+
+export const WHY_AI_ROWS = [
+  {
+    feature: "Time to first insight",
+    lexlight: "Minutes",
+    traditional: "Hours to days",
+  },
+  {
+    feature: "Cost",
+    lexlight: "Free",
+    traditional: "$200 – $500+",
+  },
+  {
+    feature: "Availability",
+    lexlight: "24/7, immediate",
+    traditional: "By appointment",
+  },
+  {
+    feature: "Structured risk flags",
+    lexlight: "Yes — categorised by severity",
+    traditional: "Varies by attorney",
+  },
+  {
+    feature: "Missing-clause detection",
+    lexlight: "Yes",
+    traditional: "Varies",
+  },
+  {
+    feature: "Full data control",
+    lexlight: "Yes — document never stored",
+    traditional: "Shared with law firm",
+  },
+  {
+    feature: "Unlimited follow-up",
+    lexlight: "Yes — same session",
+    traditional: "Billed per hour",
+  },
+] as const;
+
+export const ADVANCED_FEATURES = [
+  {
+    icon: "zap",
+    title: "Results in minutes",
+    body: "Short documents finish quickly; longer agreements typically complete within five minutes.",
+  },
+  {
+    icon: "map-pin",
+    title: "References to clauses",
+    body: "Every risk flag links back to the exact clause it comes from, so you can read it in context.",
+  },
+  {
+    icon: "layers",
+    title: "Multi-document scope awareness",
+    body: "LexLight reads how provisions interact — risk often hides in clause combinations, not single sentences.",
+  },
+  {
+    icon: "infinity",
+    title: "Unlimited analyses",
+    body: "Run as many reviews as you need with no usage cap, no subscription, and no credit card.",
+  },
+  {
+    icon: "message-circle",
+    title: "Unlimited follow-up",
+    body: "Ask targeted questions about any part of the report without re-uploading the document.",
+  },
+  {
+    icon: "file-text",
+    title: "Structured report",
+    body: "Output is organised into risk levels, missing clauses, dates, obligations, and suggested language.",
+  },
+  {
+    icon: "share-2",
+    title: "Shareable results",
+    body: "Create a temporary share link to discuss specific findings with a colleague or attorney.",
+  },
+  {
+    icon: "scale",
+    title: "Narrow, deep coverage",
+    body: "Three document types — employment contracts, NDAs, residential leases — reviewed with tailored risk criteria.",
+  },
 ] as const;
 
 export const DOCUMENT_SCOPES = [
