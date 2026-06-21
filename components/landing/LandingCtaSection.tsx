@@ -15,7 +15,7 @@ export function LandingCtaSection() {
         >
           Read the agreement before it reads against you.
         </h2>
-        <p className="mx-auto mb-8 max-w-[54ch] text-xl font-bold leading-relaxed text-white">
+        <p className="mx-auto mb-8 max-w-[54ch] text-lg leading-relaxed text-white/90">
           Upload a supported PDF and get a structured explanation of the clauses, risks, and
           questions that deserve attention.
         </p>
@@ -26,6 +26,9 @@ export function LandingCtaSection() {
         >
           Analyze my document →
         </Link>
+        <p className="mt-5 text-sm text-white/60">
+          No account required · Document not stored · Free, with no usage cap
+        </p>
       </div>
     </section>
   );

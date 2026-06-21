@@ -10,7 +10,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)](https://lexlight.vercel.app)
 
-> Free, plain-English legal document analysis. Understand contracts, leases, and terms of service in seconds.
+> Free, plain-English legal document analysis. Understand contracts, leases, and terms of service in minutes.
 
 **Live:** https://lexlight.vercel.app
 

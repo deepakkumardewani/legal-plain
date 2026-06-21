@@ -12,7 +12,7 @@ import { test, expect, type Page } from "@playwright/test";
  */
 function buildTestPdf(): Buffer {
   const text =
-    "(This is a test employment contract document for LegalPlain E2E testing. " +
+    "(This is a test employment contract document for LexLight E2E testing. " +
     "It contains test clauses and conditions for automated end-to-end verification purposes only.)";
   const stream = `BT /F1 12 Tf 72 720 Td ${text} Tj ET`;
 
@@ -117,11 +117,11 @@ const ENTRY_2 = {
   savedAt: Date.now() - 60_000, // 1 minute ago (newer)
 };
 
-/** Seeds the app's IndexedDB (legalplain / analysis_history) from the browser context. */
+/** Seeds the app's IndexedDB (lexlight / analysis_history) from the browser context. */
 async function seedIndexedDB(page: Page, entries: (typeof ENTRY_1)[]): Promise<void> {
   await page.evaluate(async (rows) => {
     await new Promise<void>((resolve, reject) => {
-      const req = indexedDB.open("legalplain", 2);
+      const req = indexedDB.open("lexlight", 2);
 
       req.onupgradeneeded = () => {
         const db = req.result;
@@ -161,7 +161,7 @@ test.describe("Analysis history & guard", () => {
   test.beforeEach(async ({ page }) => {
     // Bypass the disclaimer gate (uses sessionStorage) for every test.
     await page.addInitScript(() => {
-      sessionStorage.setItem("legalplain_disclaimer", "ack");
+      sessionStorage.setItem("lexlight_disclaimer", "ack");
     });
   });
 
@@ -218,7 +218,7 @@ test.describe("Analysis history & guard", () => {
     // Navigate to /history — entry must be saved.
     await page.getByRole("link", { name: "History" }).first().click();
     await page.waitForURL("**/history");
-    await expect(page.getByText("1 analysis")).toBeVisible({ timeout: 5_000 });
+    await expect(page.getByText("EMPLOYMENT CONTRACT")).toBeVisible({ timeout: 5_000 });
   });
 
   // -------------------------------------------------------------------------
@@ -232,7 +232,7 @@ test.describe("Analysis history & guard", () => {
     await page.goto("/history");
 
     // Two entries should be visible (newest first).
-    await expect(page.getByText("2 analyses")).toBeVisible({ timeout: 5_000 });
+    await expect(page.getByLabel(/^Reopen:/)).toHaveCount(2, { timeout: 5_000 });
 
     // ── Reopen: assert zero calls to /api/analyze ──────────────────────────
     const analyzeRequests: string[] = [];
@@ -251,7 +251,7 @@ test.describe("Analysis history & guard", () => {
 
     // ── Back to history ────────────────────────────────────────────────────
     await page.goto("/history");
-    await expect(page.getByText("2 analyses")).toBeVisible({ timeout: 5_000 });
+    await expect(page.getByLabel(/^Reopen:/)).toHaveCount(2, { timeout: 5_000 });
 
     // ── Rename first card (ENTRY_2 / NDA) ─────────────────────────────────
     await page.getByRole("button", { name: "More options" }).first().click();
@@ -272,7 +272,7 @@ test.describe("Analysis history & guard", () => {
     await page.getByRole("menuitem", { name: "Delete" }).click();
 
     // One entry remains (ENTRY_1 / Employment Contract).
-    await expect(page.getByText("1 analysis")).toBeVisible({ timeout: 3_000 });
+    await expect(page.getByLabel(/^Reopen:/)).toHaveCount(1, { timeout: 3_000 });
 
     // ── Clear all → confirm → empty state ─────────────────────────────────
     await page.getByRole("button", { name: "Clear all" }).click();

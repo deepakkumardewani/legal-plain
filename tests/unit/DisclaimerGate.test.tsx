@@ -62,7 +62,7 @@ describe("DisclaimerGate", () => {
   });
 
   it("persists acknowledgement within the same session", () => {
-    sessionStore.set("legalplain_disclaimer", "ack");
+    sessionStore.set("lexlight_disclaimer", "ack");
 
     renderGate();
 

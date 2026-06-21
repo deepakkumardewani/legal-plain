@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { fontVariables } from "@/lib/fonts";
 
-const STORAGE_KEY = "legalplain_disclaimer";
+const STORAGE_KEY = "lexlight_disclaimer";
 const ACK_VALUE = "ack";
 
 function hasAcknowledged(): boolean {

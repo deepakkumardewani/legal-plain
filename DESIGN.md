@@ -1,5 +1,5 @@
 ---
-name: LegalPlain
+name: LexLight
 colors:
   background: "#faf9f6"
   surface: "#ffffff"
@@ -24,6 +24,8 @@ colors:
   success-surface: "#edf7f2"
   warning: "#b45309"
   warning-surface: "#fef9ee"
+  surface-dark-warm: "#201a14"
+  on-surface-dark: "#f5f0e8"
 
 typography:
   display-lg:
@@ -248,7 +250,9 @@ components:
 
 ## Brand & Style
 
-LegalPlain is a protective utility for people who need to understand contracts but don't have a lawyer. The interface serves non-lawyers — stressed first-time renters, freelancers reviewing client agreements, employees receiving employment contracts — who arrive anxious and need to leave feeling safe. The visual language is **calm utility**: every decision earns its place by serving comprehension or trust, never novelty. Think of the best reference books, a quality archivist's desk, a well-made magnifying glass — functional beauty where the tool disappears into the task. The brand is Light mode by default; people read documents during the day, under time pressure, and light reads as clear, honest, and unhurried. The emotional target after completing an analysis: *"It caught something I would have missed."*
+**Theme exception — warm espresso hero:** The page is light by default (`background: #faf9f6`). The hero band is the *one* permitted dark surface, using `surface-dark-warm` (`#201a14`) — a warm espresso, not a cold near-black. This distinction is intentional: the warm-dark hero conveys gravitas and protection, while explicitly avoiding the "neon-on-dark AI aesthetic" (no cold `#0e0f16` body with glowing accents). Text on dark uses `on-surface-dark` (`#f5f0e8`). No other section uses a dark background.
+
+LexLight is a protective utility for people who need to understand contracts but don't have a lawyer. The interface serves non-lawyers — stressed first-time renters, freelancers reviewing client agreements, employees receiving employment contracts — who arrive anxious and need to leave feeling safe. The visual language is **calm utility**: every decision earns its place by serving comprehension or trust, never novelty. Think of the best reference books, a quality archivist's desk, a well-made magnifying glass — functional beauty where the tool disappears into the task. The brand is Light mode by default; people read documents during the day, under time pressure, and light reads as clear, honest, and unhurried. The emotional target after completing an analysis: *"It caught something I would have missed."*
 
 ## Colors
 

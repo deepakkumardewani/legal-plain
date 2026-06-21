@@ -39,7 +39,7 @@ export default async function SharedResultsPage({ params }: SharedResultsPagePro
         </div>
 
         <main className="mx-auto max-w-4xl px-4 py-6 md:px-6 md:py-8">
-          <RiskDashboard analysis={analysis} readOnly />
+          <RiskDashboard analysis={analysis} />
 
           <div className="mt-8 space-y-6">
             <StatutoryProtectionsPanel protections={analysis.statutoryProtections} />

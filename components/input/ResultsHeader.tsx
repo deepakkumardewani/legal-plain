@@ -9,8 +9,8 @@ export function ResultsHeader() {
   const { analysis } = useAnalysisStore();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[#e6dccd] bg-[#fbf8f1]/95 px-5 py-3 backdrop-blur-xl md:px-8">
-      <div className="mx-auto flex max-w-3xl items-center justify-between">
+    <header className="sticky top-0 z-40 border-b border-[#e6dccd] bg-[#fbf8f1]/95 px-4 py-3 backdrop-blur-xl md:px-6">
+      <div className="mx-auto flex max-w-4xl items-center justify-between">
         <div className="flex items-center gap-2.5">
           <Link
             href="/"

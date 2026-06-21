@@ -25,13 +25,7 @@ export function AnalyzeButton({ disabled, loading, onClick }: AnalyzeButtonProps
       )}
     >
       {loading ? (
-        <>
-          <span
-            className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
-            aria-hidden
-          />
-          Analyzing…
-        </>
+        "Analyzing…"
       ) : (
         <>
           Analyze my document

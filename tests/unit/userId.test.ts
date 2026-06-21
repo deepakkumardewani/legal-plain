@@ -39,7 +39,7 @@ describe("getOrCreateUserId", () => {
   it("reads from localStorage on subsequent calls", async () => {
     await loadModule();
     const first = await getOrCreateUserId();
-    expect(localStorage.getItem("legalplain_uid")).toBe(first);
+    expect(localStorage.getItem("lexlight_uid")).toBe(first);
 
     const second = await getOrCreateUserId();
     expect(second).toBe(first);
@@ -96,7 +96,7 @@ describe("getOrCreateUserId", () => {
       }),
     });
 
-    localStorage.setItem("legalplain_uid", "corrupted-value");
+    localStorage.setItem("lexlight_uid", "corrupted-value");
 
     await loadModule();
     const uuid = await getOrCreateUserId();
@@ -104,7 +104,7 @@ describe("getOrCreateUserId", () => {
   });
 
   it("regenerates UUID if stored value is malformed", async () => {
-    localStorage.setItem("legalplain_uid", "not-a-valid-uuid");
+    localStorage.setItem("lexlight_uid", "not-a-valid-uuid");
 
     await loadModule();
     const uuid = await getOrCreateUserId();

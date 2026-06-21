@@ -1,47 +1,50 @@
+import { Database, EyeOff, Lock, ShieldOff, Timer, UserX } from "lucide-react";
+
+import { SECURITY_ITEMS } from "@/components/landing/landingContent";
 import { SectionIntro } from "@/components/landing/SectionIntro";
 
-const PRIVACY_ITEMS = [
-  {
-    title: "No account gate",
-    body: "Use the analyzer without creating a profile or handing over an email address first.",
-  },
-  {
-    title: "Document not stored",
-    body: "LexLight sends extracted text for analysis and does not keep the document in its own database.",
-  },
-  {
-    title: "Temporary sharing",
-    body: "Share links store analysis results only when you choose to create one, and they expire automatically.",
-  },
-] as const;
+const ICON_MAP = {
+  lock: Lock,
+  "shield-off": ShieldOff,
+  "eye-off": EyeOff,
+  database: Database,
+  "user-x": UserX,
+  timer: Timer,
+} as const;
+
+type IconKey = keyof typeof ICON_MAP;
 
 export function PrivacySection() {
   return (
-    <section id="privacy" className="scroll-mt-24 bg-[#0f100e] px-5 py-24 md:px-8 lg:py-28">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
+    <section className="bg-surface-warm px-5 py-24 md:px-8 lg:py-32">
+      <div id="privacy" className="mx-auto max-w-6xl scroll-mt-24">
         <SectionIntro
-          eyebrow="Privacy posture"
-          title="Your contract is not the product."
-          body="The privacy promise is simple: use the tool without an account, and do not treat the document itself as something to keep."
-          light
+          eyebrow="Security & privacy"
+          title="Your contract stays yours."
+          body="Every claim below reflects how LexLight is built. Your document is analyzed, not stored, and never used to train any AI model."
         />
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {PRIVACY_ITEMS.map((item) => (
-            <article
-              key={item.title}
-              className="group rounded-[1.4rem] border border-[#2c2b25] bg-[#171713] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#4a3d2d] hover:bg-[#1d1c17]"
-            >
-              <h3
-                className="font-semibold text-[#f7efe2]"
-                style={{ fontFamily: "var(--font-display)" }}
+        <div className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {SECURITY_ITEMS.map((item) => {
+            const Icon = ICON_MAP[item.icon as IconKey];
+            return (
+              <article
+                key={item.title}
+                className="group rounded-[1.4rem] border border-outline-warm bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/30 hover:shadow-[0_20px_60px_-30px_rgba(74,55,31,0.18)]"
               >
-                {item.title}
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-[#9f9788]">{item.body}</p>
-              <span className="mt-6 block h-px w-10 bg-[#c8791a]/45 transition-all duration-300 group-hover:w-16 group-hover:bg-[#e0a14a]" />
-            </article>
-          ))}
+                <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent-dim text-accent">
+                  <Icon size={18} strokeWidth={1.75} aria-hidden="true" />
+                </div>
+                <h3
+                  className="font-semibold text-foreground"
+                  style={{ fontFamily: "var(--font-display)" }}
+                >
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">{item.body}</p>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

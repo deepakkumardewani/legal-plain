@@ -12,3 +12,4 @@ tsconfig.tsbuildinfo.env
 .vercel
 public/gif-frames/
 scripts/
+agent_docs/

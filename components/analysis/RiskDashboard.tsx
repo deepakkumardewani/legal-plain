@@ -7,7 +7,6 @@ import { CategoryTabs } from "./CategoryTabs";
 import { ClauseCard } from "./ClauseCard";
 import { JurisdictionMismatchBanner } from "./JurisdictionMismatchBanner";
 import { CLAUSE_CATEGORY_TABS_ID, CLAUSE_LIST_ID, useClauseNav } from "./ClauseNavigationContext";
-import { ExportMenu } from "@/components/export/ExportMenu";
 import { getRiskBadge } from "@/lib/riskBadge";
 
 const documentTypeLabels: Record<string, string> = {
@@ -21,10 +20,9 @@ const PANEL_CARD =
 
 interface RiskDashboardProps {
   analysis: AnalysisResult;
-  readOnly?: boolean;
 }
 
-export function RiskDashboard({ analysis, readOnly = false }: RiskDashboardProps) {
+export function RiskDashboard({ analysis }: RiskDashboardProps) {
   const { activeTab, goToClause, goToTab } = useClauseNav();
 
   const riskCounts = useMemo(() => countClausesByRiskLevel(analysis.clauses), [analysis.clauses]);
@@ -78,11 +76,6 @@ export function RiskDashboard({ analysis, readOnly = false }: RiskDashboardProps
                 {documentTypeLabels[analysis.documentType] || analysis.documentType}
                 {" · "}Governing law: {analysis.governingLawJurisdiction || "Not specified"}
               </p>
-              {!readOnly && (
-                <div className="mt-3">
-                  <ExportMenu analysis={analysis} />
-                </div>
-              )}
             </div>
             <div className="text-right shrink-0">
               <p

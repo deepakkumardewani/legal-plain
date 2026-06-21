@@ -4,7 +4,7 @@ import type { AnalysisResult } from "@/lib/types";
 
 // jsPDF uses browser globals — we mock it for unit testing
 const mockOutput = vi.fn(
-  () => new Blob(["mock-pdf-content-LegalPlain"], { type: "application/pdf" }),
+  () => new Blob(["mock-pdf-content-LexLight"], { type: "application/pdf" }),
 );
 const mockDoc = {
   setFontSize: vi.fn(),
