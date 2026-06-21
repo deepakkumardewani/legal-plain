@@ -7,7 +7,9 @@ import { AnalyzeSubmitSection } from "@/components/input/AnalyzeSubmitSection";
 import { DisclaimerGate } from "@/components/input/DisclaimerGate";
 import { DocumentTypeSection } from "@/components/input/DocumentTypeSection";
 import { DocumentUploadSection } from "@/components/input/DocumentUploadSection";
+import { HowItWorksSection } from "@/components/input/HowItWorksSection";
 import { NdaRoleSection } from "@/components/input/NdaRoleSection";
+import { WhatWeCheckSection } from "@/components/input/WhatWeCheckSection";
 import { fontVariables } from "@/lib/fonts";
 import { getOrCreateUserId } from "@/lib/userId";
 import { useAnalysisStore } from "@/lib/useAnalysisStore";
@@ -92,21 +94,40 @@ export function AnalyzePage() {
         style={{ fontFamily: "var(--font-body)" }}
       >
         <AnalyzeHeader />
-        <main className="mx-auto w-full max-w-3xl space-y-4 px-5 py-5 md:px-8 lg:py-8">
-          <DocumentUploadSection
-            onText={(text) => {
-              setDocumentText(text);
-              setError(null);
-            }}
-          />
-          <DocumentTypeSection value={documentType} onChange={setDocumentType} />
-          {documentType === "NDA" && <NdaRoleSection value={userRole} onChange={setUserRole} />}
-          <AnalyzeSubmitSection
-            canAnalyze={canAnalyze}
-            loading={loading}
-            error={error}
-            onAnalyze={handleAnalyze}
-          />
+        <main className="mx-auto w-full max-w-3xl px-5 py-6 md:px-8 lg:py-10">
+          {/* Form steps — tight group so they read as a unified flow */}
+          <div className="space-y-3">
+            <DocumentUploadSection
+              onText={(text) => {
+                setDocumentText(text);
+                setError(null);
+              }}
+            />
+            <DocumentTypeSection value={documentType} onChange={setDocumentType} />
+            {documentType === "NDA" && <NdaRoleSection value={userRole} onChange={setUserRole} />}
+          </div>
+
+          {/* Contextual info — subordinate weight, more breathing room above */}
+          {documentType && (
+            <div className="mt-5">
+              <WhatWeCheckSection documentType={documentType} />
+            </div>
+          )}
+
+          {/* How it works — lightest weight, editorial treatment */}
+          <div className="mt-6">
+            <HowItWorksSection />
+          </div>
+
+          {/* Submit — generous separation, it's the goal */}
+          <div className="mt-6">
+            <AnalyzeSubmitSection
+              canAnalyze={canAnalyze}
+              loading={loading}
+              error={error}
+              onAnalyze={handleAnalyze}
+            />
+          </div>
         </main>
       </div>
     </DisclaimerGate>
