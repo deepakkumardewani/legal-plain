@@ -4,11 +4,15 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnalyzeHeader } from "@/components/input/AnalyzeHeader";
 import { AnalyzeSubmitSection } from "@/components/input/AnalyzeSubmitSection";
+import { CommonRisksSection } from "@/components/input/CommonRisksSection";
 import { DisclaimerGate } from "@/components/input/DisclaimerGate";
 import { DocumentTypeSection } from "@/components/input/DocumentTypeSection";
 import { DocumentUploadSection } from "@/components/input/DocumentUploadSection";
 import { HowItWorksSection } from "@/components/input/HowItWorksSection";
+import { KeyTakeawaysSection } from "@/components/input/KeyTakeawaysSection";
+import { LegalDisclaimerSection } from "@/components/input/LegalDisclaimerSection";
 import { NdaRoleSection } from "@/components/input/NdaRoleSection";
+import { TrustStatsSection } from "@/components/input/TrustStatsSection";
 import { WhatWeCheckSection } from "@/components/input/WhatWeCheckSection";
 import { fontVariables } from "@/lib/fonts";
 import { getOrCreateUserId } from "@/lib/userId";
@@ -107,10 +111,12 @@ export function AnalyzePage() {
             {documentType === "NDA" && <NdaRoleSection value={userRole} onChange={setUserRole} />}
           </div>
 
-          {/* Contextual info — subordinate weight, more breathing room above */}
+          {/* Contextual info — appears once a document type is chosen */}
           {documentType && (
-            <div className="mt-5">
+            <div className="mt-5 space-y-3">
+              <KeyTakeawaysSection documentType={documentType} />
               <WhatWeCheckSection documentType={documentType} />
+              <CommonRisksSection documentType={documentType} />
             </div>
           )}
 
@@ -127,6 +133,14 @@ export function AnalyzePage() {
               error={error}
               onAnalyze={handleAnalyze}
             />
+          </div>
+
+          {/* Trust footer — supporting reassurance below the goal */}
+          <div className="mt-8">
+            <TrustStatsSection />
+          </div>
+          <div className="mt-6">
+            <LegalDisclaimerSection />
           </div>
         </main>
       </div>
