@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { StepHeading } from "@/components/input/StepHeading";
 
 interface OptionCard<T extends string> {
@@ -13,6 +14,7 @@ interface OptionCardSectionProps<T extends string> {
   options: readonly OptionCard<T>[];
   value: T | null;
   onChange: (value: T) => void;
+  headingExtra?: ReactNode;
 }
 
 export function OptionCardSection<T extends string>({
@@ -22,10 +24,11 @@ export function OptionCardSection<T extends string>({
   options,
   value,
   onChange,
+  headingExtra,
 }: OptionCardSectionProps<T>) {
   return (
-    <section className="ap-rise ap-d3">
-      <StepHeading num={num} title={title} hint={hint} />
+    <section>
+      <StepHeading num={num} title={title} hint={hint} extra={headingExtra} />
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
         {options.map((option) => {
           const selected = value === option.value;
