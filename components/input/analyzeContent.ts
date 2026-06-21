@@ -39,3 +39,29 @@ export const NDA_ROLES = [
     hint: "Both sides are sharing confidential information.",
   },
 ] as const;
+
+export const DOCUMENT_CHECKS: Record<DocumentType, string[]> = {
+  EMPLOYMENT_CONTRACT: [
+    "Non-compete scope and duration",
+    "IP assignment and ownership clauses",
+    "Severance and termination terms",
+    "At-will employment provisions",
+    "Bonus, equity, and compensation conditions",
+    "Restrictive covenants post-employment",
+  ],
+  NDA: [
+    "Confidentiality scope and carve-outs",
+    "Survival term after agreement ends",
+    "Permitted disclosures (legal, affiliates)",
+    "Return or destruction of information",
+    "Remedies for breach",
+  ],
+  RESIDENTIAL_LEASE: [
+    "Security deposit amount and return conditions",
+    "Renewal and rent increase terms",
+    "Maintenance and repair responsibilities",
+    "Early termination penalties",
+    "Pet, subletting, and alteration restrictions",
+    "Notice periods for entry and vacating",
+  ],
+};
