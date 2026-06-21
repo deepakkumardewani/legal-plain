@@ -6,7 +6,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)](https://legal-plain.vercel.app)
 
-> Free, plain-English legal document analysis. Understand contracts, leases, and terms of service in seconds.
+> Free, plain-English legal document analysis. Understand contracts, leases, and terms of service in minutes.
 
 **Live:** https://legal-plain.vercel.app
 
@@ -44,12 +44,12 @@ bun run dev
 
 Copy `.env.local.example` to `.env.local` and fill in the required values (AI provider key, Redis credentials for sharing/rate-limiting).
 
-| Command | Purpose |
-| --- | --- |
-| `bun run dev` | Start the dev server |
-| `bun run build` | Production build |
+| Command          | Purpose                        |
+| ---------------- | ------------------------------ |
+| `bun run dev`    | Start the dev server           |
+| `bun run build`  | Production build               |
 | `bun run verify` | Lint, format check, type-check |
-| `bun run test` | Unit tests (Vitest) |
+| `bun run test`   | Unit tests (Vitest)            |
 
 ## Built with
 

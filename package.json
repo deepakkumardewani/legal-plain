@@ -2,7 +2,7 @@
   "name": "legalplain",
   "version": "0.1.0",
   "private": true,
-  "description": "Free, plain-English legal document analysis — understand contracts, leases, and terms of service in seconds.",
+  "description": "Free, plain-English legal document analysis — understand contracts, leases, and terms of service in minutes.",
   "author": "Deepak Dewani",
   "homepage": "https://legal-plain.vercel.app",
   "repository": {
