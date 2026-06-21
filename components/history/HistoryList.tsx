@@ -10,20 +10,26 @@ export function HistoryList() {
 
   if (entries.length === 0) {
     return (
-      <div className="py-8">
+      <div className="border-t border-[#e6dccd] pt-10 pb-4">
         <p
-          className="text-base font-semibold text-[#18181f]"
+          className="text-[11px] font-semibold uppercase tracking-widest text-[#c8791a]"
           style={{ fontFamily: "var(--font-display)" }}
         >
-          No analyses yet
+          Nothing here yet
+        </p>
+        <p
+          className="mt-3 text-xl font-semibold tracking-tight text-[#18181f]"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          Your analyses will appear here
         </p>
         <p className="mt-2 max-w-sm text-sm leading-relaxed text-[#6b6558]">
-          Every document you analyse will be saved here automatically so you can come back to it
-          later — no account needed.
+          Past results are saved in this browser — no account, no server. Come back anytime to
+          reopen, rename, or share a result.
         </p>
         <Link
           href="/analyze"
-          className="mt-6 inline-flex items-center gap-1.5 rounded-md bg-[#c8791a] px-4 py-2 text-sm font-medium text-white transition-colors duration-150 hover:bg-[#b56a15]"
+          className="mt-6 inline-flex items-center gap-1.5 rounded-full bg-[#c8791a] px-5 py-2.5 text-sm font-medium text-white transition-colors duration-150 hover:bg-[#b56a15]"
         >
           Analyse a document
           <svg
@@ -42,12 +48,15 @@ export function HistoryList() {
   }
 
   return (
-    <div className="space-y-5">
-      <div className="flex justify-end">
+    <div>
+      <div className="mb-5 flex items-center justify-between">
+        <p className="text-sm text-[#9a9080]">
+          {entries.length} {entries.length === 1 ? "analysis" : "analyses"}
+        </p>
         <ClearHistoryButton onClear={clearAll} />
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         {entries.map((entry) => (
           <HistoryItemCard
             key={entry.analysisId}

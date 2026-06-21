@@ -55,22 +55,28 @@ export function HistoryItemCard({ entry, onRename, onDelete }: HistoryItemCardPr
   }
 
   return (
-    <div className="group relative flex flex-col rounded-xl border border-[#e8e0d4] bg-white p-5 transition-all duration-150 hover:border-[#c8791a]/30 hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-      {/* Metadata row */}
-      <div className="mb-3 flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <span className="text-[11px] font-medium uppercase tracking-wider text-[#9a9080]">
-            {docType}
-          </span>
+    <div className="group relative flex flex-col rounded-[1.25rem] border border-[#e8e0d4] bg-[#fffdf8] p-5 transition-all duration-200 hover:border-[#c8791a]/30 hover:shadow-[0_4px_20px_rgba(74,55,31,0.08)]">
+      {/* Top row: doc type + risk pill */}
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-medium uppercase tracking-wider text-[#9a9080]">
+              {docType}
+            </span>
+            <span
+              className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide ${pill.bg} ${pill.text}`}
+            >
+              {pill.label}
+            </span>
+          </div>
           {entry.customName && (
             <p
-              className="mt-0.5 truncate text-[15px] font-semibold leading-snug text-[#18181f]"
+              className="mt-1.5 truncate text-[15px] font-semibold leading-snug text-[#18181f]"
               style={{ fontFamily: "var(--font-display)" }}
             >
               {entry.customName}
             </p>
           )}
-          <p className="mt-0.5 text-xs text-[#a09080]">{date}</p>
         </div>
 
         <div className="shrink-0 opacity-0 transition-opacity duration-150 group-hover:opacity-100 focus-within:opacity-100">
@@ -83,24 +89,20 @@ export function HistoryItemCard({ entry, onRename, onDelete }: HistoryItemCardPr
         </div>
       </div>
 
-      {/* Risk pill */}
-      <span
-        className={`inline-flex w-fit items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold tracking-wide ${pill.bg} ${pill.text}`}
-      >
-        {pill.label}
-      </span>
-
       {/* Snippet */}
       {snippet && (
         <p className="mt-3 line-clamp-2 text-[12px] leading-relaxed text-[#8a8070]">{snippet}</p>
       )}
+
+      {/* Date — bottom, lightest weight */}
+      <p className="mt-3 text-[11px] text-[#b0a898]">{date}</p>
 
       {/* Clickable overlay — entire card reopens */}
       <button
         onClick={handleReopen}
         disabled={loading}
         aria-label={`Reopen: ${entry.customName ?? `${docType} · ${date}`}`}
-        className="absolute inset-0 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c8791a]/50"
+        className="absolute inset-0 rounded-[1.25rem] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#c8791a]/50"
       />
 
       {/* Loading spinner — sits above the overlay */}

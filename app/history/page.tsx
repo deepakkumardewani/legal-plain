@@ -64,20 +64,20 @@ export default function HistoryPage() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-3xl px-5 py-10 md:px-8 md:py-12">
-        <div className="mb-6 border-b border-[#e6dccd] pb-6">
-          <h1
-            className="text-2xl font-semibold tracking-tight text-[#18181f]"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            Analysis history
-          </h1>
-          <p className="mt-1.5 text-sm text-[#6b6558]">
-            Revisit past analyses — reopen, rename, or remove them.
-          </p>
-        </div>
+      <main className="mx-auto w-full max-w-3xl px-5 pt-10 pb-16 md:px-8 md:pt-12">
+        <h1
+          className="text-[28px] font-semibold tracking-[-0.02em] text-[#18181f]"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          Analysis history
+        </h1>
+        <p className="mt-1.5 text-sm text-[#6b6558]">
+          Revisit past analyses — reopen, rename, or remove them.
+        </p>
 
-        <HistoryList />
+        <div className="mt-8">
+          <HistoryList />
+        </div>
       </main>
     </div>
   );
