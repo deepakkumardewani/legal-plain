@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnalyzeHeader } from "@/components/input/AnalyzeHeader";
 import { AnalyzeSubmitSection } from "@/components/input/AnalyzeSubmitSection";
@@ -32,13 +32,23 @@ export function AnalyzePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     getOrCreateUserId().then(setUserId).catch(console.error);
   }, []);
 
+  const handleStop = useCallback(() => {
+    abortControllerRef.current?.abort();
+    setLoading(false);
+    setError(null);
+  }, []);
+
   const handleAnalyze = useCallback(async () => {
     if (!documentText.trim() || !documentType || !userId) return;
+
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
     setLoading(true);
     setError(null);
@@ -46,6 +56,7 @@ export function AnalyzePage() {
     try {
       const response = await fetch("/api/analyze", {
         method: "POST",
+        signal: controller.signal,
         headers: {
           "Content-Type": "application/json",
           "x-user-id": userId,
@@ -80,7 +91,8 @@ export function AnalyzePage() {
         savedAt: Date.now(),
       }).catch((err) => console.error("[AnalyzePage] saveAnalysis failed", err));
       router.push("/results");
-    } catch {
+    } catch (err) {
+      if (err instanceof DOMException && err.name === "AbortError") return;
       setError("Something went wrong. Please check your connection and try again.");
     } finally {
       setLoading(false);
@@ -99,21 +111,33 @@ export function AnalyzePage() {
       >
         <AnalyzeHeader />
         <main className="mx-auto w-full max-w-3xl px-5 py-6 md:px-8 lg:py-10">
-          {/* Form steps — tight group so they read as a unified flow */}
-          <div className="space-y-3">
-            <DocumentUploadSection
-              onText={(text) => {
-                setDocumentText(text);
-                setError(null);
-              }}
-            />
-            <DocumentTypeSection value={documentType} onChange={setDocumentType} />
-            {documentType === "NDA" && <NdaRoleSection value={userRole} onChange={setUserRole} />}
+          {/* Form card — visually distinct from informational content below */}
+          <div className="rounded-2xl border border-[#e6dccd] bg-[#fffdf8] p-5 shadow-sm md:p-6">
+            <div className="space-y-3">
+              <DocumentUploadSection
+                onText={(text) => {
+                  setDocumentText(text);
+                  setError(null);
+                }}
+              />
+              <DocumentTypeSection value={documentType} onChange={setDocumentType} />
+              {documentType === "NDA" && <NdaRoleSection value={userRole} onChange={setUserRole} />}
+            </div>
+
+            <div className="mt-5">
+              <AnalyzeSubmitSection
+                canAnalyze={canAnalyze}
+                loading={loading}
+                error={error}
+                onAnalyze={handleAnalyze}
+                onStop={handleStop}
+              />
+            </div>
           </div>
 
-          {/* Contextual info — appears once a document type is chosen */}
+          {/* Informational sections — editorial, outside the form */}
           {documentType && (
-            <div className="mt-5 space-y-3">
+            <div className="mt-8 space-y-3">
               <KeyTakeawaysSection documentType={documentType} />
               <WhatWeCheckSection documentType={documentType} />
               <CommonRisksSection documentType={documentType} />
@@ -123,16 +147,6 @@ export function AnalyzePage() {
           {/* How it works — lightest weight, editorial treatment */}
           <div className="mt-6">
             <HowItWorksSection />
-          </div>
-
-          {/* Submit — generous separation, it's the goal */}
-          <div className="mt-6">
-            <AnalyzeSubmitSection
-              canAnalyze={canAnalyze}
-              loading={loading}
-              error={error}
-              onAnalyze={handleAnalyze}
-            />
           </div>
 
           {/* Trust footer — supporting reassurance below the goal */}

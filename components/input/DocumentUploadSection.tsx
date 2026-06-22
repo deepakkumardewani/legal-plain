@@ -24,7 +24,7 @@ export function DocumentUploadSection({ onText }: DocumentUploadSectionProps) {
   );
 
   return (
-    <section className="ap-rise ap-d2 rounded-[2rem] border border-[#e6dccd] bg-[#fffdf8] p-5 shadow-[0_30px_90px_-70px_rgba(74,55,31,0.75)] md:p-6">
+    <section className="rounded-[2rem] border border-[#e6dccd] bg-[#fffdf8] p-5 shadow-[0_30px_90px_-70px_rgba(74,55,31,0.75)] md:p-6">
       <StepHeading
         num="01"
         title="Add your document"

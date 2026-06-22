@@ -6,6 +6,7 @@ interface AnalyzeSubmitSectionProps {
   loading: boolean;
   error: string | null;
   onAnalyze: () => void;
+  onStop: () => void;
 }
 
 export function AnalyzeSubmitSection({
@@ -13,9 +14,10 @@ export function AnalyzeSubmitSection({
   loading,
   error,
   onAnalyze,
+  onStop,
 }: AnalyzeSubmitSectionProps) {
   return (
-    <section className="ap-rise ap-d4">
+    <section>
       {error && (
         <p
           className="mb-5 rounded-[1rem] border border-[#f0c7c2] bg-[#fbeceb] px-4 py-3 text-sm font-medium text-[#b3261e]"
@@ -26,7 +28,18 @@ export function AnalyzeSubmitSection({
       )}
 
       <div className="rounded-[1.75rem] border border-[#e6dccd] bg-[#fffdf8] p-5 md:p-6">
-        <AnalyzeButton disabled={!canAnalyze} loading={loading} onClick={onAnalyze} />
+        {loading ? (
+          <button
+            type="button"
+            onClick={onStop}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[#e6dccd] bg-white px-5 py-3 text-sm font-semibold text-[#18181f] transition hover:bg-[#f5f0e8]"
+          >
+            <span className="h-4 w-4 rounded-sm bg-[#18181f]" aria-hidden />
+            Stop Analysis
+          </button>
+        ) : (
+          <AnalyzeButton disabled={!canAnalyze} loading={false} onClick={onAnalyze} />
+        )}
         {!loading && (
           <p className="mt-4 flex items-center justify-center gap-2 text-center text-xs leading-relaxed text-[#8b8377]">
             <svg

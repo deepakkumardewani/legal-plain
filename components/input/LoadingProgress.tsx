@@ -12,7 +12,6 @@ const STAGES = [
       "Mapping section layout…",
     ],
     duration: 3000,
-    // Progress range this stage fills: 0% → 22%
     fromPct: 0,
     toPct: 22,
   },
@@ -104,17 +103,20 @@ export function LoadingProgress({ active }: LoadingProgressProps) {
     stageStartRef.current = performance.now();
     stageRef.current = 0;
 
-    function scheduleSubtextRotation(stageIndex: number) {
+    function scheduleSubtextRotation(stageIndex: number, currentIdx: number) {
       if (subtextTimerRef.current !== null) clearTimeout(subtextTimerRef.current);
+      const max = STAGES[stageIndex].subtexts.length - 1;
+      if (currentIdx >= max) return; // stop at last subtext
       subtextTimerRef.current = setTimeout(() => {
-        setSubtextIdx((i) => (i + 1) % STAGES[stageIndex].subtexts.length);
-        scheduleSubtextRotation(stageIndex);
+        const next = currentIdx + 1;
+        setSubtextIdx(next);
+        scheduleSubtextRotation(stageIndex, next);
       }, getSubtextInterval(stageIndex));
     }
 
-    scheduleSubtextRotation(0);
+    scheduleSubtextRotation(0, 0);
 
-    // Animate progress bar via rAF
+    // Animate progress bar via rAF — no CSS transition needed, rAF is the animation
     function tick(now: number) {
       const current = stageRef.current;
       const { fromPct, toPct, duration } = STAGES[current];
@@ -139,7 +141,7 @@ export function LoadingProgress({ active }: LoadingProgressProps) {
         stageStartRef.current = performance.now();
         setStage(i);
         setSubtextIdx(0);
-        scheduleSubtextRotation(i);
+        scheduleSubtextRotation(i, 0);
       }, accum);
       timeouts.push(t);
     });
@@ -173,10 +175,7 @@ export function LoadingProgress({ active }: LoadingProgressProps) {
 
       {/* Overall progress bar */}
       <div className="mb-5 h-1 w-full overflow-hidden rounded-full bg-[#f0ebe4]">
-        <div
-          className="h-full rounded-full bg-[#c8791a] transition-[width] duration-700 ease-out"
-          style={{ width: `${progressPct}%` }}
-        />
+        <div className="h-full rounded-full bg-[#c8791a]" style={{ width: `${progressPct}%` }} />
       </div>
 
       {/* Step list */}
@@ -239,7 +238,7 @@ export function LoadingProgress({ active }: LoadingProgressProps) {
                     key={`${stage}-${subtextIdx}`}
                     className="mt-0.5 animate-in fade-in duration-500 text-xs text-[#a3a0a8]"
                   >
-                    {currentSubtexts[subtextIdx % currentSubtexts.length]}
+                    {currentSubtexts[subtextIdx]}
                   </p>
                 )}
                 {isCompleted && <p className="mt-0.5 text-xs text-[#c8791a]/70">Done</p>}
