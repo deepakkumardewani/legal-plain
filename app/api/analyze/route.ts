@@ -8,6 +8,7 @@ import { buildPass1Prompt } from "@/lib/prompts/pass1-detect";
 import { pass1ResultSchema } from "@/lib/schemas";
 import type { AnalysisResult } from "@/lib/types";
 import { buildAnalysisCacheKey, getCachedAnalysis, setCachedAnalysis } from "@/lib/analysisCache";
+import { saveAnalysisById } from "@/lib/redis";
 import { finalizeAnalysisResult } from "@/lib/utils";
 import { serverError } from "@/lib/apiError";
 
@@ -61,6 +62,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         analysisId: randomUUID(),
         analyzedAt: new Date().toISOString(),
       });
+      // Register the new analysisId so history-delete can reach the content cache
+      await saveAnalysisById(hit.analysisId, cacheKey).catch((err) =>
+        console.error("[analyze] saveAnalysisById (hit) failed", err),
+      );
       return NextResponse.json(hit);
     }
 
@@ -125,6 +130,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const finalized = finalizeAnalysisResult(result);
     await setCachedAnalysis(cacheKey, finalized);
+    // Store by ID so it can be cleaned up when the user deletes from history
+    await saveAnalysisById(finalized.analysisId, cacheKey).catch((err) =>
+      console.error("[analyze] saveAnalysisById failed", err),
+    );
     return NextResponse.json(finalized);
   } catch (error) {
     return serverError("Analyze error", error);

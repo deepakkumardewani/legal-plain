@@ -199,6 +199,33 @@ export async function warmRedisOnDevStartup(): Promise<void> {
   }
 }
 
+// --- Analysis by ID ---
+
+const ANALYSIS_BY_ID_PREFIX = "analysisById:";
+/** 30 days — kept for potential re-share; deleted on user history clear */
+const ANALYSIS_BY_ID_TTL_SECONDS = 60 * 60 * 24 * 30;
+
+type AnalysisByIdEntry = { cacheKey: string };
+
+export async function saveAnalysisById(analysisId: string, cacheKey: string): Promise<void> {
+  const redis = getRedis();
+  const entry: AnalysisByIdEntry = { cacheKey };
+  await redis.set(`${ANALYSIS_BY_ID_PREFIX}${analysisId}`, entry, ANALYSIS_BY_ID_TTL_SECONDS);
+}
+
+export async function deleteAnalysisById(analysisId: string): Promise<void> {
+  const redis = getRedis();
+  const key = `${ANALYSIS_BY_ID_PREFIX}${analysisId}`;
+  const entry = await redis.get<AnalysisByIdEntry>(key);
+  const delKeys = [key];
+  if (entry?.cacheKey) delKeys.push(entry.cacheKey);
+  await Promise.all(delKeys.map((k) => redis.del(k)));
+}
+
+export async function deleteAnalysesByIds(analysisIds: string[]): Promise<void> {
+  await Promise.all(analysisIds.map((id) => deleteAnalysisById(id)));
+}
+
 // --- Share links ---
 
 export async function saveShare(shareId: string, analysis: AnalysisResult): Promise<void> {

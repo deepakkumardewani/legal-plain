@@ -42,13 +42,27 @@ export function useAnalysisHistory(): UseAnalysisHistory {
     async (analysisId: string) => {
       await deleteAnalysis(analysisId);
       await reload();
+      fetch("/api/history", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ analysisId }),
+      }).catch((err) => console.error("[useAnalysisHistory] redis delete failed", err));
     },
     [reload],
   );
 
   const clearAll = useCallback(async () => {
+    const current = await listAnalyses();
     await clearAllAnalyses();
     await reload();
+    const analysisIds = current.map((e) => e.analysisId);
+    if (analysisIds.length > 0) {
+      fetch("/api/history", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ analysisIds }),
+      }).catch((err) => console.error("[useAnalysisHistory] redis clear-all failed", err));
+    }
   }, [reload]);
 
   return { entries, rename, remove, clearAll, reload };
