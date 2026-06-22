@@ -12,6 +12,10 @@ interface FollowUpEntry {
   citedClauseIds: string[];
 }
 
+interface PendingEntry {
+  question: string;
+}
+
 interface FollowUpInputProps {
   analysis: AnalysisResult;
   documentText: string;
@@ -133,18 +137,14 @@ function ThreadMessage({ entry, idToClause, goToClause }: ThreadMessageProps) {
 function TypingIndicator() {
   return (
     <div
-      className="flex items-center gap-1.5 px-4 py-3"
+      className="space-y-2 px-4 py-4"
       role="status"
       aria-label="Generating answer"
     >
       <span className="sr-only">Generating answer…</span>
-      {[0, 1, 2].map((i) => (
-        <span
-          key={i}
-          className="h-2 w-2 animate-bounce rounded-full bg-[#c8791a]/60"
-          style={{ animationDelay: `${i * 150}ms` }}
-        />
-      ))}
+      <div className="h-3 w-3/4 animate-pulse rounded-full bg-[#e6dccd]" />
+      <div className="h-3 w-1/2 animate-pulse rounded-full bg-[#e6dccd]" style={{ animationDelay: "150ms" }} />
+      <div className="h-3 w-2/3 animate-pulse rounded-full bg-[#e6dccd]" style={{ animationDelay: "300ms" }} />
     </div>
   );
 }
@@ -154,6 +154,8 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
   const [question, setQuestion] = useState("");
   const [remaining, setRemaining] = useState(analysis.followUpQuestionsRemaining);
   const [thread, setThread] = useState<FollowUpEntry[]>([]);
+  const [pending, setPending] = useState<PendingEntry | null>(null);
+  const [usedSuggestions, setUsedSuggestions] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -167,8 +169,11 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
       const trimmed = text.trim();
       if (!trimmed || trimmed.length > 500 || disabled) return;
 
+      // Show question immediately before API call
+      setPending({ question: trimmed });
       setLoading(true);
       setError(null);
+      setQuestion("");
 
       try {
         const userId = await getOrCreateUserId();
@@ -190,10 +195,12 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
         const data = await res.json();
 
         if (!res.ok) {
+          setPending(null);
           setError(data.error || "Something went wrong. Please try again.");
           return;
         }
 
+        setPending(null);
         setThread((prev) => [
           ...prev,
           {
@@ -203,9 +210,9 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
           },
         ]);
         setRemaining(data.remaining);
-        setQuestion("");
         inputRef.current?.focus();
       } catch {
+        setPending(null);
         setError("Network error. Please check your connection and try again.");
       } finally {
         setLoading(false);
@@ -220,7 +227,7 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
 
   const handleSuggestedClick = useCallback(
     (suggested: string) => {
-      setQuestion(suggested);
+      setUsedSuggestions((prev) => new Set(prev).add(suggested));
       submitQuestion(suggested);
     },
     [submitQuestion],
@@ -236,30 +243,99 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
     [handleSubmit],
   );
 
-  return (
-    <section className="mt-8 rounded-lg border border-[#e6dccd] bg-[#fffdf8] p-6 shadow-sm">
-      <h2 className="font-[family-name:var(--font-bricolage)] text-lg font-semibold text-[#18181f]">
-        Ask a Follow-Up Question
-      </h2>
-      <p className="mt-1 text-sm text-[#6b6560]">
-        {hasUnlimitedQuestions
-          ? "Unlimited questions for this analysis"
-          : remaining > 0
-            ? `${remaining} question${remaining === 1 ? "" : "s"} remaining`
-            : "No questions remaining for this analysis"}
-      </p>
+  const hasThread = thread.length > 0 || loading || pending !== null;
+  const availableSuggestions = SUGGESTED_QUESTIONS.filter((q) => !usedSuggestions.has(q));
 
-      {thread.length === 0 && !loading && (
-        <div className="mt-5" role="region" aria-label="Suggested questions">
-          <p className="text-sm text-[#6b6560]">Try asking:</p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {SUGGESTED_QUESTIONS.map((suggested) => (
+  return (
+    <section className="mt-8 rounded-xl border border-[#e6dccd] bg-[#fbf8f1] shadow-sm">
+      {/* Header */}
+      <div className="border-b border-[#e6dccd] px-6 py-4">
+        <div className="flex items-baseline justify-between gap-4">
+          <h2 className="font-[family-name:var(--font-bricolage)] text-lg font-semibold text-[#18181f]">
+            Ask a Follow-Up Question
+          </h2>
+          <span className="shrink-0 text-xs text-[#9c9690]">
+            {hasUnlimitedQuestions
+              ? "Unlimited questions"
+              : remaining > 0
+                ? `${remaining} question${remaining === 1 ? "" : "s"} remaining`
+                : "No questions remaining"}
+          </span>
+        </div>
+      </div>
+
+      {/* Thread */}
+      {hasThread && (
+        <div
+          className="space-y-5 px-6 py-5"
+          role="log"
+          aria-live="polite"
+          aria-label="Question thread"
+        >
+          {thread.map((entry, idx) => (
+            <ThreadMessage
+              key={idx}
+              entry={entry}
+              idToClause={idToClause}
+              goToClause={goToClause}
+            />
+          ))}
+          {/* Optimistic pending question + loading indicator */}
+          {pending && (
+            <div className="space-y-3">
+              <div className="flex justify-end">
+                <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-[#c8791a] px-4 py-2.5 text-sm text-white">
+                  {pending.question}
+                </div>
+              </div>
+              <div className="max-w-[90%] rounded-2xl rounded-bl-sm border border-[#e6dccd] bg-white shadow-sm">
+                <TypingIndicator />
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Composer */}
+      <div className={cn("px-6 pb-6", hasThread ? "pt-0" : "pt-5")}>
+        {/* Suggestions — full prompt on empty state, compact chips when thread exists */}
+        {!hasThread && availableSuggestions.length > 0 && (
+          <div className="mb-4" role="region" aria-label="Suggested questions">
+            <p className="mb-2 text-sm text-[#6b6560]">Try asking:</p>
+            <div className="flex flex-wrap gap-2">
+              {availableSuggestions.map((suggested) => (
+                <button
+                  key={suggested}
+                  type="button"
+                  disabled={disabled}
+                  className={cn(
+                    "rounded-full border border-[#e6dccd] bg-[#fffdf8] px-3 py-1.5 text-sm text-[#18181f] transition-colors",
+                    disabled
+                      ? "cursor-not-allowed opacity-50"
+                      : "hover:border-[#c8791a]/40 hover:bg-[#c8791a]/10 hover:text-[#ad6414]",
+                  )}
+                  onClick={() => handleSuggestedClick(suggested)}
+                >
+                  {suggested}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {hasThread && availableSuggestions.length > 0 && (
+          <div
+            className="mb-3 flex flex-wrap items-center gap-2"
+            role="region"
+            aria-label="Suggested questions"
+          >
+            <span className="text-xs font-medium text-[#9c9690]">Suggested:</span>
+            {availableSuggestions.map((suggested) => (
               <button
                 key={suggested}
                 type="button"
                 disabled={disabled}
                 className={cn(
-                  "rounded-full border border-[#e6dccd] bg-[#fbf8f1] px-3 py-1.5 text-sm text-[#18181f] transition-colors",
+                  "rounded-full border border-[#e6dccd] bg-[#fffdf8] px-2.5 py-1 text-xs text-[#6b6560] transition-colors",
                   disabled
                     ? "cursor-not-allowed opacity-50"
                     : "hover:border-[#c8791a]/40 hover:bg-[#c8791a]/10 hover:text-[#ad6414]",
@@ -270,10 +346,8 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
               </button>
             ))}
           </div>
-        </div>
-      )}
+        )}
 
-      <div className="mt-4">
         <textarea
           ref={inputRef}
           className={cn(
@@ -311,38 +385,20 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
             className={cn(
               "rounded-full px-5 py-1.5 text-sm font-semibold transition-colors",
               disabled || !question.trim() || overCap
-                ? "cursor-not-allowed bg-[#f5f0e8] text-[#a3a0a8]"
-                : "bg-[#c8791a] text-white hover:bg-[#ad6414]",
+                ? "cursor-not-allowed bg-[#e6dccd] text-[#a3a0a8]"
+                : "bg-[#18181f] text-white hover:bg-[#2d2d3a]",
             )}
             onClick={handleSubmit}
             disabled={disabled || !question.trim() || overCap}
           >
-            {loading ? "Sending…" : "Ask"}
+            Ask
           </button>
         </div>
+
+        {error && (
+          <div className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        )}
       </div>
-
-      {error && (
-        <div className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
-      )}
-
-      {(thread.length > 0 || loading) && (
-        <div className="mt-6 space-y-4" role="log" aria-live="polite" aria-label="Question thread">
-          {thread.map((entry, idx) => (
-            <ThreadMessage
-              key={idx}
-              entry={entry}
-              idToClause={idToClause}
-              goToClause={goToClause}
-            />
-          ))}
-          {loading && (
-            <div className="max-w-[90%] rounded-2xl rounded-bl-sm border border-[#e6dccd] bg-white shadow-sm">
-              <TypingIndicator />
-            </div>
-          )}
-        </div>
-      )}
     </section>
   );
 }

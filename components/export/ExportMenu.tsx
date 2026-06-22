@@ -44,7 +44,7 @@ export function ExportMenu({ analysis }: ExportMenuProps) {
             <Button
               variant="outline"
               size="sm"
-              className="gap-2 border-[#e6dccd] bg-[#fffdf8] text-[#0e0f16] hover:bg-[#f5f0e8]"
+              className="gap-2 border-[#e6dccd] bg-[#fffdf8] text-[#0e0f16] hover:bg-[#f5f0e8] hover:text-[#18181f]"
             >
               <Download className="h-4 w-4" />
               Export
