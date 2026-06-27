@@ -13,3 +13,4 @@ tsconfig.tsbuildinfo.env
 public/gif-frames/
 scripts/
 agent_docs/
+.env.local.example
