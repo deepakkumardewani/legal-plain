@@ -5,6 +5,7 @@ import { callAI } from "@/lib/ai";
 import { buildFollowupPrompt } from "@/lib/prompts/followup";
 import { serverError } from "@/lib/apiError";
 import type { AnalysisResult } from "@/lib/types";
+import { captureFollowupAsked } from "@/lib/analytics";
 
 const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -56,6 +57,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const existingIds = validClauseIds(analysisResult);
     const validIds = citedClauseIds.filter((id) => existingIds.has(id));
 
+    captureFollowupAsked({ sessionId: userId, documentType: analysisResult.documentType, request });
     return NextResponse.json({
       answer,
       citedClauseIds: validIds,

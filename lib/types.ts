@@ -87,6 +87,7 @@ export interface AnalysisResult {
   keyDates: KeyDate[];
   yourRights: string[];
   yourObligations: string[];
+  suggestedQuestions?: string[];
   analysisId: string;
   analyzedAt: string;
   followUpQuestionsRemaining: number;

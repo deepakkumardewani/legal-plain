@@ -7,11 +7,14 @@ import { StepHeading } from "@/components/input/StepHeading";
 
 type InputTab = "upload" | "paste";
 
+export type InputMethod = "pdf-upload" | "paste";
+
 interface DocumentUploadSectionProps {
   onText: (text: string) => void;
+  onInputMethodChange?: (method: InputMethod) => void;
 }
 
-export function DocumentUploadSection({ onText }: DocumentUploadSectionProps) {
+export function DocumentUploadSection({ onText, onInputMethodChange }: DocumentUploadSectionProps) {
   const [activeTab, setActiveTab] = useState<InputTab>("upload");
 
   const switchTab = useCallback(
@@ -19,8 +22,9 @@ export function DocumentUploadSection({ onText }: DocumentUploadSectionProps) {
       if (tab === activeTab) return;
       onText("");
       setActiveTab(tab);
+      onInputMethodChange?.(tab === "upload" ? "pdf-upload" : "paste");
     },
-    [activeTab, onText],
+    [activeTab, onText, onInputMethodChange],
   );
 
   return (
@@ -54,8 +58,7 @@ export function DocumentUploadSection({ onText }: DocumentUploadSectionProps) {
       </div>
 
       <p className="mt-3 text-center text-xs text-[#a3a0a8]">
-        Your document is never sent to our servers after analysis — results are saved only in your
-        browser.
+        Free to use, no account required — results are saved only in your browser.
       </p>
     </section>
   );

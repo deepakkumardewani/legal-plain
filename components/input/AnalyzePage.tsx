@@ -20,6 +20,7 @@ import { useAnalysisStore } from "@/lib/useAnalysisStore";
 import { useUnloadGuard } from "@/lib/useUnloadGuard";
 import { saveAnalysis } from "@/lib/analysisHistory";
 import type { AnalysisResult, DocumentType } from "@/lib/types";
+import type { InputMethod } from "@/components/input/DocumentUploadSection";
 
 type NdaRole = "RECEIVING" | "DISCLOSING" | "MUTUAL";
 
@@ -29,6 +30,7 @@ export function AnalyzePage() {
   const [documentText, setDocumentText] = useState("");
   const [documentType, setDocumentType] = useState<DocumentType | null>(null);
   const [userRole, setUserRole] = useState<NdaRole>("RECEIVING");
+  const [inputMethod, setInputMethod] = useState<InputMethod>("pdf-upload");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
@@ -42,7 +44,17 @@ export function AnalyzePage() {
     abortControllerRef.current?.abort();
     setLoading(false);
     setError(null);
-  }, []);
+
+    if (userId && documentType) {
+      fetch("/api/analytics/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ event: "analysis_stopped", sessionId: userId, documentType }),
+      }).catch(() => {
+        // Best-effort; don't surface analytics errors to the user
+      });
+    }
+  }, [userId, documentType]);
 
   const handleAnalyze = useCallback(async () => {
     if (!documentText.trim() || !documentType || !userId) return;
@@ -65,6 +77,7 @@ export function AnalyzePage() {
           documentText: documentText.trim(),
           documentType,
           userId,
+          inputMethod,
           ...(documentType === "NDA" ? { userRole } : {}),
         }),
       });
@@ -97,7 +110,7 @@ export function AnalyzePage() {
     } finally {
       setLoading(false);
     }
-  }, [documentText, documentType, userId, userRole, setAnalysis, router]);
+  }, [documentText, documentType, userId, userRole, inputMethod, setAnalysis, router]);
 
   useUnloadGuard(loading);
 
@@ -119,6 +132,7 @@ export function AnalyzePage() {
                   setDocumentText(text);
                   setError(null);
                 }}
+                onInputMethodChange={setInputMethod}
               />
               <DocumentTypeSection value={documentType} onChange={setDocumentType} />
               {documentType === "NDA" && <NdaRoleSection value={userRole} onChange={setUserRole} />}

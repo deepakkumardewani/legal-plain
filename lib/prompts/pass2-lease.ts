@@ -110,6 +110,7 @@ IMPORTANT OUTPUT RULES:
 - Surface jurisdiction mismatch separately via mismatchSnippet; do not inflate scores for mismatch alone.
 - statutoryProtections: array of { name, jurisdiction, summary, overridesClauseId? }. List statutes that give the tenant rights this lease cannot override (e.g., state security deposit caps, habitability warranty, rent control ordinances, anti-retaliation laws). Positive framing — these are protections the tenant keeps regardless of what the lease says.
 - contradictions: array of { description: string, clauseIds: string[] (min 2) }. Scan the entire document for internal contradictions (e.g., one clause says 30-day notice, another says 60-day). Each contradiction must list the clause IDs involved.
+- suggestedQuestions: array of exactly 4 short, specific follow-up questions a tenant would naturally want to ask about THIS lease — based on the actual clauses, risks, and obligations found. Questions should be concrete and document-specific, not generic.
 
 ${mismatchSection}
 

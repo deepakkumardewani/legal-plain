@@ -180,6 +180,7 @@ IMPORTANT OUTPUT RULES:
 - Surface jurisdiction mismatch separately via mismatchSnippet; do not inflate scores for mismatch alone.
 - statutoryProtections: array of { name, jurisdiction, summary, overridesClauseId? }. List statutes that give parties rights this NDA cannot override (e.g., DTSA §1833(b) whistleblower immunity, Speak Out Act, SEC Rule 21F-17, state trade-secret law carve-outs). Positive framing — these are protections parties keep regardless of what the NDA says.
 - contradictions: array of { description: string, clauseIds: string[] (min 2) }. Scan the entire document for internal contradictions (e.g., one clause defines confidentiality broadly, another carves out exceptions that contradict it). Each contradiction must list the clause IDs involved.
+- suggestedQuestions: array of exactly 4 short, specific follow-up questions a reader would naturally want to ask about THIS NDA — based on the actual clauses, risks, and obligations found. Questions should be concrete and document-specific, not generic.
 
 ${mismatchSection}
 

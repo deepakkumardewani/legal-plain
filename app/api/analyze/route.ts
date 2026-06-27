@@ -11,6 +11,7 @@ import { buildAnalysisCacheKey, getCachedAnalysis, setCachedAnalysis } from "@/l
 import { saveAnalysisById } from "@/lib/redis";
 import { finalizeAnalysisResult } from "@/lib/utils";
 import { serverError } from "@/lib/apiError";
+import { captureDocumentAnalyzed, type InputMethod } from "@/lib/analytics";
 
 const UUID_V4_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -43,6 +44,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       | "DISCLOSING"
       | "MUTUAL"
       | undefined;
+    const inputMethod: InputMethod =
+      (body as { inputMethod?: string }).inputMethod === "paste" ? "paste" : "pdf-upload";
 
     console.log("[analyze] docType=%s docLen=%d", documentType, documentText.length);
 
@@ -66,6 +69,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       await saveAnalysisById(hit.analysisId, cacheKey).catch((err) =>
         console.error("[analyze] saveAnalysisById (hit) failed", err),
       );
+      captureDocumentAnalyzed({
+        sessionId: userId,
+        documentType,
+        documentText,
+        inputMethod,
+        request,
+      });
       return NextResponse.json(hit);
     }
 
@@ -134,8 +144,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     await saveAnalysisById(finalized.analysisId, cacheKey).catch((err) =>
       console.error("[analyze] saveAnalysisById failed", err),
     );
+    captureDocumentAnalyzed({
+      sessionId: userId,
+      documentType,
+      documentText,
+      inputMethod,
+      request,
+    });
     return NextResponse.json(finalized);
   } catch (error) {
+    if (error instanceof Error && error.message.includes("timed out")) {
+      return serverError(
+        "Analyze error",
+        error,
+        "Analysis is taking longer than expected. Try again with a shorter document, or paste just the key sections.",
+      );
+    }
     return serverError("Analyze error", error);
   }
 }

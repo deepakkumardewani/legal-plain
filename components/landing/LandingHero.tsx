@@ -61,7 +61,8 @@ export function LandingHero() {
             style={{ color: "rgba(245,240,232,0.70)" }}
           >
             Upload an employment contract, NDA, or residential lease. LexLight reviews the document
-            clause by clause, highlights practical risk, and explains what to ask before you sign.
+            clause by clause, flags the terms that could cost you, and explains what to ask before
+            you sign.
           </p>
 
           <div className="lp-rise lp-d4 mt-10 flex flex-wrap items-center gap-4">
@@ -88,6 +89,10 @@ export function LandingHero() {
               See the review method
             </a>
           </div>
+
+          <p className="lp-rise lp-d4 mt-6 text-sm" style={{ color: "rgba(245,240,232,0.55)" }}>
+            What a lawyer charges $200–$500 to review — free, and ready in minutes.
+          </p>
         </div>
 
         <div className="lp-rise lp-d4 relative hidden lg:block">

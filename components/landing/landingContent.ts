@@ -57,7 +57,7 @@ export const WHY_AI_ROWS = [
   },
   {
     feature: "Structured risk flags",
-    lexlight: "Yes — categorised by severity",
+    lexlight: "Yes — categorized by severity",
     traditional: "Varies by attorney",
   },
   {
@@ -90,8 +90,8 @@ export const ADVANCED_FEATURES = [
   },
   {
     icon: "layers",
-    title: "Multi-document scope awareness",
-    body: "LexLight reads how provisions interact — risk often hides in clause combinations, not single sentences.",
+    title: "Clauses read in context",
+    body: "Risk often hides in how clauses combine, not in one sentence — so LexLight reads them together.",
   },
   {
     icon: "infinity",
@@ -106,7 +106,7 @@ export const ADVANCED_FEATURES = [
   {
     icon: "file-text",
     title: "Structured report",
-    body: "Output is organised into risk levels, missing clauses, dates, obligations, and suggested language.",
+    body: "Output is organized into risk levels, missing clauses, dates, obligations, and suggested language.",
   },
   {
     icon: "share-2",

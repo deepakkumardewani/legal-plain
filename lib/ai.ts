@@ -5,7 +5,7 @@ import type { ZodSchema } from "zod";
 
 const API_KEY = process.env.DEEPSEEK_API_KEY;
 const MODEL = process.env.AI_MODEL || "deepseek-v4-flash";
-const TIMEOUT_MS = 180_000;
+const TIMEOUT_MS = 270_000;
 const MAX_RETRIES = 1;
 /** DeepSeek max output tokens per API docs */
 const MAX_OUTPUT_TOKENS = 384_000;

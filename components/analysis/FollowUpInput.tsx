@@ -23,11 +23,11 @@ interface FollowUpInputProps {
 
 const UNLIMITED_REMAINING_THRESHOLD = 1_000_000;
 
-const SUGGESTED_QUESTIONS = [
-  "What happens if I break the NDA?",
+const FALLBACK_QUESTIONS = [
   "What are the main risks in this contract?",
   "Which clauses should I negotiate?",
   "What are my key obligations?",
+  "What happens if either party breaches this agreement?",
 ];
 
 function clauseChipLabel(
@@ -136,15 +136,17 @@ function ThreadMessage({ entry, idToClause, goToClause }: ThreadMessageProps) {
 
 function TypingIndicator() {
   return (
-    <div
-      className="space-y-2 px-4 py-4"
-      role="status"
-      aria-label="Generating answer"
-    >
+    <div className="space-y-2 px-4 py-4" role="status" aria-label="Generating answer">
       <span className="sr-only">Generating answer…</span>
       <div className="h-3 w-3/4 animate-pulse rounded-full bg-[#e6dccd]" />
-      <div className="h-3 w-1/2 animate-pulse rounded-full bg-[#e6dccd]" style={{ animationDelay: "150ms" }} />
-      <div className="h-3 w-2/3 animate-pulse rounded-full bg-[#e6dccd]" style={{ animationDelay: "300ms" }} />
+      <div
+        className="h-3 w-1/2 animate-pulse rounded-full bg-[#e6dccd]"
+        style={{ animationDelay: "150ms" }}
+      />
+      <div
+        className="h-3 w-2/3 animate-pulse rounded-full bg-[#e6dccd]"
+        style={{ animationDelay: "300ms" }}
+      />
     </div>
   );
 }
@@ -159,6 +161,10 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const suggestedQuestions = analysis.suggestedQuestions?.length
+    ? analysis.suggestedQuestions
+    : FALLBACK_QUESTIONS;
 
   const hasUnlimitedQuestions = remaining >= UNLIMITED_REMAINING_THRESHOLD;
   const disabled = (!hasUnlimitedQuestions && remaining === 0) || loading;
@@ -244,7 +250,7 @@ export function FollowUpInput({ analysis, documentText }: FollowUpInputProps) {
   );
 
   const hasThread = thread.length > 0 || loading || pending !== null;
-  const availableSuggestions = SUGGESTED_QUESTIONS.filter((q) => !usedSuggestions.has(q));
+  const availableSuggestions = suggestedQuestions.filter((q) => !usedSuggestions.has(q));
 
   return (
     <section className="mt-8 rounded-xl border border-[#e6dccd] bg-[#fbf8f1] shadow-sm">

@@ -31,7 +31,7 @@ export function HistoryList() {
           href="/analyze"
           className="mt-6 inline-flex items-center gap-1.5 rounded-full bg-[#c8791a] px-5 py-2.5 text-sm font-medium text-white transition-colors duration-150 hover:bg-[#b56a15]"
         >
-          Analyse a document
+          Analyze a document
           <svg
             className="h-3.5 w-3.5"
             viewBox="0 0 24 24"

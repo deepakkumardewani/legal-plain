@@ -27,14 +27,14 @@ const STAGES = [
     toPct: 36,
   },
   {
-    label: "Analysing all clauses",
+    label: "Analyzing all clauses",
     subtexts: [
       "Reviewing employment terms…",
       "Evaluating risk and obligations…",
       "Checking termination conditions…",
       "Assessing restrictive covenants…",
       "Comparing against standard protections…",
-      "Scrutinising liability clauses…",
+      "Scrutinizing liability clauses…",
       "Reviewing IP and confidentiality terms…",
     ],
     duration: 17000,
@@ -55,7 +55,7 @@ const STAGES = [
   {
     label: "Compiling your report",
     subtexts: [
-      "Organising findings by risk level…",
+      "Organizing findings by risk level…",
       "Formatting your summary…",
       "Highlighting key concerns…",
       "Preparing clause breakdown…",

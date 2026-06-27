@@ -91,6 +91,7 @@ export const aiAnalysisResultSchema = z.object({
   keyDates: z.array(keyDateSchema),
   yourRights: z.array(z.string()),
   yourObligations: z.array(z.string()),
+  suggestedQuestions: z.array(z.string()).optional(),
 });
 
 // Full shape after server enrichment (used for followup/share validation)
